@@ -194,33 +194,39 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Center: Nav Items */}
+        {/* Center: Nav Items Floating Capsule Dock */}
         <nav style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '24px',
-          fontFamily: 'var(--font-mono)',
-          fontSize: '12px',
-          fontWeight: 500,
+          gap: '6px',
+          padding: '4px 8px',
+          borderRadius: '99px',
+          backgroundColor: 'rgba(255, 255, 255, 0.04)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: 'inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 4px 20px rgba(0, 0, 0, 0.3)',
+          fontFamily: 'var(--font-display)',
+          fontSize: '13px',
+          fontWeight: 600,
+          letterSpacing: '-0.01em',
         }}>
-          <Link href="/" style={{ color: '#ffffff', textDecoration: 'none', transition: 'color 0.2s' }}>
+          <Link href="/" className="nav-link-zoom" style={{ color: '#ffffff', textDecoration: 'none' }}>
             Feed
           </Link>
-          <Link href="/reviews" style={{ color: 'rgba(255, 255, 255, 0.7)', textDecoration: 'none', transition: 'color 0.2s' }}>
+          <Link href="/reviews" className="nav-link-zoom" style={{ color: 'rgba(255, 255, 255, 0.65)', textDecoration: 'none' }}>
             Reviews
           </Link>
-          <Link href="/interviews" style={{ color: 'rgba(255, 255, 255, 0.7)', textDecoration: 'none', transition: 'color 0.2s' }}>
+          <Link href="/interviews" className="nav-link-zoom" style={{ color: 'rgba(255, 255, 255, 0.65)', textDecoration: 'none' }}>
             Interviews
           </Link>
-          <Link href="/anime" style={{ color: 'rgba(255, 255, 255, 0.7)', textDecoration: 'none', transition: 'color 0.2s' }}>
+          <Link href="/anime" className="nav-link-zoom" style={{ color: 'rgba(255, 255, 255, 0.65)', textDecoration: 'none' }}>
             Anime
           </Link>
-          <Link href="/gaming" style={{ color: 'rgba(255, 255, 255, 0.7)', textDecoration: 'none', transition: 'color 0.2s' }}>
+          <Link href="/gaming" className="nav-link-zoom" style={{ color: 'rgba(255, 255, 255, 0.65)', textDecoration: 'none' }}>
             Gaming
           </Link>
-          <Link href="/community" style={{ color: 'rgba(255, 255, 255, 0.7)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Link href="/community" className="nav-link-zoom" style={{ color: 'rgba(255, 255, 255, 0.65)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>Community</span>
-            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
+            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#ef4444', boxShadow: '0 0 8px rgba(239, 68, 68, 0.8)' }} />
           </Link>
         </nav>
 
