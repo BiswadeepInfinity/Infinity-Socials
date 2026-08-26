@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #040406;
+    --bg-secondary: #0a0a0f;
+    --bg-tertiary: #12121a;
+    --bg-elevated: #1a1a24;
+    
+    --text-primary: #f5f5f7;
+    --text-secondary: #a1a1a6;
+    --text-tertiary: #6e6e73;
+    
+    --accent-silver: #e5e7eb;
+    --accent-metallic: #9ca3af;
+    --accent-gold: #f59e0b;
+    --accent-crimson: #e11d48;
+    
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-highlight: rgba(255, 255, 255, 0.35);
+    --ios-specular: rgba(255, 255, 255, 0.5);
+    
+    --font-display: var(--font-oxygen), -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    --font-body: var(--font-oxygen), -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* iOS Liquid Glass Design System */
+.ios-glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  ), rgba(12, 12, 18, 0.65);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 
+    0 24px 48px -12px rgba(0, 0, 0, 0.75),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.ios-glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 32px 64px -12px rgba(0, 0, 0, 0.85),
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.ios-glass-pill {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+/* Glassmorphism Legacy Mappings */
+.glass-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  ), rgba(14, 14, 22, 0.7);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.glass-dock {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    rgba(10, 10, 16, 0.8) 100%
+  );
+  backdrop-filter: blur(36px) saturate(200%);
+  -webkit-backdrop-filter: blur(36px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.7),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.5);
+}
+
+/* Editorial Button Utilities (Monochrome & Metallic Platinum) */
+.btn-editorial-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+  color: #050508;
+  border-radius: 99px;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+  transition: all 0.25s ease;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-editorial-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35);
+  background: #ffffff;
+}
+
+.btn-editorial-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f5f7;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 99px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-editorial-glass:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #040406;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.isolated-scroll-track {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
