@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/components/AuthProvider';
 
@@ -278,6 +278,17 @@ export default function Navbar() {
 function NavbarAuthSection() {
   const { user, profile, loading, signOut } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (loading) {
     return <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />;
@@ -285,10 +296,10 @@ function NavbarAuthSection() {
 
   if (user && profile) {
     return (
-      <div className="relative">
+      <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-2.5 p-1 pr-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 transition-colors cursor-pointer"
+          className="flex items-center gap-2.5 p-1 pr-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 transition-all cursor-pointer"
         >
           <div className="w-7 h-7 rounded-full overflow-hidden bg-violet-600/30 border border-white/20 flex items-center justify-center">
             {profile.avatar_url ? (
@@ -306,36 +317,76 @@ function NavbarAuthSection() {
         </button>
 
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 py-1.5 bg-[#0e0e18] border border-white/15 rounded-2xl shadow-2xl z-50 backdrop-blur-xl">
-            <div className="px-3.5 py-2 border-b border-white/10">
-              <p className="text-[11px] font-semibold text-white truncate">{profile.display_name || profile.username}</p>
-              <p className="text-[10px] text-white/40 truncate">{user.email}</p>
+          <div className="absolute right-0 mt-2.5 w-56 p-2 bg-[#100f16]/95 border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.06)] z-50 backdrop-blur-2xl animate-dropdown">
+            {/* Header info */}
+            <div className="px-3.5 py-2.5 border-b border-white/[0.06] mb-1.5 bg-white/[0.02] rounded-xl">
+              <p className="text-[13px] font-bold text-white truncate">{profile.display_name || profile.username}</p>
+              <p className="text-[10px] text-white/45 truncate font-mono">@{profile.username}</p>
+            </div>
+
+            {/* Menu Links */}
+            <div className="space-y-1">
+              <Link
+                href="/profile"
+                onClick={() => setDropdownOpen(false)}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-white/80 hover:text-white hover:bg-white/[0.08] active:scale-[0.98] transition-all duration-150"
+              >
+                <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span>My Profile</span>
+              </Link>
+
+              <Link
+                href="/reviews"
+                onClick={() => setDropdownOpen(false)}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-white/80 hover:text-white hover:bg-white/[0.08] active:scale-[0.98] transition-all duration-150"
+              >
+                <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <span>My Reviews</span>
+              </Link>
+
+              <Link
+                href="/profile"
+                onClick={() => setDropdownOpen(false)}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-white/80 hover:text-white hover:bg-white/[0.08] active:scale-[0.98] transition-all duration-150"
+              >
+                <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Settings</span>
+              </Link>
+
               {profile.role === 'admin' && (
-                <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30">
-                  Admin
-                </span>
+                <Link
+                  href="/admin"
+                  onClick={() => setDropdownOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-violet-300 hover:text-violet-200 hover:bg-violet-500/15 active:scale-[0.98] transition-all duration-150"
+                >
+                  <span className="text-sm">⚡</span>
+                  <span>Admin CMS</span>
+                </Link>
               )}
             </div>
 
-            {profile.role === 'admin' && (
-              <Link
-                href="/admin"
-                onClick={() => setDropdownOpen(false)}
-                className="block px-3.5 py-2 text-xs text-violet-300 hover:bg-white/[0.06] transition-colors"
+            {/* Logout Row matching reference pill style */}
+            <div className="pt-2 mt-1.5 border-t border-white/[0.06]">
+              <button
+                onClick={() => {
+                  setDropdownOpen(false);
+                  signOut();
+                }}
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold text-[#f87171] bg-[#3a151b]/80 hover:bg-[#4a1b23] active:scale-[0.98] border border-rose-500/20 transition-all duration-150 cursor-pointer shadow-inner"
               >
-                ⚙️ Admin CMS
-              </Link>
-            )}
-
-            <button
-              onClick={() => {
-                setDropdownOpen(false);
-                signOut();
-              }}
-              className="w-full text-left px-3.5 py-2 text-xs text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
-            >
-              Sign Out
-            </button>
+                <svg className="w-4 h-4 text-[#f87171]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Logout</span>
+              </button>
+            </div>
           </div>
         )}
       </div>

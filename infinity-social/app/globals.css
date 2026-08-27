@@ -208,6 +208,26 @@ body {
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
+@keyframes dropdownSpring {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(-8px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-dropdown {
+  animation: dropdownSpring 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top right;
+}
+
 /* Apple Dock / Lens Magnifier Effect on Nav Links */
 .nav-link-zoom {
   display: inline-flex;

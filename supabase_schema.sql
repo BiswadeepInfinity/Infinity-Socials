@@ -168,6 +168,8 @@ CREATE TABLE IF NOT EXISTS forum_votes (
 -- ============================================================
 -- BOOKMARKS (User personal bookshelf)
 -- ============================================================
+-- BOOKMARKS (User personal bookshelf)
+-- ============================================================
 CREATE TABLE IF NOT EXISTS bookmarks (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
@@ -177,6 +179,73 @@ CREATE TABLE IF NOT EXISTS bookmarks (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id, article_id)
 );
+
+-- ============================================================
+-- USER REVIEWS (Community & Personal Critique)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS user_reviews (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL CHECK (category IN ('Game', 'Movie', 'Anime', 'Series', 'Tech', 'Music')),
+  release_year INT DEFAULT EXTRACT(YEAR FROM CURRENT_DATE),
+  verdict TEXT NOT NULL CHECK (verdict IN ('masterpiece', 'must_buy', 'timepass', 'skip')),
+  score NUMERIC(3,1) CHECK (score >= 0 AND score <= 10),
+  content TEXT NOT NULL,
+  cover_url TEXT,
+  likes_count INT DEFAULT 0,
+  comments_count INT DEFAULT 0,
+  is_public BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- User review likes
+CREATE TABLE IF NOT EXISTS user_review_likes (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  review_id UUID REFERENCES user_reviews(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(review_id, user_id)
+);
+
+-- ============================================================
+-- USER COLLECTIONS (Curated Shelves & Lists)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS collections (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT,
+  is_private BOOLEAN DEFAULT FALSE,
+  cover_gradient TEXT DEFAULT 'from-violet-900/60 to-purple-950/80',
+  items_count INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS collection_items (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  collection_id UUID REFERENCES collections(id) ON DELETE CASCADE,
+  article_id UUID REFERENCES articles(id) ON DELETE CASCADE,
+  user_review_id UUID REFERENCES user_reviews(id) ON DELETE SET NULL,
+  notes TEXT,
+  added_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================================
+-- USER WATCHLIST / INTERESTED RADAR
+-- ============================================================
+CREATE TABLE IF NOT EXISTS user_watchlist (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  release_window TEXT NOT NULL,
+  hype_score INT DEFAULT 95,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 
 -- ============================================================
 -- ANNOTATIONS (Highlighter + Pen tool)
@@ -279,6 +348,56 @@ ALTER TABLE bookmarks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE annotations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE translations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tts_cache ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_reviews ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_review_likes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE collections ENABLE ROW LEVEL SECURITY;
+ALTER TABLE collection_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_watchlist ENABLE ROW LEVEL SECURITY;
+
+-- User reviews policies
+CREATE POLICY "Public user reviews are viewable by everyone" ON user_reviews
+  FOR SELECT USING (is_public = TRUE OR auth.uid() = user_id);
+
+CREATE POLICY "Users can create own reviews" ON user_reviews
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own reviews" ON user_reviews
+  FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own reviews" ON user_reviews
+  FOR DELETE USING (auth.uid() = user_id OR public.is_admin_or_mod());
+
+-- Review likes policies
+CREATE POLICY "Review likes viewable by all" ON user_review_likes
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Auth users can like reviews" ON user_review_likes
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can remove review like" ON user_review_likes
+  FOR DELETE USING (auth.uid() = user_id);
+
+-- Collections policies
+CREATE POLICY "Public collections are viewable by all" ON collections
+  FOR SELECT USING (is_private = FALSE OR auth.uid() = user_id);
+
+CREATE POLICY "Users manage own collections" ON collections
+  FOR ALL USING (auth.uid() = user_id);
+
+-- Collection items
+CREATE POLICY "View collection items" ON collection_items
+  FOR SELECT USING (EXISTS (SELECT 1 FROM collections c WHERE c.id = collection_id AND (c.is_private = FALSE OR c.user_id = auth.uid())));
+
+CREATE POLICY "Users manage own collection items" ON collection_items
+  FOR ALL USING (EXISTS (SELECT 1 FROM collections c WHERE c.id = collection_id AND c.user_id = auth.uid()));
+
+-- Watchlist
+CREATE POLICY "Users view own watchlist" ON user_watchlist
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users manage own watchlist" ON user_watchlist
+  FOR ALL USING (auth.uid() = user_id);
+
 
 -- Helper security function to check admin/mod role without recursive RLS trigger
 CREATE OR REPLACE FUNCTION public.is_admin_or_mod()

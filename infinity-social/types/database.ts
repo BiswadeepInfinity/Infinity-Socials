@@ -47,13 +47,43 @@ export type Article = {
   metrics?: ArticleMetric;
 };
 
-export type ArticleMetric = {
+export type UserReview = {
   id: string;
-  article_id: string;
-  score: number | null;
-  pros: string[];
-  cons: string[];
-  verdict: string | null;
+  user_id: string;
+  title: string;
+  category: 'Game' | 'Movie' | 'Anime' | 'Series' | 'Tech' | 'Music';
+  release_year: number;
+  verdict: 'masterpiece' | 'must_buy' | 'timepass' | 'skip';
+  score: number;
+  content: string;
+  cover_url: string | null;
+  likes_count: number;
+  comments_count: number;
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
+  author?: Profile;
+};
+
+export type Collection = {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  is_private: boolean;
+  cover_gradient: string;
+  items_count: number;
   created_at: string;
   updated_at: string;
 };
+
+export type WatchlistItem = {
+  id: string;
+  user_id: string;
+  title: string;
+  category: string;
+  release_window: string;
+  hype_score: number;
+  created_at: string;
+};
+
