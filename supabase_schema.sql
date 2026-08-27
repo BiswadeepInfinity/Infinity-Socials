@@ -268,6 +268,7 @@ GROUP BY fm.id, p.username, p.display_name, p.avatar_url;
 -- ============================================================
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE article_metrics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE article_votes ENABLE ROW LEVEL SECURITY;
@@ -279,105 +280,265 @@ ALTER TABLE annotations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE translations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tts_cache ENABLE ROW LEVEL SECURITY;
 
--- Profiles: public read, own write
-CREATE POLICY "Public profiles are viewable by everyone" ON profiles FOR SELECT USING (TRUE);
-CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+-- Helper security function to check admin/mod role without recursive RLS trigger
+CREATE OR REPLACE FUNCTION public.is_admin_or_mod()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE id = auth.uid() AND role IN ('admin', 'moderator')
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- Profiles: public read, own write (prevent role escalation by ordinary users)
+CREATE POLICY "Public profiles are viewable by everyone" ON profiles 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Users can insert own profile on signup" ON profiles 
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile" ON profiles 
+  FOR UPDATE USING (auth.uid() = id) 
+  WITH CHECK (
+    auth.uid() = id AND (
+      role IS NULL OR 
+      role = (SELECT p.role FROM public.profiles p WHERE p.id = auth.uid()) OR 
+      public.is_admin()
+    )
+  );
+
+-- Categories: public read, admin write
+CREATE POLICY "Categories are viewable by everyone" ON categories 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Admins can manage categories" ON categories 
+  FOR ALL USING (public.is_admin_or_mod());
 
 -- Articles: public read if published, admin full access
-CREATE POLICY "Published articles viewable by all" ON articles FOR SELECT USING (is_published = TRUE OR auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
-CREATE POLICY "Admins can manage articles" ON articles FOR ALL USING (auth.uid() IN (SELECT id FROM profiles WHERE role IN ('admin', 'moderator')));
+CREATE POLICY "Published articles viewable by all" ON articles 
+  FOR SELECT USING (is_published = TRUE OR public.is_admin_or_mod());
 
--- Article metrics: public read
-CREATE POLICY "Metrics are public" ON article_metrics FOR SELECT USING (TRUE);
-CREATE POLICY "Admins manage metrics" ON article_metrics FOR ALL USING (auth.uid() IN (SELECT id FROM profiles WHERE role IN ('admin', 'moderator')));
+CREATE POLICY "Admins can manage articles" ON articles 
+  FOR ALL USING (public.is_admin_or_mod());
+
+-- Article metrics: public read, admin manage
+CREATE POLICY "Metrics are public" ON article_metrics 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Admins manage metrics" ON article_metrics 
+  FOR ALL USING (public.is_admin_or_mod());
 
 -- Votes: authenticated users can vote once
-CREATE POLICY "Anyone can read votes" ON article_votes FOR SELECT USING (TRUE);
-CREATE POLICY "Authenticated users can vote" ON article_votes FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "Users can change own vote" ON article_votes FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY "Users can delete own vote" ON article_votes FOR DELETE USING (auth.uid() = user_id);
+CREATE POLICY "Anyone can read votes" ON article_votes 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Authenticated users can vote" ON article_votes 
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can change own vote" ON article_votes 
+  FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own vote" ON article_votes 
+  FOR DELETE USING (auth.uid() = user_id);
 
 -- Forums: public read, auth write
-CREATE POLICY "Forums are public" ON forums FOR SELECT USING (TRUE);
-CREATE POLICY "Auth users can create forums" ON forums FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-CREATE POLICY "Creators and mods can manage forums" ON forums FOR UPDATE USING (auth.uid() = created_by OR auth.uid() IN (SELECT id FROM profiles WHERE role IN ('admin', 'moderator')));
+CREATE POLICY "Forums are public" ON forums 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Auth users can create forums" ON forums 
+  FOR INSERT WITH CHECK (auth.role() = 'authenticated' AND auth.uid() = created_by);
+
+CREATE POLICY "Creators and mods can manage forums" ON forums 
+  FOR UPDATE USING (auth.uid() = created_by OR public.is_admin_or_mod());
 
 -- Forum messages: public read, auth write own
-CREATE POLICY "Messages are public" ON forum_messages FOR SELECT USING (TRUE);
-CREATE POLICY "Auth users can post messages" ON forum_messages FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "Users can edit own messages" ON forum_messages FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY "Users can delete own messages" ON forum_messages FOR DELETE USING (auth.uid() = user_id OR auth.uid() IN (SELECT id FROM profiles WHERE role IN ('admin', 'moderator')));
+CREATE POLICY "Messages are public" ON forum_messages 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Auth users can post messages" ON forum_messages 
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can edit own messages" ON forum_messages 
+  FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own messages" ON forum_messages 
+  FOR DELETE USING (auth.uid() = user_id OR public.is_admin_or_mod());
 
 -- Forum votes: authenticated
-CREATE POLICY "Anyone can read forum votes" ON forum_votes FOR SELECT USING (TRUE);
-CREATE POLICY "Auth users can vote on messages" ON forum_votes FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "Users can change own forum vote" ON forum_votes FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY "Users can remove own forum vote" ON forum_votes FOR DELETE USING (auth.uid() = user_id);
+CREATE POLICY "Anyone can read forum votes" ON forum_votes 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Auth users can vote on messages" ON forum_votes 
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can change own forum vote" ON forum_votes 
+  FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can remove own forum vote" ON forum_votes 
+  FOR DELETE USING (auth.uid() = user_id);
 
 -- Bookmarks: private to owner
-CREATE POLICY "Users can view own bookmarks" ON bookmarks FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Users can manage own bookmarks" ON bookmarks FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Users can view own bookmarks" ON bookmarks 
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own bookmarks" ON bookmarks 
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own bookmarks" ON bookmarks 
+  FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own bookmarks" ON bookmarks 
+  FOR DELETE USING (auth.uid() = user_id);
 
 -- Annotations: private OR shared read
-CREATE POLICY "Users see own annotations" ON annotations FOR SELECT USING (auth.uid() = user_id OR is_shared = TRUE);
-CREATE POLICY "Users manage own annotations" ON annotations FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Users see own annotations" ON annotations 
+  FOR SELECT USING (auth.uid() = user_id OR is_shared = TRUE);
+
+CREATE POLICY "Users can insert own annotations" ON annotations 
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users manage own annotations" ON annotations 
+  FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users delete own annotations" ON annotations 
+  FOR DELETE USING (auth.uid() = user_id);
 
 -- Translations: public read
-CREATE POLICY "Translations are public" ON translations FOR SELECT USING (TRUE);
-CREATE POLICY "Admins manage translations" ON translations FOR ALL USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
+CREATE POLICY "Translations are public" ON translations 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Admins manage translations" ON translations 
+  FOR ALL USING (public.is_admin());
 
 -- TTS: public read
-CREATE POLICY "TTS cache is public" ON tts_cache FOR SELECT USING (TRUE);
-CREATE POLICY "Admins manage TTS" ON tts_cache FOR ALL USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
+CREATE POLICY "TTS cache is public" ON tts_cache 
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Admins manage TTS" ON tts_cache 
+  FOR ALL USING (public.is_admin());
 
 -- ============================================================
--- FUNCTIONS for vote toggling
+-- FUNCTIONS for vote toggling (Hardened)
 -- ============================================================
 
--- Toggle article vote (prevents double voting)
+-- Toggle article vote (prevents double voting & verifies auth)
 CREATE OR REPLACE FUNCTION toggle_article_vote(p_article_id UUID, p_vote_type TEXT)
 RETURNS VOID AS $$
 DECLARE
+  v_uid UUID;
   existing_vote TEXT;
 BEGIN
+  v_uid := auth.uid();
+  IF v_uid IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  IF p_vote_type NOT IN ('up', 'down') THEN
+    RAISE EXCEPTION 'Invalid vote type';
+  END IF;
+
   SELECT vote_type INTO existing_vote
-  FROM article_votes
-  WHERE article_id = p_article_id AND user_id = auth.uid();
+  FROM public.article_votes
+  WHERE article_id = p_article_id AND user_id = v_uid;
 
   IF existing_vote IS NULL THEN
-    INSERT INTO article_votes (article_id, user_id, vote_type) VALUES (p_article_id, auth.uid(), p_vote_type);
+    INSERT INTO public.article_votes (article_id, user_id, vote_type) 
+    VALUES (p_article_id, v_uid, p_vote_type);
   ELSIF existing_vote = p_vote_type THEN
-    DELETE FROM article_votes WHERE article_id = p_article_id AND user_id = auth.uid();
+    DELETE FROM public.article_votes 
+    WHERE article_id = p_article_id AND user_id = v_uid;
   ELSE
-    UPDATE article_votes SET vote_type = p_vote_type WHERE article_id = p_article_id AND user_id = auth.uid();
+    UPDATE public.article_votes 
+    SET vote_type = p_vote_type 
+    WHERE article_id = p_article_id AND user_id = v_uid;
   END IF;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
--- Toggle forum message vote
+-- Toggle forum message vote (Hardened)
 CREATE OR REPLACE FUNCTION toggle_forum_vote(p_message_id UUID, p_vote_type TEXT)
 RETURNS VOID AS $$
 DECLARE
+  v_uid UUID;
   existing_vote TEXT;
 BEGIN
+  v_uid := auth.uid();
+  IF v_uid IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  IF p_vote_type NOT IN ('up', 'down') THEN
+    RAISE EXCEPTION 'Invalid vote type';
+  END IF;
+
   SELECT vote_type INTO existing_vote
-  FROM forum_votes
-  WHERE message_id = p_message_id AND user_id = auth.uid();
+  FROM public.forum_votes
+  WHERE message_id = p_message_id AND user_id = v_uid;
 
   IF existing_vote IS NULL THEN
-    INSERT INTO forum_votes (message_id, user_id, vote_type) VALUES (p_message_id, auth.uid(), p_vote_type);
+    INSERT INTO public.forum_votes (message_id, user_id, vote_type) 
+    VALUES (p_message_id, v_uid, p_vote_type);
   ELSIF existing_vote = p_vote_type THEN
-    DELETE FROM forum_votes WHERE message_id = p_message_id AND user_id = auth.uid();
+    DELETE FROM public.forum_votes 
+    WHERE message_id = p_message_id AND user_id = v_uid;
   ELSE
-    UPDATE forum_votes SET vote_type = p_vote_type WHERE message_id = p_message_id AND user_id = auth.uid();
+    UPDATE public.forum_votes 
+    SET vote_type = p_vote_type 
+    WHERE message_id = p_message_id AND user_id = v_uid;
   END IF;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
--- Increment view count
+-- Increment view count (Hardened)
 CREATE OR REPLACE FUNCTION increment_view_count(p_article_id UUID)
 RETURNS VOID AS $$
 BEGIN
-  UPDATE articles SET view_count = view_count + 1 WHERE id = p_article_id;
+  UPDATE public.articles 
+  SET view_count = COALESCE(view_count, 0) + 1 
+  WHERE id = p_article_id;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- ============================================================
+-- STORAGE BUCKETS & POLICIES (Avatars & Uploads)
+-- ============================================================
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('avatars', 'avatars', true)
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY "Avatar images are publicly accessible" ON storage.objects
+  FOR SELECT USING (bucket_id = 'avatars');
+
+CREATE POLICY "Users can upload their own avatar" ON storage.objects
+  FOR INSERT WITH CHECK (
+    bucket_id = 'avatars' AND
+    auth.role() = 'authenticated' AND
+    (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+CREATE POLICY "Users can update their own avatar" ON storage.objects
+  FOR UPDATE USING (
+    bucket_id = 'avatars' AND
+    auth.role() = 'authenticated' AND
+    (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+CREATE POLICY "Users can delete their own avatar" ON storage.objects
+  FOR DELETE USING (
+    bucket_id = 'avatars' AND
+    auth.role() = 'authenticated' AND
+    (storage.foldername(name))[1] = auth.uid()::text
+  );
+
