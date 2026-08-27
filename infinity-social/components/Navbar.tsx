@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/components/AuthProvider';
 
 export default function Navbar() {
   const [searchFocused, setSearchFocused] = useState(false);
@@ -266,20 +267,93 @@ export default function Navbar() {
             </span>
           </div>
 
-          <Link
-            href="/auth/login"
-            className="btn-editorial-primary"
-            style={{
-              padding: '8px 20px',
-              fontSize: '12px',
-              fontWeight: 600,
-            }}
-          >
-            Sign In
-          </Link>
+          <NavbarAuthSection />
         </div>
 
       </div>
     </header>
   );
 }
+
+function NavbarAuthSection() {
+  const { user, profile, loading, signOut } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  if (loading) {
+    return <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />;
+  }
+
+  if (user && profile) {
+    return (
+      <div className="relative">
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="flex items-center gap-2.5 p-1 pr-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 transition-colors cursor-pointer"
+        >
+          <div className="w-7 h-7 rounded-full overflow-hidden bg-violet-600/30 border border-white/20 flex items-center justify-center">
+            {profile.avatar_url ? (
+              <img src={profile.avatar_url} alt={profile.username} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-xs font-bold text-white">
+                {profile.username ? profile.username.charAt(0).toUpperCase() : 'U'}
+              </span>
+            )}
+          </div>
+          <span className="text-xs font-semibold text-white tracking-tight">
+            @{profile.username}
+          </span>
+          <span className="text-[10px] text-white/40">▾</span>
+        </button>
+
+        {dropdownOpen && (
+          <div className="absolute right-0 mt-2 w-48 py-1.5 bg-[#0e0e18] border border-white/15 rounded-2xl shadow-2xl z-50 backdrop-blur-xl">
+            <div className="px-3.5 py-2 border-b border-white/10">
+              <p className="text-[11px] font-semibold text-white truncate">{profile.display_name || profile.username}</p>
+              <p className="text-[10px] text-white/40 truncate">{user.email}</p>
+              {profile.role === 'admin' && (
+                <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                  Admin
+                </span>
+              )}
+            </div>
+
+            {profile.role === 'admin' && (
+              <Link
+                href="/admin"
+                onClick={() => setDropdownOpen(false)}
+                className="block px-3.5 py-2 text-xs text-violet-300 hover:bg-white/[0.06] transition-colors"
+              >
+                ⚙️ Admin CMS
+              </Link>
+            )}
+
+            <button
+              onClick={() => {
+                setDropdownOpen(false);
+                signOut();
+              }}
+              className="w-full text-left px-3.5 py-2 text-xs text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href="/auth/login"
+      className="btn-editorial-primary"
+      style={{
+        padding: '8px 20px',
+        fontSize: '12px',
+        fontWeight: 600,
+      }}
+    >
+      Sign In
+    </Link>
+  );
+}
+
