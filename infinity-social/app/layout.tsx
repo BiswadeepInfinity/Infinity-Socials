@@ -28,6 +28,8 @@ export const metadata: Metadata = {
 };
 
 import { AuthProvider } from "@/components/AuthProvider";
+import PageTransitionProvider from "@/components/PageTransitionProvider";
+import { Suspense } from "react";
 
 export default function RootLayout({
   children,
@@ -42,7 +44,11 @@ export default function RootLayout({
       </head>
       <body className={`${oxygen.className} bg-[#050508] text-white min-h-screen antialiased`}>
         <AuthProvider>
-          {children}
+          <Suspense fallback={null}>
+            <PageTransitionProvider>
+              {children}
+            </PageTransitionProvider>
+          </Suspense>
         </AuthProvider>
       </body>
     </html>

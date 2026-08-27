@@ -165,7 +165,7 @@ export default function AvatarCropperModal({
         }
       },
       'image/webp',
-      0.95
+      0.88
     );
   };
 

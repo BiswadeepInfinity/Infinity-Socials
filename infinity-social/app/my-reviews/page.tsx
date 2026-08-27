@@ -10,6 +10,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { supabase } from '@/lib/supabase';
 import { UserReview } from '@/types/database';
 import Link from 'next/link';
+import { compressImageToWebP } from '@/lib/image-compression';
 
 type ReviewFilter = 'all' | 'must_buy' | 'wait_sale' | 'wait_patches' | 'skip';
 
@@ -226,14 +227,19 @@ export default function MyReviewsPage() {
       let finalCoverUrl = existingCoverUrl;
       let finalVoiceUrl = existingVoiceUrl;
 
-      // Upload Cover Image file to Supabase storage if selected
+      // Upload Cover Image file to Supabase storage if selected with WebP compression
       if (coverFile) {
-        const fileExt = coverFile.name.split('.').pop();
-        const filePath = `${user.id}/reviews/covers/${Date.now()}.${fileExt}`;
+        const { file: compressedCover } = await compressImageToWebP(coverFile, {
+          maxWidth: 1200,
+          maxHeight: 1600,
+          quality: 0.85,
+        });
+
+        const filePath = `${user.id}/reviews/covers/${Date.now()}.webp`;
 
         const { error: uploadErr } = await supabase.storage
           .from('avatars')
-          .upload(filePath, coverFile, { upsert: true });
+          .upload(filePath, compressedCover, { upsert: true });
 
         if (uploadErr) {
           throw new Error(`Cover upload error: ${uploadErr.message}`);
@@ -297,7 +303,14 @@ export default function MyReviewsPage() {
       } else {
         const { data, error } = await supabase
           .from('user_reviews')
-          .insert({ ...payload, likes_count: 0, comments_count: 0, is_public: true })
+          .insert({
+            ...payload,
+            upvotes_count: 0,
+            downvotes_count: 0,
+            likes_count: 0,
+            comments_count: 0,
+            is_public: true,
+          })
           .select()
           .single();
 
@@ -431,22 +444,28 @@ export default function MyReviewsPage() {
                   className="p-5 rounded-2xl bg-[#0e0e13] border border-white/[0.07] hover:border-white/[0.14] transition-all flex flex-col justify-between space-y-4"
                 >
                   <div className="flex gap-4 items-start">
-                    <div className="w-24 h-32 rounded-xl overflow-hidden bg-black/40 border border-white/[0.06] flex-shrink-0 relative">
+                    <Link
+                      href={`/reviews/${rev.id}`}
+                      className="w-24 h-32 rounded-xl overflow-hidden bg-black/40 border border-white/[0.06] flex-shrink-0 relative block group"
+                    >
                       <img
                         src={rev.cover_url || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&q=80'}
                         alt={rev.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-emerald-400 font-mono border border-white/10">
                         {rev.score}%
                       </div>
-                    </div>
+                    </Link>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-sm font-bold text-white tracking-tight line-clamp-1">
+                        <Link
+                          href={`/reviews/${rev.id}`}
+                          className="text-sm font-bold text-white tracking-tight line-clamp-1 hover:text-cyan-300 transition-colors"
+                        >
                           {rev.title}
-                        </h3>
+                        </Link>
                         <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border flex-shrink-0 ${verdictCfg.pill}`}>
                           {verdictCfg.label}
                         </span>

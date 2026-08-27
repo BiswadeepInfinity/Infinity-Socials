@@ -11,6 +11,7 @@ import ButterflyLoader from '@/components/ButterflyLoader';
 import RichArticleEditor from '@/components/RichArticleEditor';
 import ArticleRenderer from '@/components/ArticleRenderer';
 import Link from 'next/link';
+import { compressImageToWebP } from '@/lib/image-compression';
 
 type TabType = 'reviews' | 'collections' | 'bookmarks';
 type ReviewFilter = 'all' | 'must_buy' | 'wait_sale' | 'wait_patches' | 'skip';
@@ -54,6 +55,7 @@ export default function ProfilePage() {
 
   // New Review Modal
   const [isNewReviewModalOpen, setIsNewReviewModalOpen] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<UserReview | null>(null);
   const [newTitle, setNewTitle] = useState('');
   const [newCategory, setNewCategory] = useState<'Game' | 'Movie' | 'Anime' | 'Series' | 'Tech' | 'Music'>('Game');
   const [newYear, setNewYear] = useState<number>(new Date().getFullYear());
@@ -196,12 +198,17 @@ export default function ProfilePage() {
       let finalVoiceUrl: string | null = null;
 
       if (coverFile && user) {
-        const fileExt = coverFile.name.split('.').pop();
-        const filePath = `${user.id}/reviews/covers/${Date.now()}.${fileExt}`;
+        const { file: compressedCover } = await compressImageToWebP(coverFile, {
+          maxWidth: 1200,
+          maxHeight: 1600,
+          quality: 0.85,
+        });
+
+        const filePath = `${user.id}/reviews/covers/${Date.now()}.webp`;
 
         const { error: uploadErr } = await supabase.storage
           .from('avatars')
-          .upload(filePath, coverFile, { upsert: true });
+          .upload(filePath, compressedCover, { upsert: true });
 
         if (!uploadErr) {
           const { data: publicUrlData } = supabase.storage
@@ -241,18 +248,26 @@ export default function ProfilePage() {
         cons,
         bottom_line: bottomLine.trim() || null,
         cover_url: finalCoverUrl,
+        upvotes_count: 0,
+        downvotes_count: 0,
         likes_count: 0,
         comments_count: 0,
         is_public: true,
       };
 
       const { data, error } = await supabase.from('user_reviews').insert(payload).select().single();
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase review insert error:', error);
+        throw new Error(error.message || 'Database error occurred while publishing review');
+      }
 
       if (data) {
-        setReviews([data as UserReview, ...reviews]);
+        setReviews((prev) => [data as UserReview, ...prev]);
       }
+
       setIsNewReviewModalOpen(false);
+      setActiveTab('reviews');
+      setReviewFilter('all');
       setNewTitle('');
       setNewContent('');
       setNewYoutubeUrl('');
@@ -264,7 +279,10 @@ export default function ProfilePage() {
       setCoverFile(null);
       setCoverPreview(null);
     } catch (err: any) {
-      setReviewError(err.message || 'Failed to publish review');
+      console.error('Failed to publish review:', err);
+      setReviewError(err?.message || 'Failed to publish review. Please ensure all required fields are filled.');
+      const modalEl = document.getElementById('profile-review-modal-container');
+      if (modalEl) modalEl.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setCreatingReview(false);
     }
@@ -633,7 +651,10 @@ export default function ProfilePage() {
                           className="p-5 rounded-[26px] bg-[#0c0c12] border border-white/[0.07] hover:border-white/[0.15] transition-all group flex flex-col sm:flex-row gap-5 items-start relative shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
                         >
                           {/* Left Poster */}
-                          <div className="w-full sm:w-28 h-36 sm:h-36 rounded-2xl overflow-hidden bg-black/40 border border-white/[0.08] flex-shrink-0 relative">
+                          <Link
+                            href={`/reviews/${rev.id}`}
+                            className="w-full sm:w-28 h-36 sm:h-36 rounded-2xl overflow-hidden bg-black/40 border border-white/[0.08] flex-shrink-0 relative cursor-pointer group-hover:border-white/20 transition-all block"
+                          >
                             <img
                               src={rev.cover_url || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&q=80'}
                               alt={rev.title}
@@ -642,15 +663,18 @@ export default function ProfilePage() {
                             <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/85 backdrop-blur-md text-[10px] font-bold text-white font-mono border border-white/10 shadow-lg">
                               ★ {rev.score}%
                             </div>
-                          </div>
+                          </Link>
 
                           {/* Center Content */}
                           <div className="flex-1 flex flex-col justify-between h-full w-full">
                             <div>
                               <div className="flex items-center justify-between gap-2">
-                                <h3 className="text-base font-bold text-white tracking-tight line-clamp-1">
+                                <Link
+                                  href={`/reviews/${rev.id}`}
+                                  className="text-base font-bold text-white tracking-tight line-clamp-1 hover:text-cyan-300 transition-colors"
+                                >
                                   {rev.title}
-                                </h3>
+                                </Link>
                                 <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${verdictCfg.pill}`}>
                                   {verdictCfg.label}
                                 </span>
@@ -661,30 +685,30 @@ export default function ProfilePage() {
                               </p>
 
                               <ArticleRenderer content={rev.content} isExcerpt={true} className="mt-2.5" />
-
-                              {/* Media Link Badges */}
-                              {(rev.youtube_url || rev.voice_url) && (
-                                <div className="flex items-center gap-2 mt-3">
-                                  {rev.youtube_url && (
-                                    <a
-                                      href={rev.youtube_url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 text-[10px] font-semibold transition-colors"
-                                    >
-                                      <span>▶</span>
-                                      <span>YouTube</span>
-                                    </a>
-                                  )}
-                                  {rev.voice_url && (
-                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-[10px] font-semibold">
-                                      <span>🎙️</span>
-                                      <span>Voice Review</span>
-                                    </span>
-                                  )}
-                                </div>
-                              )}
                             </div>
+
+                            {/* Media Link Badges */}
+                            {(rev.youtube_url || rev.voice_url) && (
+                              <div className="flex items-center gap-2 mt-3">
+                                {rev.youtube_url && (
+                                  <a
+                                    href={rev.youtube_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 text-[10px] font-semibold transition-colors"
+                                  >
+                                    <span>▶</span>
+                                    <span>YouTube</span>
+                                  </a>
+                                )}
+                                {rev.voice_url && (
+                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-[10px] font-semibold">
+                                    <span>🎙️</span>
+                                    <span>Voice Review</span>
+                                  </span>
+                                )}
+                              </div>
+                            )}
 
                             {/* Interaction Bottom Bar */}
                             <div className="flex items-center justify-between pt-3 mt-3 border-t border-white/[0.04]">
@@ -889,7 +913,7 @@ export default function ProfilePage() {
       {/* MODAL 1: WRITE A REVIEW */}
       {/* ============================================================ */}
       {isNewReviewModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+        <div id="profile-review-modal-container" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
           <div className="w-full max-w-3xl p-6 sm:p-8 rounded-3xl bg-[#111116] border border-white/10 shadow-2xl my-8">
             <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.08]">
               <div>

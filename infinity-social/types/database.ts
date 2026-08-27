@@ -72,13 +72,29 @@ export type UserReview = {
   pros?: string[];
   cons?: string[];
   bottom_line?: string | null;
+  community_votes?: {
+    must_buy: number;
+    wait_sale: number;
+    wait: number;
+    skip: number;
+  } | null;
   cover_url: string | null;
+  upvotes_count: number;
+  downvotes_count: number;
   likes_count: number;
   comments_count: number;
   is_public: boolean;
   created_at: string;
   updated_at: string;
   author?: Profile;
+};
+
+export type ReviewPollVote = {
+  id: string;
+  review_id: string;
+  user_id: string;
+  vote_option: 'must_buy' | 'wait_sale' | 'wait' | 'skip';
+  created_at: string;
 };
 
 export type Collection = {
