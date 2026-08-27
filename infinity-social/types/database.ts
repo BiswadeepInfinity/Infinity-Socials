@@ -21,6 +21,17 @@ export type Category = {
   created_at: string;
 };
 
+export type ArticleMetric = {
+  id: string;
+  article_id: string;
+  score: number | null;
+  verdict: 'must_buy' | 'wait_sale' | 'wait_patches' | 'skip' | null;
+  pros: string[];
+  cons: string[];
+  created_at: string;
+  updated_at: string;
+};
+
 export type Article = {
   id: string;
   slug: string;
@@ -53,9 +64,14 @@ export type UserReview = {
   title: string;
   category: 'Game' | 'Movie' | 'Anime' | 'Series' | 'Tech' | 'Music';
   release_year: number;
-  verdict: 'masterpiece' | 'must_buy' | 'timepass' | 'skip';
+  verdict: 'must_buy' | 'wait_sale' | 'wait_patches' | 'skip';
   score: number;
   content: string;
+  youtube_url: string;
+  voice_url?: string | null;
+  pros?: string[];
+  cons?: string[];
+  bottom_line?: string | null;
   cover_url: string | null;
   likes_count: number;
   comments_count: number;

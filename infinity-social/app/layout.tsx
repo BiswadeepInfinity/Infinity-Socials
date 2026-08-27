@@ -40,7 +40,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={oxygen.className}>
+      <body className={`${oxygen.className} bg-[#050508] text-white min-h-screen antialiased`}>
         <AuthProvider>
           {children}
         </AuthProvider>

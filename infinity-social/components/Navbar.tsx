@@ -147,7 +147,7 @@ export default function Navbar() {
         justifyContent: 'space-between',
       }}>
         
-        {/* Left: Brand Identity in Titanium / Silver */}
+        {/* Left: Brand Identity with Official Logo */}
         <Link href="/" style={{
           display: 'flex',
           alignItems: 'center',
@@ -155,16 +155,29 @@ export default function Navbar() {
           textDecoration: 'none',
         }}>
           <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '10px',
-            background: 'linear-gradient(135deg, #ffffff 0%, #71717a 100%)',
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            backgroundColor: '#000000',
+            border: '1px solid rgba(255, 255, 255, 0.14)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 15px rgba(255, 255, 255, 0.15)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 255, 255, 0.08)',
+            overflow: 'hidden',
+            flexShrink: 0,
+            padding: '2px',
           }}>
-            <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#09090b', lineHeight: 1 }}>∞</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Infinity Butterfly Logo"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+            />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -177,20 +190,22 @@ export default function Navbar() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}>
-              INFINITY
+              INFINITY SOCIALS
             </span>
             <span style={{
               fontFamily: 'var(--font-mono)',
               fontSize: '9px',
-              fontWeight: 700,
-              padding: '2px 6px',
-              borderRadius: '4px',
+              fontWeight: 800,
+              padding: '2px 7px',
+              borderRadius: '6px',
               backgroundColor: 'rgba(255, 255, 255, 0.12)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: '#f4f4f5',
-              letterSpacing: '0.05em',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              color: '#ffffff',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              boxShadow: '0 0 12px rgba(255, 255, 255, 0.08)',
             }}>
-              JOURNAL
+              BETA
             </span>
           </div>
         </Link>
@@ -338,7 +353,7 @@ function NavbarAuthSection() {
               </Link>
 
               <Link
-                href="/reviews"
+                href="/my-reviews"
                 onClick={() => setDropdownOpen(false)}
                 className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-white/80 hover:text-white hover:bg-white/[0.08] active:scale-[0.98] transition-all duration-150"
               >
@@ -349,7 +364,7 @@ function NavbarAuthSection() {
               </Link>
 
               <Link
-                href="/profile"
+                href="/settings"
                 onClick={() => setDropdownOpen(false)}
                 className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-white/80 hover:text-white hover:bg-white/[0.08] active:scale-[0.98] transition-all duration-150"
               >

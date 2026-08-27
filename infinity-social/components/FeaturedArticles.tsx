@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
+type ReviewDomain = 'all' | 'movies' | 'games' | 'tech' | 'anime';
+
 const FEATURED_ARTICLES = [
   {
     id: '1',
@@ -10,11 +12,12 @@ const FEATURED_ARTICLES = [
     title: 'Shadow of the Erdtree: The Brutal Pinnacle of FromSoftware',
     excerpt: 'How Miyazaki redefined difficulty and subterranean vertical exploration in the Land of Shadow.',
     category: 'REVIEW',
+    domain: 'games',
     accentColor: '#f43f5e',
     coverImage: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&q=85',
     readTime: '8 MIN',
     author: 'Aryan Shah',
-    score: '9.8',
+    score: '98%',
   },
   {
     id: '2',
@@ -22,11 +25,12 @@ const FEATURED_ARTICLES = [
     title: 'Demon Slayer: Why Ufotable’s Animation Defies Industry Limits',
     excerpt: 'Deconstructing the sakuga frame rates and composite lighting powering the Hashira Training climax.',
     category: 'ANIME',
+    domain: 'anime',
     accentColor: '#f59e0b',
     coverImage: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=85',
     readTime: '6 MIN',
     author: 'Kenji Tanaka',
-    score: '9.4',
+    score: '94%',
   },
   {
     id: '3',
@@ -34,11 +38,12 @@ const FEATURED_ARTICLES = [
     title: 'GTA VI: The Living Next-Gen Simulation of Leonida',
     excerpt: 'Inside the patented procedural physics, AI traffic systems, and dual-protagonist narrative engine.',
     category: 'SPECIAL',
+    domain: 'games',
     accentColor: '#e4e4e7',
     coverImage: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&q=85',
     readTime: '12 MIN',
     author: 'Sofia Rivera',
-    score: '10/10',
+    score: '100%',
   },
   {
     id: '4',
@@ -46,11 +51,12 @@ const FEATURED_ARTICLES = [
     title: 'Black Myth: Wukong & the Global Ascent of Eastern AAA',
     excerpt: 'How Chinese cultural myth paired with Unreal Engine 5 shattered Steam concurrent player records.',
     category: 'DEEP DIVE',
+    domain: 'games',
     accentColor: '#10b981',
     coverImage: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=1200&q=85',
     readTime: '10 MIN',
     author: 'Marcus Chen',
-    score: '9.0',
+    score: '90%',
   },
   {
     id: '5',
@@ -58,19 +64,38 @@ const FEATURED_ARTICLES = [
     title: 'One Piece Season 2: Rebuilding the Grand Line for Netflix',
     excerpt: 'Showrunner interview on practical sets, scaling Baroque Works, and bringing Tony Tony Chopper to life.',
     category: 'EXCLUSIVE',
+    domain: 'movies',
     accentColor: '#a855f7',
     coverImage: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&q=85',
     readTime: '7 MIN',
     author: 'Sofia Rivera',
-    score: '8.8',
+    score: '88%',
+  },
+  {
+    id: '6',
+    slug: 'rtx-5090-blackwell-deep-dive',
+    title: 'Nvidia RTX 5090: Next-Gen Neural Rendering & Architecture',
+    excerpt: 'Deep-dive analysis on Blackwell tensor cores, power efficiency, and real-time path tracing performance.',
+    category: 'TECH',
+    domain: 'tech',
+    accentColor: '#06b6d4',
+    coverImage: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1200&q=85',
+    readTime: '9 MIN',
+    author: 'Kenji Tanaka',
+    score: '96%',
   },
 ];
 
 export default function FeaturedArticlesWindow() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeDomain, setActiveDomain] = useState<ReviewDomain>('all');
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const displayedArticles = activeDomain === 'all'
+    ? FEATURED_ARTICLES
+    : FEATURED_ARTICLES.filter((a) => a.domain === activeDomain);
 
   const checkScrollState = () => {
     if (!scrollRef.current) return;
@@ -103,7 +128,7 @@ export default function FeaturedArticlesWindow() {
       el.removeEventListener('wheel', handleWheel);
       el.removeEventListener('scroll', checkScrollState);
     };
-  }, []);
+  }, [displayedArticles.length]);
 
   // Calculate dynamic reactive shift offset for every tile based on which tile is hovered
   const getCardTransform = (index: number) => {
@@ -118,7 +143,7 @@ export default function FeaturedArticlesWindow() {
 
     const isHovered = index === hoveredIndex;
     const isFirst = hoveredIndex === 0;
-    const isLast = hoveredIndex === FEATURED_ARTICLES.length - 1;
+    const isLast = hoveredIndex === displayedArticles.length - 1;
 
     // 1. THE HOVERED CARD EXPANDS
     if (isHovered) {
@@ -351,8 +376,56 @@ export default function FeaturedArticlesWindow() {
                 lineHeight: 1.12,
                 margin: 0,
               }}>
-                Cover Stories & Deep Dives
+                Recent Reviews & Deep Dives
               </h2>
+            </div>
+
+            {/* Middle: Domain Filter Pills */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px',
+              borderRadius: '99px',
+              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              backdropFilter: 'blur(16px)',
+            }}>
+              {(['all', 'movies', 'games', 'tech', 'anime'] as ReviewDomain[]).map((dom) => {
+                const isActive = activeDomain === dom;
+                const labels: Record<ReviewDomain, string> = {
+                  all: 'All Domains',
+                  movies: '🎬 Movies',
+                  games: '🎮 Games',
+                  tech: '⚡ Tech',
+                  anime: '⛩️ Anime',
+                };
+                return (
+                  <button
+                    key={dom}
+                    onClick={() => {
+                      setActiveDomain(dom);
+                      setHoveredIndex(null);
+                      if (scrollRef.current) scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+                    }}
+                    style={{
+                      padding: '6px 14px',
+                      borderRadius: '99px',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      fontWeight: isActive ? 700 : 500,
+                      color: isActive ? '#000000' : 'rgba(255, 255, 255, 0.6)',
+                      backgroundColor: isActive ? '#ffffff' : 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.25s ease',
+                      boxShadow: isActive ? '0 2px 10px rgba(255,255,255,0.3)' : 'none',
+                    }}
+                  >
+                    {labels[dom]}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Navigation Controls */}
@@ -411,7 +484,7 @@ export default function FeaturedArticlesWindow() {
             ref={scrollRef}
             className="isolated-deck-track"
           >
-            {FEATURED_ARTICLES.map((article, index) => {
+            {displayedArticles.map((article, index) => {
               const cardStyle = getCardTransform(index);
               const isHovered = hoveredIndex === index;
 
