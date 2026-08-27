@@ -167,61 +167,61 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           {/* Side Nav Tabs */}
-          <div className="md:col-span-4 space-y-1">
+          <div className="md:col-span-4 space-y-1.5 p-2 rounded-2xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-md">
             <button
               onClick={() => setActiveTab('profile')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-3 ${
+              className={`w-full text-left px-4 py-3 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-3 outline-none ${
                 activeTab === 'profile'
-                  ? 'bg-white/[0.08] text-white border border-white/10'
-                  : 'text-white/50 hover:text-white hover:bg-white/[0.03]'
+                  ? 'bg-white/[0.08] text-white shadow-inner border border-white/10'
+                  : 'text-white/50 hover:text-white hover:bg-white/[0.04] border border-transparent'
               }`}
             >
-              <span>👤</span>
+              <span className="text-sm">👤</span>
               <span>Profile Information</span>
             </button>
 
             <button
               onClick={() => setActiveTab('account')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-3 ${
+              className={`w-full text-left px-4 py-3 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-3 outline-none ${
                 activeTab === 'account'
-                  ? 'bg-white/[0.08] text-white border border-white/10'
-                  : 'text-white/50 hover:text-white hover:bg-white/[0.03]'
+                  ? 'bg-white/[0.08] text-white shadow-inner border border-white/10'
+                  : 'text-white/50 hover:text-white hover:bg-white/[0.04] border border-transparent'
               }`}
             >
-              <span>🔒</span>
+              <span className="text-sm">🔒</span>
               <span>Security & Password</span>
             </button>
 
             <button
               onClick={() => setActiveTab('appearance')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-3 ${
+              className={`w-full text-left px-4 py-3 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-3 outline-none ${
                 activeTab === 'appearance'
-                  ? 'bg-white/[0.08] text-white border border-white/10'
-                  : 'text-white/50 hover:text-white hover:bg-white/[0.03]'
+                  ? 'bg-white/[0.08] text-white shadow-inner border border-white/10'
+                  : 'text-white/50 hover:text-white hover:bg-white/[0.04] border border-transparent'
               }`}
             >
-              <span>🎨</span>
+              <span className="text-sm">🎨</span>
               <span>Preferences & Theme</span>
             </button>
 
             <button
               onClick={() => setActiveTab('notifications')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-3 ${
+              className={`w-full text-left px-4 py-3 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-3 outline-none ${
                 activeTab === 'notifications'
-                  ? 'bg-white/[0.08] text-white border border-white/10'
-                  : 'text-white/50 hover:text-white hover:bg-white/[0.03]'
+                  ? 'bg-white/[0.08] text-white shadow-inner border border-white/10'
+                  : 'text-white/50 hover:text-white hover:bg-white/[0.04] border border-transparent'
               }`}
             >
-              <span>🔔</span>
+              <span className="text-sm">🔔</span>
               <span>Notifications</span>
             </button>
 
-            <div className="pt-4 mt-4 border-t border-white/[0.06]">
+            <div className="pt-2 mt-2 border-t border-white/[0.06]">
               <button
                 onClick={() => signOut()}
-                className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer flex items-center gap-3"
+                className="w-full text-left px-4 py-3 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-all duration-200 cursor-pointer flex items-center gap-3 outline-none border border-transparent hover:border-rose-500/20"
               >
-                <span>🚪</span>
+                <span className="text-sm">🚪</span>
                 <span>Sign Out</span>
               </button>
             </div>
