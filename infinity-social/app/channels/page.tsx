@@ -10,15 +10,12 @@ import CreateChannelModal from '@/components/CreateChannelModal';
 import { useChannelsStore } from '@/lib/channels-store';
 import { 
   Flame, 
-  Sparkles, 
   TrendingUp, 
   Clock, 
   Plus, 
   Search,
   MessageSquare,
-  RotateCw,
-  Award,
-  BookOpen
+  RotateCw
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -36,8 +33,8 @@ export default function ChannelsPage() {
     setIsRefreshing(true);
     setTimeout(() => {
       setIsRefreshing(false);
-      toast.success('⚡ Feed refreshed with latest live takes!');
-    }, 600);
+      toast.success('Feed refreshed with latest takes');
+    }, 500);
   };
 
   // Top upvoted article forums
@@ -72,120 +69,119 @@ export default function ChannelsPage() {
     <div className="min-h-screen bg-[#040408] text-white flex flex-col">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
-        {/* Top Community Banner Header */}
-        <div className="mb-8 p-6 md:p-8 rounded-3xl bg-gradient-to-r from-cyan-950/40 via-purple-950/30 to-blue-950/40 border border-white/10 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="px-3 py-0.5 rounded-full text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 uppercase tracking-wider">
-                  Article-Derived Discussion Channels
-                </span>
-                <span className="flex items-center gap-1 text-[11px] font-mono text-emerald-400">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Live Dynamic Feed
-                </span>
-              </div>
-              <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight">
-                Discussion Channels & Forums
-              </h1>
-              <p className="text-zinc-400 text-sm md:text-base mt-1 max-w-2xl">
-                Every forum is rooted in an official article. Read or watch the breakdown in the mini-preview window, vote on community takes, and join deep debates.
-              </p>
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        
+        {/* Sleek Minimalist Editorial Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 mb-8 border-b border-white/[0.08]">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5 font-mono text-[10px] sm:text-[11px] text-zinc-500 uppercase tracking-widest font-semibold">
+              <span className="w-2 h-2 rounded-full bg-cyan-400" />
+              <span>Channels</span>
+              <span>•</span>
+              <span className="text-zinc-400">Pop Culture Debates</span>
             </div>
+            <h1 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-white tracking-tight leading-tight">
+              Community Discussions & Theories
+            </h1>
+            <p className="text-xs sm:text-sm text-zinc-400 font-light mt-1 max-w-xl leading-relaxed">
+              Explore article-derived deep dives, vote on community hot takes, and earn verified commenter flairs.
+            </p>
+          </div>
 
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleRefreshFeed}
-                disabled={isRefreshing}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-bold text-xs sm:text-sm transition-all cursor-pointer active:scale-95 shadow-md"
-                title="Refresh Instagram-style feed"
-              >
-                <RotateCw className={`w-4 h-4 text-cyan-400 ${isRefreshing ? 'animate-spin' : ''}`} />
-                <span>{isRefreshing ? 'Refreshing...' : 'Refresh Feed'}</span>
-              </button>
+          <div className="flex items-center gap-2.5 shrink-0 self-start md:self-auto">
+            <button
+              onClick={handleRefreshFeed}
+              disabled={isRefreshing}
+              className="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
+              title="Refresh feed"
+            >
+              <RotateCw className={`w-3.5 h-3.5 text-zinc-400 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <span>{isRefreshing ? 'Updating...' : 'Refresh'}</span>
+            </button>
 
-              <button
-                onClick={() => setIsCreatePostOpen(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-black font-bold text-sm transition-all shadow-lg shadow-cyan-500/25 cursor-pointer active:scale-95"
-              >
-                <Plus className="w-4 h-4" /> Create Post
-              </button>
-            </div>
+            <button
+              onClick={() => setIsCreatePostOpen(true)}
+              className="px-4 py-2 rounded-xl bg-white text-black font-display font-bold text-xs hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-[0_0_15px_rgba(255,255,255,0.2)] cursor-pointer active:scale-95"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Start Discussion</span>
+            </button>
           </div>
         </div>
 
-        {/* 3-Column Reddit Layout */}
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+        {/* 3-Column Modern Reddit/Linear Layout */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+          
           {/* Left Navigation Sidebar */}
           <ChannelsSidebar onOpenCreateChannel={() => setIsCreateChannelOpen(true)} />
 
           {/* Main Feed Content Area */}
-          <section className="flex-1 min-w-0 w-full flex flex-col gap-5">
+          <section className="flex-1 min-w-0 w-full flex flex-col gap-4">
+            
             {/* Sorting & Search Toolbar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-[#0a0a10]/80 border border-white/10 backdrop-blur-xl">
-              {/* Sort pill toggles */}
-              <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center justify-between gap-3 p-2 sm:p-2.5 rounded-2xl bg-[#090910]/90 border border-white/[0.08] backdrop-blur-xl">
+              
+              {/* Sort Pill Toggles */}
+              <div className="flex items-center gap-1">
                 <button
                   onClick={() => setFilterSort('hot')}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     filterSort === 'hot'
-                      ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+                      ? 'bg-white/[0.1] text-white border border-white/[0.15] font-bold shadow-sm'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
                   }`}
                 >
-                  <Flame className="w-4 h-4" /> Most Upvoted (Hot)
+                  <Flame className="w-3.5 h-3.5 text-orange-400" />
+                  <span>Hot</span>
                 </button>
 
                 <button
                   onClick={() => setFilterSort('new')}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     filterSort === 'new'
-                      ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+                      ? 'bg-white/[0.1] text-white border border-white/[0.15] font-bold shadow-sm'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
                   }`}
                 >
-                  <Clock className="w-4 h-4" /> New
+                  <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>New</span>
                 </button>
 
                 <button
                   onClick={() => setFilterSort('top')}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     filterSort === 'top'
-                      ? 'bg-purple-500/20 text-purple-400 border border-purple-500/40'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+                      ? 'bg-white/[0.1] text-white border border-white/[0.15] font-bold shadow-sm'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
                   }`}
                 >
-                  <TrendingUp className="w-4 h-4" /> Top
+                  <TrendingUp className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Top</span>
                 </button>
               </div>
 
               {/* Search in discussions */}
-              <div className="relative flex-1 max-w-xs min-w-[200px]">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+              <div className="relative flex-1 max-w-xs min-w-[180px]">
+                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
                 <input
                   type="text"
-                  placeholder="Search discussions..."
+                  placeholder="Search debates..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500"
+                  className="w-full bg-black/40 border border-white/[0.08] rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors"
                 />
               </div>
             </div>
 
-            {/* Flair Filter Bar */}
+            {/* Tag Filter Bar */}
             {allFlairs.length > 0 && (
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-                <span className="text-zinc-500 text-[11px] font-semibold whitespace-nowrap">
-                  Filter by tag:
-                </span>
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
                 <button
                   onClick={() => setSelectedTag(null)}
-                  className={`px-3 py-1 rounded-lg border transition-colors whitespace-nowrap cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-lg border transition-colors whitespace-nowrap cursor-pointer text-xs font-mono ${
                     selectedTag === null
-                      ? 'bg-white/15 text-white border-white/30 font-bold'
-                      : 'bg-white/5 text-zinc-400 border-white/5 hover:border-white/15'
+                      ? 'bg-white/[0.1] text-white border-white/20 font-bold'
+                      : 'bg-white/[0.02] text-zinc-400 border-white/[0.06] hover:border-white/15'
                   }`}
                 >
                   All
@@ -194,10 +190,10 @@ export default function ChannelsPage() {
                   <button
                     key={tag}
                     onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                    className={`px-3 py-1 rounded-lg border transition-colors whitespace-nowrap cursor-pointer ${
+                    className={`px-2.5 py-1 rounded-lg border transition-colors whitespace-nowrap cursor-pointer text-xs font-mono ${
                       selectedTag === tag
-                        ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
-                        : 'bg-white/5 text-zinc-400 border-white/5 hover:border-white/15'
+                        ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30 font-bold'
+                        : 'bg-white/[0.02] text-zinc-400 border-white/[0.06] hover:border-white/15'
                     }`}
                   >
                     {tag}
@@ -207,19 +203,19 @@ export default function ChannelsPage() {
             )}
 
             {/* Posts Stream */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3.5">
               {filteredPosts.length === 0 ? (
-                <div className="p-12 text-center rounded-3xl bg-[#0a0a10]/50 border border-white/10">
-                  <MessageSquare className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
-                  <h3 className="text-base font-bold text-zinc-300">No discussions found</h3>
-                  <p className="text-xs text-zinc-500 mt-1 mb-4">
-                    Be the first one to start a conversation!
+                <div className="p-12 text-center rounded-2xl bg-[#090910]/80 border border-white/[0.08]">
+                  <MessageSquare className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
+                  <h3 className="text-sm font-bold text-zinc-300">No discussions found</h3>
+                  <p className="text-xs text-zinc-500 mt-1 mb-3">
+                    Start the first conversation in this topic.
                   </p>
                   <button
                     onClick={() => setIsCreatePostOpen(true)}
-                    className="px-4 py-2 rounded-xl bg-cyan-400 text-black text-xs font-bold hover:bg-cyan-300"
+                    className="px-3.5 py-1.5 rounded-xl bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors"
                   >
-                    Create Discussion
+                    Start Discussion
                   </button>
                 </div>
               ) : (
@@ -230,98 +226,80 @@ export default function ChannelsPage() {
             </div>
           </section>
 
-          {/* Right Trending Communities Panel */}
-          <aside className="hidden xl:flex flex-col gap-5 w-80 flex-shrink-0">
+          {/* Right Panel: Trending & Communities */}
+          <aside className="hidden xl:flex flex-col gap-4 w-72 flex-shrink-0 select-none">
             
-            {/* Most Upvoted Article Forums Box */}
-            <div className="bg-[#0a0a10]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl">
-              <div className="flex items-center justify-between gap-2 mb-4">
-                <div className="flex items-center gap-2">
-                  <Flame className="w-4 h-4 text-orange-400" />
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-200">
-                    Most Upvoted Forums
+            {/* Most Upvoted Forums Box */}
+            <div className="bg-[#090910]/90 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-4 shadow-lg">
+              <div className="flex items-center justify-between gap-2 mb-3 px-1">
+                <div className="flex items-center gap-1.5">
+                  <Flame className="w-3.5 h-3.5 text-orange-400" />
+                  <h3 className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+                    Trending Debates
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono text-zinc-500">Karma</span>
+                <span className="text-[9px] font-mono text-zinc-500 uppercase">Karma</span>
               </div>
 
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-1.5">
                 {topUpvotedArticleForums.map((p, idx) => {
                   const chSlug = channels.find((c) => c.id === p.channel_id)?.slug || 'gaming';
                   return (
                     <Link
                       key={p.id}
                       href={`/channels/${chSlug}/${p.id}`}
-                      className="group p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/20 transition-all flex items-start gap-2.5 no-underline"
+                      className="group p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.04] hover:border-white/[0.12] transition-all flex items-start gap-2.5 no-underline"
                     >
-                    <span className="font-mono text-xs font-extrabold text-orange-400 w-4 pt-0.5 shrink-0">
-                      #{idx + 1}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <h4 className="text-xs font-bold text-zinc-200 group-hover:text-cyan-300 transition-colors line-clamp-2 leading-snug">
-                        {p.title}
-                      </h4>
-                      <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 mt-1">
-                        <span className="text-cyan-400 font-semibold">{p.flair}</span>
-                        <span className="font-bold text-orange-400">▲ {p.upvotes}</span>
+                      <span className="font-mono text-xs font-bold text-zinc-500 group-hover:text-white w-3.5 pt-0.5 shrink-0">
+                        {idx + 1}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors line-clamp-2 leading-snug">
+                          {p.title}
+                        </h4>
+                        <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 mt-1">
+                          <span className="text-zinc-400">{p.flair}</span>
+                          <span className="font-bold text-orange-400/90">▲ {p.upvotes}</span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                );
-              })}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Trending Communities */}
-            <div className="bg-[#0a0a10]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl">
-              <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-4 h-4 text-cyan-400" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
-                  Topic Channels
-                </h3>
+            {/* Channels Directory */}
+            <div className="bg-[#090910]/90 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-4 shadow-lg">
+              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400 mb-3 px-1">
+                Channels
               </div>
 
-              <div className="flex flex-col gap-3">
-                {channels.map((ch, idx) => (
+              <div className="flex flex-col gap-1.5">
+                {channels.map((ch) => (
                   <Link
                     key={ch.id}
                     href={`/channels/${ch.slug}`}
                     className="flex items-center justify-between gap-2 p-1.5 rounded-xl hover:bg-white/[0.04] transition-colors no-underline group"
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="text-xs font-bold text-zinc-500 w-4">
-                        {idx + 1}
-                      </span>
+                    <div className="flex items-center gap-2 min-w-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={ch.avatar_url}
                         alt={ch.name}
-                        className="w-7 h-7 rounded-full object-cover border border-white/10 flex-shrink-0"
+                        className="w-5 h-5 rounded-full object-cover border border-white/10 flex-shrink-0"
                       />
-                      <div className="min-w-0">
-                        <div className="text-xs font-bold text-zinc-200 group-hover:text-cyan-300 transition-colors truncate">
-                          r/{ch.slug}
-                        </div>
-                        <div className="text-[10px] text-zinc-500">
-                          {ch.member_count.toLocaleString()} members
-                        </div>
-                      </div>
+                      <span className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors truncate">
+                        r/{ch.slug}
+                      </span>
                     </div>
+                    <span className="text-[10px] font-mono text-zinc-500 shrink-0">
+                      {ch.member_count.toLocaleString()}
+                    </span>
                   </Link>
                 ))}
               </div>
             </div>
 
-            {/* Achievement Badges Guide Card */}
-            <div className="bg-gradient-to-br from-cyan-950/30 to-purple-950/30 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-5">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2 flex items-center gap-1.5">
-                <Award className="w-4 h-4 text-amber-400" /> Community Badges
-              </h4>
-              <p className="text-xs text-zinc-300 leading-relaxed">
-                Post thoughtful analyses, participate in discussions, and earn exclusive badges like{' '}
-                <span className="text-cyan-300 font-bold">Top 1% Commenter</span> and community flairs!
-              </p>
-            </div>
           </aside>
         </div>
       </main>

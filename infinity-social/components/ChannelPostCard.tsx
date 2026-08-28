@@ -123,51 +123,45 @@ export default function ChannelPostCard({
             {channel && (
               <Link
                 href={`/channels/${channel.slug}`}
-                className="flex items-center gap-1.5 font-bold text-zinc-200 hover:text-white transition-colors"
+                className="font-semibold text-zinc-300 hover:text-white transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={channel.avatar_url}
-                  alt={channel.name}
-                  className="w-5 h-5 rounded-full object-cover border border-white/10"
-                />
-                <span>r/{channel.slug}</span>
+                r/{channel.slug}
               </Link>
             )}
 
-            <span>•</span>
+            <span className="text-zinc-600">•</span>
             
             <div className="flex items-center gap-1.5">
-              <span>Posted by</span>
-              <span className="text-zinc-300 font-medium hover:underline cursor-pointer">
+              <span>by</span>
+              <span className="text-zinc-200 font-medium hover:underline cursor-pointer">
                 u/{post.author_username}
               </span>
               
-              {/* Badges */}
-              {post.author_badges?.map((badge) => (
-                <ChannelBadge key={badge} type={badge} size="sm" />
-              ))}
+              {/* Single Badge to prevent clutter */}
+              {post.author_badges?.[0] && (
+                <ChannelBadge type={post.author_badges[0]} size="sm" />
+              )}
             </div>
 
-            <span>•</span>
-            <span className="text-zinc-500">{post.created_at}</span>
+            <span className="text-zinc-600">•</span>
+            <span className="text-zinc-500 font-mono text-[11px]">{post.created_at}</span>
 
             {post.is_pinned && (
-              <span className="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                <Pin className="w-3 h-3" /> PINNED
+              <span className="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase">
+                PINNED
               </span>
             )}
           </div>
 
           {/* Post Title */}
           {isDetailed ? (
-            <h1 className="text-xl md:text-2xl font-bold text-white mb-3 leading-snug tracking-tight">
+            <h1 className="text-xl md:text-2xl font-bold text-white mb-2 leading-snug tracking-tight">
               {post.title}
             </h1>
           ) : (
-            <Link href={`/channels/${currentSlug}/${post.id}`} className="group block">
-              <h2 className="text-lg font-bold text-zinc-100 group-hover:text-cyan-400 transition-colors mb-2 leading-snug">
+            <Link href={`/channels/${currentSlug}/${post.id}`} className="group block mb-1.5">
+              <h2 className="text-base sm:text-lg font-bold text-zinc-100 group-hover:text-cyan-300 transition-colors leading-snug">
                 {post.title}
               </h2>
             </Link>
@@ -175,8 +169,8 @@ export default function ChannelPostCard({
 
           {/* Post Flair */}
           {post.flair && (
-            <div className="mb-3">
-              <span className="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-md bg-white/10 text-cyan-300 border border-white/10">
+            <div className="mb-2.5">
+              <span className="inline-block text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-white/[0.06] text-zinc-300 border border-white/[0.06]">
                 {post.flair}
               </span>
             </div>
@@ -184,35 +178,31 @@ export default function ChannelPostCard({
 
           {/* Post Body Text */}
           <div
-            className={`text-zinc-300 text-sm md:text-[15px] leading-relaxed whitespace-pre-line ${
-              !isDetailed && 'line-clamp-4'
+            className={`text-zinc-300 text-xs sm:text-sm leading-relaxed whitespace-pre-line ${
+              !isDetailed && 'line-clamp-3'
             }`}
           >
             {post.content}
           </div>
 
-          {/* Linked Source Article Cinema Window */}
+          {/* Linked Source Article Cinema Window (High-end Media Bar) */}
           {post.article_slug && !hideArticlePreview && (
             <Link
               href={`/articles/${post.article_slug}`}
-              className="mt-4 group/article flex flex-col sm:flex-row items-stretch gap-3.5 p-3 rounded-2xl bg-gradient-to-r from-white/[0.04] to-white/[0.02] border border-white/[0.12] hover:border-cyan-400/50 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(6,182,212,0.15)] no-underline overflow-hidden relative"
+              className="mt-3.5 group/article flex flex-col sm:flex-row items-stretch gap-3 p-2.5 rounded-xl bg-black/40 hover:bg-black/60 border border-white/[0.08] hover:border-white/20 transition-all duration-200 shadow-md no-underline overflow-hidden relative"
             >
-              {/* Thumbnail with Play/Read Overlay */}
-              <div className="relative w-full sm:w-[140px] h-[100px] rounded-xl overflow-hidden bg-black shrink-0 border border-white/10">
+              {/* Widescreen Thumbnail */}
+              <div className="relative w-full sm:w-[130px] h-[80px] rounded-lg overflow-hidden bg-black shrink-0 border border-white/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.article_thumbnail || post.media_url || '/placeholder.png'}
                   alt={post.article_title || 'Article cover'}
-                  className="w-full h-full object-cover group-hover/article:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover/article:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute inset-0 bg-black/30 group-hover/article:bg-black/10 transition-colors flex items-center justify-center">
-                  <div className="w-8 h-8 rounded-full bg-black/70 border border-white/30 backdrop-blur-md flex items-center justify-center text-white shadow-md group-hover/article:scale-110 transition-transform">
-                    <BookOpen className="w-4 h-4 text-cyan-400" />
-                  </div>
-                </div>
+                <div className="absolute inset-0 bg-black/20 group-hover/article:bg-transparent transition-colors" />
 
                 {post.article_score && (
-                  <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-black/80 border border-amber-400/40 text-[9px] font-mono font-bold text-amber-300 backdrop-blur-sm">
+                  <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/80 border border-white/20 text-[9px] font-mono font-bold text-amber-300 backdrop-blur-sm">
                     ★ {post.article_score}
                   </div>
                 )}
@@ -221,20 +211,18 @@ export default function ChannelPostCard({
               {/* Text Info */}
               <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-[9px] uppercase tracking-wider font-bold text-cyan-400">
-                      {post.article_category || 'Original Article'}
-                    </span>
-                    <span className="text-white/30 text-[10px]">•</span>
-                    <span className="font-mono text-[10px] text-white/50">{post.article_read_time || 'Read Story'}</span>
+                  <div className="flex items-center gap-1.5 mb-1 font-mono text-[9px] text-zinc-400 uppercase tracking-wider">
+                    <span>{post.article_category || 'Article'}</span>
+                    <span>•</span>
+                    <span>{post.article_read_time || 'Read'}</span>
                   </div>
-                  <h4 className="font-display font-bold text-xs sm:text-sm text-white group-hover/article:text-cyan-300 transition-colors line-clamp-2 leading-snug">
+                  <h4 className="font-display font-semibold text-xs sm:text-sm text-zinc-200 group-hover/article:text-white transition-colors line-clamp-1 leading-snug">
                     {post.article_title || post.title}
                   </h4>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-semibold mt-2 group-hover/article:translate-x-1 transition-transform">
-                  <span>Read Full Article & Watch Video</span>
+                <div className="flex items-center gap-1 text-[10px] font-mono text-cyan-400 font-semibold group-hover/article:translate-x-0.5 transition-transform">
+                  <span>Read Article & Watch Video</span>
                   <span>→</span>
                 </div>
               </div>
