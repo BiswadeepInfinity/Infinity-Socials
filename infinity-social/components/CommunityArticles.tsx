@@ -183,38 +183,38 @@ export default function CommunityArticles() {
   });
 
   return (
-    <section className="py-20 bg-[#030306] w-full flex justify-center border-t border-white/[0.06] relative overflow-hidden">
+    <section className="py-12 sm:py-20 bg-[#030306] w-full flex justify-center border-t border-white/[0.06] relative overflow-hidden">
       {/* Background Ambient Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-r from-white/[0.02] via-white/[0.04] to-transparent rounded-full blur-3xl pointer-events-none" />
       
-      <div className="w-full max-w-[1240px] px-6 relative z-10">
+      <div className="w-full max-w-[1240px] px-4 sm:px-6 relative z-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-white/[0.08]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-10 pb-5 sm:pb-6 border-b border-white/[0.08]">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span className="font-mono text-[11px] uppercase tracking-widest text-white/60 font-semibold">
+            <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+              <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-white/60 font-semibold">
                 Verified Creator Leaderboard
               </span>
             </div>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
+            <h2 className="font-display font-extrabold text-2xl sm:text-4xl text-white tracking-tight">
               Community Top Charts
             </h2>
-            <p className="text-sm text-white/50 font-light mt-1 max-w-xl">
+            <p className="text-xs sm:text-sm text-white/50 font-light mt-1 max-w-xl leading-relaxed">
               Curated and ranked in real-time by community karma, critical reviews, and verified creator scores.
             </p>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex items-center gap-2 bg-white/[0.04] p-1.5 rounded-full border border-white/[0.1] backdrop-blur-md self-start md:self-auto">
+          {/* Filter Pills (Horizontally scrollable on mobile) */}
+          <div className="flex items-center gap-1.5 bg-white/[0.04] p-1 rounded-full border border-white/[0.1] backdrop-blur-md overflow-x-auto max-w-full scrollbar-none self-start md:self-auto">
             {(['all', 'gaming', 'tech', 'anime'] as const).map((filter) => (
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-1.5 rounded-full text-xs font-mono font-medium transition-all capitalize ${
+                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono font-medium transition-all capitalize whitespace-nowrap ${
                   activeFilter === filter
-                    ? 'bg-white text-black font-bold shadow-[0_0_16px_rgba(255,255,255,0.4)]'
+                    ? 'bg-white text-black font-bold shadow-[0_0_14px_rgba(255,255,255,0.4)]'
                     : 'text-white/60 hover:text-white hover:bg-white/[0.06]'
                 }`}
               >
@@ -225,7 +225,7 @@ export default function CommunityArticles() {
         </div>
 
         {/* Redesigned Clean & Premium Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {filteredItems.map((item) => {
             const v = votes[item.id];
             const netKarma = v.up - v.down;
@@ -235,20 +235,20 @@ export default function CommunityArticles() {
             return (
               <div
                 key={item.id}
-                className="group relative rounded-[24px] bg-[#0c0c14]/80 border border-white/[0.12] hover:border-white/30 transition-all duration-300 backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-between gap-5 shadow-[0_16px_40px_rgba(0,0,0,0.6)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.85)] hover:-translate-y-0.5"
+                className="group relative rounded-[20px] sm:rounded-[24px] bg-[#0c0c14]/80 border border-white/[0.12] hover:border-white/30 transition-all duration-300 backdrop-blur-xl p-4 sm:p-6 flex flex-col justify-between gap-4 sm:gap-5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.85)] hover:-translate-y-0.5"
               >
                 {/* Top Subtle Specular Highlight */}
                 <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
 
                 {/* Creator Header Row */}
-                <div className="flex items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
-                  <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-center justify-between gap-3 pb-3.5 border-b border-white/[0.06]">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <div className="relative flex-shrink-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={item.creator.avatar}
                         alt={item.creator.name}
-                        className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border border-white/20 shadow-sm"
                       />
                       <span
                         className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-white rounded-full border-2 border-[#0c0c14] flex items-center justify-center text-[8px] text-black font-black"
@@ -259,15 +259,15 @@ export default function CommunityArticles() {
                     </div>
 
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-display font-bold text-[14px] text-white tracking-tight truncate">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-display font-bold text-[13px] sm:text-[14px] text-white tracking-tight truncate">
                           {item.creator.name}
                         </span>
-                        <span className="text-[11px] font-mono text-white/40">
+                        <span className="text-[10px] sm:text-[11px] font-mono text-white/40 truncate">
                           {item.creator.handle}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] font-mono text-white/50 mt-0.5">
+                      <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-white/50 mt-0.5">
                         <span className="text-white/80 font-semibold">{item.creator.subscribers}</span>
                         <span className="text-white/30">•</span>
                         <span>{(currentLifetimeUp / 1000).toFixed(1)}k karma</span>
@@ -278,10 +278,10 @@ export default function CommunityArticles() {
                   {/* Join / Follow Button */}
                   <button
                     onClick={() => toggleJoin(item.creator.name)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-1.5 flex-shrink-0 ${
+                    className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-1 flex-shrink-0 ${
                       isJoined
                         ? 'bg-white/10 text-white/90 border border-white/25 hover:bg-white/15'
-                        : 'bg-white text-black hover:bg-white/90 shadow-[0_0_14px_rgba(255,255,255,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]'
+                        : 'bg-white text-black hover:bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.3)]'
                     }`}
                   >
                     <span>{isJoined ? '✓ Joined' : '+ Follow'}</span>
@@ -289,9 +289,9 @@ export default function CommunityArticles() {
                 </div>
 
                 {/* Main Content Layout */}
-                <div className="flex flex-col sm:flex-row gap-4.5 items-start">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4.5 items-start">
                   {/* Thumbnail Cover with Rank Indicator */}
-                  <div className="relative w-full sm:w-[130px] h-[105px] rounded-[16px] overflow-hidden flex-shrink-0 bg-[#050508] border border-white/15 shadow-inner">
+                  <div className="relative w-full sm:w-[130px] h-[160px] xs:h-[180px] sm:h-[105px] rounded-[14px] sm:rounded-[16px] overflow-hidden flex-shrink-0 bg-[#050508] border border-white/15 shadow-inner">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={item.thumbnail}
@@ -307,19 +307,19 @@ export default function CommunityArticles() {
                   </div>
 
                   {/* Text Details */}
-                  <div className="flex-1 flex flex-col justify-between min-w-0">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-white/[0.07] text-white/80 border border-white/15">
+                  <div className="flex-1 flex flex-col justify-between min-w-0 w-full">
+                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                      <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-semibold uppercase tracking-wider bg-white/[0.07] text-white/80 border border-white/15">
                         {item.category}
                       </span>
-                      <span className="text-[11px] font-mono text-white/40">•</span>
-                      <span className="text-[11px] font-mono text-white/40">{item.date}</span>
-                      <span className="text-[11px] font-mono text-white/40">•</span>
-                      <span className="text-[11px] font-mono text-white/40">{item.readTime}</span>
+                      <span className="text-[10px] sm:text-[11px] font-mono text-white/40">•</span>
+                      <span className="text-[10px] sm:text-[11px] font-mono text-white/40">{item.date}</span>
+                      <span className="text-[10px] sm:text-[11px] font-mono text-white/40">•</span>
+                      <span className="text-[10px] sm:text-[11px] font-mono text-white/40">{item.readTime}</span>
                     </div>
 
                     <Link href={`/articles/${item.slug}`} className="block group/title">
-                      <h3 className="font-display font-bold text-[16px] text-white group-hover/title:text-white/80 transition-colors leading-snug line-clamp-2">
+                      <h3 className="font-display font-bold text-[15px] sm:text-[16px] text-white group-hover/title:text-white/80 transition-colors leading-snug line-clamp-2">
                         {item.title}
                       </h3>
                     </Link>
@@ -331,13 +331,13 @@ export default function CommunityArticles() {
                 </div>
 
                 {/* Footer Controls: Interactive Voting & Meta */}
-                <div className="flex items-center justify-between pt-3.5 border-t border-white/[0.06] mt-1">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] mt-0.5">
+                  <div className="flex items-center gap-2.5 sm:gap-3">
                     {/* Voting Pill */}
                     <div className="flex items-center bg-white/[0.05] p-0.5 rounded-full border border-white/[0.1]">
                       <button
                         onClick={() => handleVote(item.id, 'up')}
-                        className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
+                        className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold transition-all ${
                           v.userVote === 'up'
                             ? 'bg-white text-black shadow-[0_0_12px_rgba(255,255,255,0.4)]'
                             : 'text-white/70 hover:text-white hover:bg-white/[0.08]'
@@ -348,11 +348,11 @@ export default function CommunityArticles() {
                         <span>{v.up.toLocaleString()}</span>
                       </button>
 
-                      <div className="w-[1px] h-3.5 bg-white/10 mx-0.5" />
+                      <div className="w-[1px] h-3 bg-white/10 mx-0.5" />
 
                       <button
                         onClick={() => handleVote(item.id, 'down')}
-                        className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono transition-all ${
+                        className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-mono transition-all ${
                           v.userVote === 'down'
                             ? 'bg-rose-500/20 text-rose-300 border border-rose-400/30'
                             : 'text-white/40 hover:text-white/70 hover:bg-white/[0.08]'
@@ -369,8 +369,8 @@ export default function CommunityArticles() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <span className="flex items-center gap-1.5 text-xs font-mono text-white/50">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <span className="flex items-center gap-1 text-[11px] sm:text-xs font-mono text-white/50">
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                       </svg>
@@ -379,7 +379,7 @@ export default function CommunityArticles() {
 
                     <Link
                       href={`/articles/${item.slug}`}
-                      className="text-xs font-mono font-semibold text-white/80 hover:text-white flex items-center gap-1 group/link"
+                      className="text-[11px] sm:text-xs font-mono font-semibold text-white/80 hover:text-white flex items-center gap-1 group/link"
                     >
                       <span>Read Story</span>
                       <span className="group-hover/link:translate-x-0.5 transition-transform">→</span>
