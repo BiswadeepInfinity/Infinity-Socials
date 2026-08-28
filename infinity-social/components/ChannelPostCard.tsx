@@ -6,8 +6,8 @@ import { ChannelPost } from '@/types/database';
 import { useChannelsStore } from '@/lib/channels-store';
 import ChannelBadge from '@/components/ChannelBadge';
 import { 
-  ArrowBigUp, 
-  ArrowBigDown, 
+  ChevronUp, 
+  ChevronDown, 
   MessageSquare, 
   Share2, 
   Bookmark, 
@@ -28,7 +28,7 @@ interface ChannelPostCardProps {
 export default function ChannelPostCard({ 
   post, 
   channelSlug, 
-  isDetailed = false,
+  isDetailed = false, 
   hideArticlePreview = false 
 }: ChannelPostCardProps) {
   const { votePost, channels } = useChannelsStore();
@@ -57,42 +57,42 @@ export default function ChannelPostCard({
 
   return (
     <article
-      className={`rounded-2xl transition-all duration-200 border bg-[#0a0a10]/80 backdrop-blur-xl ${
+      className={`rounded-2xl transition-all duration-200 border bg-[#090910]/90 backdrop-blur-xl ${
         isDetailed
           ? 'border-white/15 p-6'
-          : 'border-white/10 hover:border-white/20 p-5 hover:bg-[#0e0e16]/90'
+          : 'border-white/[0.08] hover:border-white/20 p-4 sm:p-5 hover:bg-[#0d0d16]'
       }`}
       style={{
         boxShadow: '0 4px 24px -2px rgba(0, 0, 0, 0.5)',
       }}
     >
-      <div className="flex items-start gap-4">
-        {/* Left Voting Column (Reddit Style) */}
-        <div className="flex flex-col items-center bg-white/[0.03] border border-white/5 rounded-xl p-1.5 min-w-[42px] select-none">
+      <div className="flex items-start gap-3 sm:gap-4">
+        {/* Left Voting Column (Infinity Continuum Style) */}
+        <div className="flex flex-col items-center bg-white/[0.03] border border-white/[0.06] rounded-xl p-1 min-w-[38px] select-none shrink-0">
           <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               votePost(post.id, 'up');
             }}
-            className={`p-1 rounded-lg transition-colors ${
+            className={`p-1 rounded-lg transition-all active:scale-90 cursor-pointer ${
               post.user_vote === 'up'
-                ? 'text-orange-500 bg-orange-500/10'
-                : 'text-zinc-400 hover:text-orange-400 hover:bg-white/5'
+                ? 'text-cyan-300 bg-cyan-500/20 border border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.4)]'
+                : 'text-zinc-500 hover:text-cyan-400 hover:bg-white/5'
             }`}
             title="Upvote"
             aria-label="Upvote"
           >
-            <ArrowBigUp className="w-6 h-6 fill-current" />
+            <ChevronUp className="w-5 h-5 stroke-[2.5]" />
           </button>
 
           <span
-            className={`text-xs font-bold my-0.5 tracking-tight ${
+            className={`text-xs font-mono font-bold my-0.5 tracking-tight ${
               post.user_vote === 'up'
-                ? 'text-orange-500 font-extrabold'
+                ? 'text-cyan-400 font-black drop-shadow-[0_0_6px_rgba(6,182,212,0.6)]'
                 : post.user_vote === 'down'
-                ? 'text-indigo-400 font-extrabold'
-                : 'text-zinc-300'
+                ? 'text-rose-400 font-black drop-shadow-[0_0_6px_rgba(244,63,94,0.6)]'
+                : 'text-zinc-400'
             }`}
           >
             {score}
@@ -104,15 +104,15 @@ export default function ChannelPostCard({
               e.stopPropagation();
               votePost(post.id, 'down');
             }}
-            className={`p-1 rounded-lg transition-colors ${
+            className={`p-1 rounded-lg transition-all active:scale-90 cursor-pointer ${
               post.user_vote === 'down'
-                ? 'text-indigo-400 bg-indigo-500/10'
-                : 'text-zinc-400 hover:text-indigo-400 hover:bg-white/5'
+                ? 'text-rose-300 bg-rose-500/20 border border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.4)]'
+                : 'text-zinc-500 hover:text-rose-400 hover:bg-white/5'
             }`}
             title="Downvote"
             aria-label="Downvote"
           >
-            <ArrowBigDown className="w-6 h-6 fill-current" />
+            <ChevronDown className="w-5 h-5 stroke-[2.5]" />
           </button>
         </div>
 

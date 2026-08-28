@@ -46,7 +46,7 @@ export default function ChannelsSidebar({ onOpenCreateChannel }: ChannelsSidebar
                   : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
               }`}
             >
-              <Flame className="w-3.5 h-3.5 text-orange-400" />
+              <TrendingUp className="w-3.5 h-3.5 text-cyan-400" />
               <span>Trending & Hot</span>
             </Link>
 

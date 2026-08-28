@@ -131,8 +131,8 @@ export default function ChannelsPage() {
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
                   }`}
                 >
-                  <Flame className="w-3.5 h-3.5 text-orange-400" />
-                  <span>Hot</span>
+                  <TrendingUp className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Trending</span>
                 </button>
 
                 <button
@@ -259,7 +259,7 @@ export default function ChannelsPage() {
                         </h4>
                         <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 mt-1">
                           <span className="text-zinc-400">{p.flair}</span>
-                          <span className="font-bold text-orange-400/90">▲ {p.upvotes}</span>
+                          <span className="font-bold text-cyan-400">▲ {p.upvotes}</span>
                         </div>
                       </div>
                     </Link>

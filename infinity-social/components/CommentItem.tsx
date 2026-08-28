@@ -5,12 +5,11 @@ import { ChannelComment } from '@/types/database';
 import { useChannelsStore } from '@/lib/channels-store';
 import ChannelBadge from '@/components/ChannelBadge';
 import { 
-  ArrowBigUp, 
-  ArrowBigDown, 
+  ChevronUp, 
+  ChevronDown, 
   MessageSquare, 
   Share2, 
   Sparkles, 
-  ChevronDown, 
   ChevronRight,
   Pin,
   Send
@@ -179,27 +178,27 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
 
               {/* Action Buttons Bar */}
               <div className="flex items-center gap-3 text-xs text-zinc-400 mt-2">
-                {/* Voting counter */}
-                <div className="flex items-center bg-white/[0.04] rounded-lg px-1.5 py-0.5 border border-white/5">
+                {/* Voting counter (Infinity style) */}
+                <div className="flex items-center bg-white/[0.03] rounded-lg px-1 py-0.5 border border-white/[0.06]">
                   <button
                     onClick={() => handleVote('up')}
-                    className={`p-1 rounded transition-colors ${
+                    className={`p-0.5 rounded transition-all active:scale-90 cursor-pointer ${
                       comment.user_vote === 'up'
-                        ? 'text-orange-500 bg-orange-500/10'
-                        : 'text-zinc-400 hover:text-orange-400'
+                        ? 'text-cyan-300 bg-cyan-500/20 border border-cyan-500/30'
+                        : 'text-zinc-500 hover:text-cyan-400'
                     }`}
                     title="Upvote"
                   >
-                    <ArrowBigUp className="w-4 h-4 fill-current" />
+                    <ChevronUp className="w-4 h-4 stroke-[2.5]" />
                   </button>
 
                   <span
-                    className={`font-bold text-xs px-1 ${
+                    className={`font-mono text-xs font-bold px-1.5 ${
                       comment.user_vote === 'up'
-                        ? 'text-orange-500'
+                        ? 'text-cyan-400 font-black'
                         : comment.user_vote === 'down'
-                        ? 'text-indigo-400'
-                        : 'text-zinc-300'
+                        ? 'text-rose-400 font-black'
+                        : 'text-zinc-400'
                     }`}
                   >
                     {score}
@@ -207,14 +206,14 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
 
                   <button
                     onClick={() => handleVote('down')}
-                    className={`p-1 rounded transition-colors ${
+                    className={`p-0.5 rounded transition-all active:scale-90 cursor-pointer ${
                       comment.user_vote === 'down'
-                        ? 'text-indigo-400 bg-indigo-500/10'
-                        : 'text-zinc-400 hover:text-indigo-400'
+                        ? 'text-rose-300 bg-rose-500/20 border border-rose-500/30'
+                        : 'text-zinc-500 hover:text-rose-400'
                     }`}
                     title="Downvote"
                   >
-                    <ArrowBigDown className="w-4 h-4 fill-current" />
+                    <ChevronDown className="w-4 h-4 stroke-[2.5]" />
                   </button>
                 </div>
 
