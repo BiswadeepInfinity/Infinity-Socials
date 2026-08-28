@@ -190,7 +190,7 @@ export default function CommunityArticles() {
       <div className="w-full max-w-[1240px] px-4 sm:px-6 relative z-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-10 pb-5 sm:pb-6 border-b border-white/[0.08]">
+        <div className="scroll-reveal flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-10 pb-5 sm:pb-6 border-b border-white/[0.08]">
           <div>
             <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
@@ -235,8 +235,8 @@ export default function CommunityArticles() {
             return (
               <div
                 key={item.id}
-                style={{ animationDelay: `${index * 80}ms` }}
-                className="animate-card-reveal touch-spring group relative rounded-[20px] sm:rounded-[24px] bg-[#0c0c14]/80 border border-white/[0.12] hover:border-white/30 transition-all duration-300 backdrop-blur-xl p-4 sm:p-6 flex flex-col justify-between gap-4 sm:gap-5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.85)] hover:-translate-y-0.5 active:border-white/30"
+                style={{ transitionDelay: `${index * 90}ms` }}
+                className="scroll-reveal-card touch-spring group relative rounded-[20px] sm:rounded-[24px] bg-[#0c0c14]/80 border border-white/[0.12] hover:border-white/30 transition-all duration-300 backdrop-blur-xl p-4 sm:p-6 flex flex-col justify-between gap-4 sm:gap-5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.85)] hover:-translate-y-0.5 active:border-white/30"
               >
                 {/* Top Subtle Specular Highlight */}
                 <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />

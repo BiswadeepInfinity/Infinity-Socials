@@ -61,7 +61,7 @@ function CategoryTrack({
       <div className="w-full max-w-[1240px] px-6">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+        <div className="scroll-reveal flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-white/70" />
@@ -84,14 +84,16 @@ function CategoryTrack({
             <span>View all {badgeText}</span>
             <span className="group-hover:translate-x-0.5 transition-transform">→</span>
           </Link>
-        </div>        {/* Responsive Grid Tray: 2-col on mobile, up to 5-col on desktop */}
+        </div>
+
+        {/* Responsive Grid Tray: 2-col on mobile, up to 5-col on desktop */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
           {items.map((cat, index) => (
             <Link
               key={cat.slug}
               href={`/categories/${cat.slug}`}
-              style={{ animationDelay: `${index * 60}ms` }}
-              className="animate-card-reveal touch-spring group relative h-[210px] xs:h-[240px] sm:h-[310px] rounded-[18px] sm:rounded-[22px] overflow-hidden cursor-pointer border border-white/[0.12] hover:border-white/35 transition-all duration-300 flex flex-col justify-end p-3 sm:p-4 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] hover:-translate-y-1 bg-[#0c0c14] active:border-white/40"
+              style={{ transitionDelay: `${index * 70}ms` }}
+              className="scroll-reveal-card touch-spring group relative h-[210px] xs:h-[240px] sm:h-[310px] rounded-[18px] sm:rounded-[22px] overflow-hidden cursor-pointer border border-white/[0.12] hover:border-white/35 transition-all duration-300 flex flex-col justify-end p-3 sm:p-4 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] hover:-translate-y-1 bg-[#0c0c14] active:border-white/40"
             >
               {/* Background Image */}
               {/* eslint-disable-next-line @next/next/no-img-element */}

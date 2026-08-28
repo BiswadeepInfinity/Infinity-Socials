@@ -388,7 +388,7 @@ export default function FeaturedArticlesWindow() {
         <div className="w-full max-w-[1240px] px-4 sm:px-6 mx-auto">
           
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-9">
+          <div className="scroll-reveal flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-9">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
