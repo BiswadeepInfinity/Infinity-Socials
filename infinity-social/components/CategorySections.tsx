@@ -84,44 +84,53 @@ function CategoryTrack({
             <span>View all {badgeText}</span>
             <span className="group-hover:translate-x-0.5 transition-transform">→</span>
           </Link>
-        </div>
-
-        {/* 5-Column Responsive Grid Tray */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        </div>        {/* Responsive Grid Tray: 2-col on mobile, up to 5-col on desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
           {items.map((cat) => (
             <Link
               key={cat.slug}
               href={`/categories/${cat.slug}`}
-              className="group relative h-[280px] sm:h-[310px] rounded-[22px] overflow-hidden cursor-pointer border border-white/[0.12] hover:border-white/35 transition-all duration-300 flex flex-col justify-end p-4 shadow-[0_12px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] hover:-translate-y-1 bg-[#0c0c14]"
+              className="group relative h-[210px] xs:h-[240px] sm:h-[310px] rounded-[18px] sm:rounded-[22px] overflow-hidden cursor-pointer border border-white/[0.12] hover:border-white/35 transition-all duration-300 flex flex-col justify-end p-3 sm:p-4 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] hover:-translate-y-1 bg-[#0c0c14]"
             >
               {/* Background Image */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out brightness-[0.7] group-hover:brightness-90"
-                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              
+              {/* Dynamic Gradient Scrim */}
+              <div
+                className="absolute inset-0 transition-opacity duration-300 group-hover:opacity-90"
+                style={{
+                  background: `linear-gradient(to top, rgba(5,5,10,0.95) 0%, rgba(5,5,10,0.65) 45%, rgba(5,5,10,0.1) 100%)`,
+                }}
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050508] via-[#050508]/50 to-transparent pointer-events-none" />
+              {/* Accent Border Glow on Hover */}
+              <div
+                className="absolute inset-0 rounded-[18px] sm:rounded-[22px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  boxShadow: `inset 0 0 20px ${cat.accent}30`,
+                  border: `1px solid ${cat.accent}60`,
+                }}
+              />
 
-              {/* Tag / Count Badge */}
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 shadow-sm">
+              {/* Text / Meta Info */}
+              <div className="relative z-10 space-y-0.5">
                 <span
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ backgroundColor: cat.accent, boxShadow: `0 0 8px ${cat.accent}` }}
-                />
-                <span className="font-mono text-[9px] font-medium text-white/80">{cat.count}</span>
-              </div>
-
-              {/* Text Meta */}
-              <div className="relative z-10 space-y-1">
-                <p className="font-mono text-[9px] uppercase tracking-wider text-white/50 truncate">
-                  {cat.tagline}
-                </p>
+                  className="font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-wider block drop-shadow-sm"
+                  style={{ color: cat.accent }}
+                >
+                  {cat.count}
+                </span>
                 <h4 className="font-display font-bold text-sm sm:text-base text-white group-hover:text-white transition-colors leading-snug">
                   {cat.name}
                 </h4>
+                <p className="font-mono text-[9px] uppercase tracking-wider text-white/50 truncate hidden xs:block">
+                  {cat.tagline}
+                </p>
               </div>
             </Link>
           ))}

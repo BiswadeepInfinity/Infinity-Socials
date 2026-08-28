@@ -195,12 +195,19 @@ export default function FeaturedArticlesWindow() {
         /* Track with hidden scrollbar and generous padding for floating expansion */
         .isolated-deck-track {
           display: flex;
-          gap: 24px;
+          gap: 16px;
           overflow-x: auto;
           scrollbar-width: none;
           -ms-overflow-style: none;
-          padding: 20px 40px 40px 20px;
+          -webkit-overflow-scrolling: touch;
+          padding: 16px 20px 32px 16px;
           align-items: center;
+        }
+        @media (min-width: 640px) {
+          .isolated-deck-track {
+            gap: 24px;
+            padding: 20px 40px 40px 20px;
+          }
         }
         .isolated-deck-track::-webkit-scrollbar {
           display: none;
@@ -209,9 +216,15 @@ export default function FeaturedArticlesWindow() {
         /* Fixed slot container */
         .card-slot {
           flex-shrink: 0;
-          width: 340px;
-          height: 480px;
+          width: 280px;
+          height: 420px;
           position: relative;
+        }
+        @media (min-width: 640px) {
+          .card-slot {
+            width: 340px;
+            height: 480px;
+          }
         }
 
         /* Cinema card inside slot */
@@ -219,8 +232,8 @@ export default function FeaturedArticlesWindow() {
           position: absolute;
           top: 0;
           left: 0;
-          height: 480px;
-          border-radius: 30px;
+          height: 420px;
+          border-radius: 24px;
           overflow: hidden;
           text-decoration: none;
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(10, 10, 16, 0.7);
@@ -233,6 +246,12 @@ export default function FeaturedArticlesWindow() {
                       opacity 0.4s ease,
                       border-color 0.35s ease,
                       box-shadow 0.35s ease;
+        }
+        @media (min-width: 640px) {
+          .cinema-poster-card {
+            height: 480px;
+            border-radius: 30px;
+          }
         }
 
         /* Active Hover Highlights */

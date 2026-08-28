@@ -100,150 +100,59 @@ export default function HeroSection() {
   };
 
   return (
-    <section style={{
-      position: 'relative',
-      width: '100%',
-      height: 'calc(100vh - 72px)',
-      minHeight: '620px',
-      backgroundColor: '#030305',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      overflow: 'hidden',
-      userSelect: 'none',
-      padding: '20px 0 14px',
-    }}>
+    <section className="relative w-full min-h-[580px] lg:h-[calc(100vh-72px)] bg-[#030305] flex flex-col justify-between items-center overflow-hidden select-none py-6 sm:py-8 lg:py-4">
       
       {/* Background Photography */}
       {HERO_FEATURED.map((item, idx) => (
         <div
           key={item.title}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            opacity: idx === activeIndex ? 0.35 : 0,
-            transform: idx === activeIndex ? 'scale(1.05)' : 'scale(1)',
-            transition: 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out',
-            pointerEvents: 'none',
-          }}
+          className={`absolute inset-0 pointer-events-none transition-all duration-700 ${
+            idx === activeIndex ? 'opacity-30 sm:opacity-35 scale-105' : 'opacity-0 scale-100'
+          }`}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={item.bgImage}
             alt={item.title}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            className="w-full h-full object-cover"
           />
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to top, #030305 0%, rgba(3,3,5,0.8) 50%, rgba(3,3,5,0.6) 100%)',
-          }} />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#030305] via-[#030305]/80 to-[#030305]/60" />
         </div>
       ))}
 
-      {/* Main 2-Column Hero Stage with 3D Deck */}
-      <div style={{
-        position: 'relative',
-        zIndex: 10,
-        width: '100%',
-        maxWidth: '1200px',
-        margin: 'auto 0',
-        padding: '0 24px',
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 0.95fr)',
-        gap: '48px',
-        alignItems: 'center',
-      }}>
+      {/* Main Hero Stage - Stacked on Mobile, 2-Column on Desktop */}
+      <div className="relative z-10 w-full max-w-[1200px] my-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] gap-8 sm:gap-10 lg:gap-12 items-center">
         
         {/* Left Column: Headline & Action Stage */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          textAlign: 'left',
-        }}>
+        <div className="flex flex-col items-start text-left">
           
-          {/* Category Tag (Silver Titanium Pill) */}
-          <div style={{ marginBottom: '16px' }}>
-            <span style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '6px 14px',
-              borderRadius: '99px',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: '#f4f4f5',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '11px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              fontWeight: 600,
-              backdropFilter: 'blur(12px)',
-            }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#e4e4e7' }} />
+          {/* Category Tag */}
+          <div className="mb-3 sm:mb-4">
+            <span className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-zinc-100 font-mono text-[10px] sm:text-xs uppercase tracking-wider font-semibold backdrop-blur-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-200" />
               {current.category}
             </span>
           </div>
 
           {/* Headline */}
-          <div style={{
-            minHeight: '110px',
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '14px',
-          }}>
-            <h1 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2rem, 3.4vw, 3.2rem)',
-              fontWeight: 700,
-              color: '#ffffff',
-              lineHeight: 1.15,
-              letterSpacing: '-0.02em',
-              margin: 0,
-              textShadow: '0 4px 20px rgba(0,0,0,0.8)',
-            }}>
+          <div className="min-h-0 sm:min-h-[90px] lg:min-h-[110px] flex items-center mb-3 sm:mb-4">
+            <h1 className="font-display text-2xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.15] tracking-tight m-0 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
               {current.title}
             </h1>
           </div>
 
           {/* Subtitle */}
-          <div style={{
-            minHeight: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '28px',
-          }}>
-            <p style={{
-              fontSize: 'clamp(0.95rem, 1.2vw, 1.1rem)',
-              fontWeight: 300,
-              color: 'rgba(255, 255, 255, 0.75)',
-              lineHeight: 1.5,
-              margin: 0,
-              maxWidth: '560px',
-            }}>
+          <div className="min-h-0 sm:min-h-[44px] lg:min-h-[48px] flex items-center mb-5 sm:mb-7">
+            <p className="text-xs sm:text-sm lg:text-base font-light text-white/70 leading-relaxed m-0 max-w-xl line-clamp-3 sm:line-clamp-none">
               {current.subtitle}
             </p>
           </div>
 
           {/* Action Buttons */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
-            flexWrap: 'wrap',
-            marginBottom: '24px',
-          }}>
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap mb-5 sm:mb-6 w-full sm:w-auto">
             <Link
               href={`/articles/${current.slug}`}
-              className="btn-editorial-primary"
-              style={{
-                padding: '13px 28px',
-                fontSize: '14px',
-                fontWeight: 700,
-                textDecoration: 'none',
-              }}
+              className="btn-editorial-primary flex-1 sm:flex-initial justify-center px-6 sm:px-7 py-3 text-xs sm:text-sm font-bold text-white no-underline text-center"
             >
               <span>Read Full Story</span>
               <span>→</span>
@@ -251,42 +160,28 @@ export default function HeroSection() {
 
             <button
               onClick={scrollToWindow}
-              className="btn-editorial-glass"
-              style={{
-                padding: '13px 24px',
-                fontSize: '14px',
-                fontWeight: 600,
-              }}
+              className="btn-editorial-glass hidden sm:inline-flex px-5 sm:px-6 py-3 text-xs sm:text-sm font-semibold"
             >
               <span>Explore Featured Deck</span>
               <span>↓</span>
             </button>
           </div>
 
-          {/* Slide Indicator Bars (Silver / Platinum Glow) */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            height: '16px',
-          }}>
+          {/* Slide Indicator Bars */}
+          <div className="flex items-center gap-2 h-4">
             {HERO_FEATURED.map((_, idx) => (
-              <div
+              <button
                 key={idx}
                 onClick={() => {
                   setActiveIndex(idx);
                   if (idx > 2) setDeckOffset(idx - 2);
                   else setDeckOffset(0);
                 }}
-                style={{
-                  height: '5px',
-                  width: idx === activeIndex ? '36px' : '8px',
-                  backgroundColor: idx === activeIndex ? '#ffffff' : 'rgba(255,255,255,0.2)',
-                  boxShadow: idx === activeIndex ? '0 0 12px rgba(255,255,255,0.8)' : 'none',
-                  borderRadius: '99px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                }}
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  idx === activeIndex
+                    ? 'w-8 sm:w-9 bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]'
+                    : 'w-2 bg-white/20 hover:bg-white/40'
+                }`}
                 aria-label={`Slide ${idx + 1}`}
               />
             ))}
