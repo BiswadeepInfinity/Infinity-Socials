@@ -346,7 +346,7 @@ export default function CommunityArticles() {
                 {/* Main Content Layout */}
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4.5 items-start">
                   {/* Thumbnail Cover with Rank Indicator */}
-                  <div className="relative w-full sm:w-[130px] h-[160px] xs:h-[180px] sm:h-[105px] rounded-[14px] sm:rounded-[16px] overflow-hidden flex-shrink-0 bg-[#050508] border border-white/15 shadow-inner">
+                  <div className="relative w-full sm:w-[130px] h-[120px] xs:h-[135px] sm:h-[105px] rounded-[12px] sm:rounded-[16px] overflow-hidden flex-shrink-0 bg-[#050508] border border-white/15 shadow-inner">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={item.thumbnail}

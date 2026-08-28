@@ -259,12 +259,12 @@ export default function FeaturedArticlesWindow() {
           display: none;
         }
 
-        /* Fixed slot container */
+        /* Fixed slot container with horizontal landscape aspect ratio on mobile */
         .card-slot {
           flex-shrink: 0;
-          width: 72vw;
-          max-width: 260px;
-          height: 360px;
+          width: 82vw;
+          max-width: 320px;
+          height: 240px;
           position: relative;
           scroll-snap-align: start;
         }
@@ -587,24 +587,24 @@ export default function FeaturedArticlesWindow() {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        padding: isMobile ? '16px 18px' : '22px 24px',
+                        padding: isMobile ? '10px 14px' : '22px 24px',
                         zIndex: 10,
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '8px',
+                        gap: isMobile ? '3px' : '8px',
                       }}
                     >
                       <h3 style={{
                         fontFamily: 'var(--font-display)',
-                        fontSize: isMobile ? '16px' : '18px',
+                        fontSize: isMobile ? '14px' : '18px',
                         fontWeight: 700,
                         color: '#ffffff',
-                        lineHeight: 1.25,
+                        lineHeight: 1.2,
                         letterSpacing: '-0.01em',
                         margin: 0,
                         textShadow: '0 2px 10px rgba(0,0,0,0.9)',
                         display: '-webkit-box',
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: isMobile ? 2 : 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
                       }}>
@@ -612,13 +612,13 @@ export default function FeaturedArticlesWindow() {
                       </h3>
 
                       <p style={{
-                        fontSize: isMobile ? '11px' : '12px',
+                        fontSize: isMobile ? '10px' : '12px',
                         color: 'rgba(255, 255, 255, 0.75)',
                         fontWeight: 300,
-                        lineHeight: 1.4,
+                        lineHeight: 1.3,
                         margin: 0,
                         display: '-webkit-box',
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: isMobile ? 1 : 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
                       }}>
@@ -627,13 +627,13 @@ export default function FeaturedArticlesWindow() {
 
                       {/* Meta Footer */}
                       <div style={{
-                        paddingTop: '8px',
+                        paddingTop: isMobile ? '4px' : '8px',
                         borderTop: '1px solid rgba(255, 255, 255, 0.12)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         fontFamily: 'var(--font-mono)',
-                        fontSize: isMobile ? '10px' : '11px',
+                        fontSize: isMobile ? '9px' : '11px',
                         color: 'rgba(255, 255, 255, 0.5)',
                       }}>
                         <span style={{ color: 'rgba(255, 255, 255, 0.85)', fontWeight: 500 }} className="truncate max-w-[140px]">
