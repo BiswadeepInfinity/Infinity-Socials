@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 interface CreatorInfo {
@@ -138,6 +138,50 @@ export default function CommunityArticles() {
   );
 
   const [joinedCreators, setJoinedCreators] = useState<Record<string, boolean>>({});
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const cards = sectionRef.current.querySelectorAll('.community-card-item');
+      if (!cards.length) return;
+
+      const viewportCenter = window.innerHeight * 0.48;
+      let closestIdx = 0;
+      let minDistance = Infinity;
+
+      cards.forEach((card, idx) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.top + rect.height / 2;
+        const distance = Math.abs(cardCenter - viewportCenter);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIdx = idx;
+        }
+      });
+
+      setMobileActiveIndex(closestIdx);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobile, activeFilter]);
 
   const toggleJoin = (creatorName: string) => {
     setJoinedCreators((prev) => ({
@@ -183,7 +227,7 @@ export default function CommunityArticles() {
   });
 
   return (
-    <section className="py-12 sm:py-20 bg-[#030306] w-full flex justify-center border-t border-white/[0.06] relative overflow-hidden">
+    <section ref={sectionRef} className="py-12 sm:py-20 bg-[#030306] w-full flex justify-center border-t border-white/[0.06] relative overflow-hidden">
       {/* Background Ambient Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-r from-white/[0.02] via-white/[0.04] to-transparent rounded-full blur-3xl pointer-events-none" />
       
@@ -231,12 +275,22 @@ export default function CommunityArticles() {
             const netKarma = v.up - v.down;
             const isJoined = joinedCreators[item.creator.name] || false;
             const currentLifetimeUp = item.creator.totalUpvotes + (v.userVote === 'up' ? 1 : 0);
+            const isCardActive = !isMobile || mobileActiveIndex === index;
 
             return (
               <div
                 key={item.id}
-                style={{ transitionDelay: `${index * 90}ms` }}
-                className="scroll-reveal-card touch-spring group relative rounded-[20px] sm:rounded-[24px] bg-[#0c0c14]/80 border border-white/[0.12] hover:border-white/30 transition-all duration-300 backdrop-blur-xl p-4 sm:p-6 flex flex-col justify-between gap-4 sm:gap-5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.85)] hover:-translate-y-0.5 active:border-white/30"
+                style={{
+                  opacity: isCardActive ? 1 : 0.45,
+                  transform: isCardActive ? 'scale(1) translateY(0px)' : 'scale(0.95) translateY(4px)',
+                  filter: isCardActive ? 'brightness(1) saturate(1.15)' : 'brightness(0.55) saturate(0.7)',
+                  borderColor: isCardActive ? 'rgba(255, 255, 255, 0.45)' : 'rgba(255, 255, 255, 0.08)',
+                  boxShadow: isCardActive
+                    ? '0 24px 50px rgba(0,0,0,0.9), 0 0 25px rgba(255,255,255,0.12), inset 0 1px 1px rgba(255,255,255,0.4)'
+                    : '0 8px 20px rgba(0,0,0,0.5)',
+                  transition: 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease, border-color 0.35s ease, box-shadow 0.35s ease',
+                }}
+                className="community-card-item touch-spring group relative rounded-[20px] sm:rounded-[24px] bg-[#0c0c14]/80 border transition-all duration-300 backdrop-blur-xl p-4 sm:p-6 flex flex-col justify-between gap-4 sm:gap-5"
               >
                 {/* Top Subtle Specular Highlight */}
                 <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
