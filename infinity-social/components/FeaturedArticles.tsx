@@ -262,9 +262,9 @@ export default function FeaturedArticlesWindow() {
         /* Fixed slot container */
         .card-slot {
           flex-shrink: 0;
-          width: 80vw;
-          max-width: 300px;
-          height: 420px;
+          width: 72vw;
+          max-width: 260px;
+          height: 360px;
           position: relative;
           scroll-snap-align: start;
         }

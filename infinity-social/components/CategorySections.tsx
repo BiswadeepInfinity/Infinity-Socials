@@ -93,7 +93,7 @@ function CategoryTrack({
               key={cat.slug}
               href={`/categories/${cat.slug}`}
               style={{ transitionDelay: `${index * 70}ms` }}
-              className="scroll-reveal-card touch-spring group relative h-[210px] xs:h-[240px] sm:h-[310px] rounded-[18px] sm:rounded-[22px] overflow-hidden cursor-pointer border border-white/[0.12] hover:border-white/35 transition-all duration-300 flex flex-col justify-end p-3 sm:p-4 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] hover:-translate-y-1 bg-[#0c0c14] active:border-white/40"
+              className="scroll-reveal-card touch-spring group relative h-[150px] xs:h-[175px] sm:h-[310px] rounded-[14px] sm:rounded-[22px] overflow-hidden cursor-pointer border border-white/[0.12] hover:border-white/35 transition-all duration-300 flex flex-col justify-end p-2.5 sm:p-4 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)] hover:-translate-y-1 bg-[#0c0c14] active:border-white/40"
             >
               {/* Background Image */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
