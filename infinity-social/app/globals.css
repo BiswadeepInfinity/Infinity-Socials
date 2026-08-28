@@ -27,8 +27,14 @@
   }
 }
 
-* {
-  box-sizing: border-box;
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 13.5px; /* Scales down mobile proportions cleanly for a native app feel */
+  }
 }
 
 html, body {
