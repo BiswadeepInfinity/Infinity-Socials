@@ -333,87 +333,31 @@ export default function FeaturedArticlesWindow() {
 
       <section
         id="featured-articles-window"
-        style={{
-          width: '100%',
-          padding: '90px 0 110px',
-          backgroundColor: '#020204',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
+        className="w-full py-10 sm:py-16 lg:py-24 bg-[#020204] flex flex-col items-center relative overflow-hidden"
       >
-        <div style={{
-          width: '100%',
-          maxWidth: '1240px',
-          padding: '0 24px',
-          margin: '0 auto',
-        }}>
+        <div className="w-full max-w-[1240px] px-4 sm:px-6 mx-auto">
           
           {/* Section Header */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '20px',
-            marginBottom: '36px',
-          }}>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-9">
             <div>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '8px',
-              }}>
-                <span style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 0 10px rgba(255,255,255,0.8)',
-                }} />
-                <span style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '11px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.12em',
-                  color: '#a1a1aa',
-                  fontWeight: 600,
-                }}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">
                   Curated Features
                 </span>
               </div>
 
-              <h2 style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2rem, 3.8vw, 3rem)',
-                fontWeight: 700,
-                color: '#ffffff',
-                letterSpacing: '-0.02em',
-                lineHeight: 1.12,
-                margin: 0,
-              }}>
+              <h2 className="font-display text-xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-tight m-0">
                 Recent Reviews & Deep Dives
               </h2>
             </div>
 
-            {/* Middle: Domain Filter Pills */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '4px',
-              borderRadius: '99px',
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(16px)',
-            }}>
+            {/* Middle: Domain Filter Pills (Horizontally Scrollable on Mobile) */}
+            <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl overflow-x-auto max-w-full scrollbar-none">
               {(['all', 'movies', 'games', 'tech', 'anime'] as ReviewDomain[]).map((dom) => {
                 const isActive = activeDomain === dom;
                 const labels: Record<ReviewDomain, string> = {
-                  all: 'All Domains',
+                  all: 'All',
                   movies: '🎬 Movies',
                   games: '🎮 Games',
                   tech: '⚡ Tech',
@@ -427,19 +371,11 @@ export default function FeaturedArticlesWindow() {
                       setHoveredIndex(null);
                       if (scrollRef.current) scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
                     }}
-                    style={{
-                      padding: '6px 14px',
-                      borderRadius: '99px',
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '11px',
-                      fontWeight: isActive ? 700 : 500,
-                      color: isActive ? '#000000' : 'rgba(255, 255, 255, 0.6)',
-                      backgroundColor: isActive ? '#ffffff' : 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s ease',
-                      boxShadow: isActive ? '0 2px 10px rgba(255,255,255,0.3)' : 'none',
-                    }}
+                    className={`px-3 py-1.5 rounded-full font-mono text-[11px] font-semibold whitespace-nowrap transition-all duration-200 border-none cursor-pointer ${
+                      isActive
+                        ? 'bg-white text-black shadow-[0_2px_10px_rgba(255,255,255,0.3)] font-bold'
+                        : 'bg-transparent text-white/60 hover:text-white'
+                    }`}
                   >
                     {labels[dom]}
                   </button>
@@ -447,27 +383,14 @@ export default function FeaturedArticlesWindow() {
               })}
             </div>
 
-            {/* Navigation Controls */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* Navigation Controls (Desktop only) */}
+            <div className="hidden sm:flex items-center gap-2">
               <button
                 onClick={() => scrollByAmount(-440)}
                 disabled={!canScrollLeft}
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#ffffff',
-                  fontSize: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: canScrollLeft ? 'pointer' : 'not-allowed',
-                  opacity: canScrollLeft ? 1 : 0.3,
-                  transition: 'all 0.2s ease',
-                  backdropFilter: 'blur(16px)',
-                }}
+                className={`w-10 h-10 rounded-full bg-white/[0.05] border border-white/15 text-white flex items-center justify-center transition-all ${
+                  canScrollLeft ? 'cursor-pointer hover:bg-white/10 opacity-100' : 'cursor-not-allowed opacity-30'
+                }`}
                 title="Previous Story"
               >
                 ←
@@ -475,22 +398,9 @@ export default function FeaturedArticlesWindow() {
               <button
                 onClick={() => scrollByAmount(440)}
                 disabled={!canScrollRight}
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#ffffff',
-                  fontSize: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: canScrollRight ? 'pointer' : 'not-allowed',
-                  opacity: canScrollRight ? 1 : 0.3,
-                  transition: 'all 0.2s ease',
-                  backdropFilter: 'blur(16px)',
-                }}
+                className={`w-10 h-10 rounded-full bg-white/[0.05] border border-white/15 text-white flex items-center justify-center transition-all ${
+                  canScrollRight ? 'cursor-pointer hover:bg-white/10 opacity-100' : 'cursor-not-allowed opacity-30'
+                }`}
                 title="Next Story"
               >
                 →

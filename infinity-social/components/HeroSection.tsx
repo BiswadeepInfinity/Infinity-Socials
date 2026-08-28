@@ -189,13 +189,13 @@ export default function HeroSection() {
 
         </div>
 
-        {/* Right Column: Genuine 3D Perspective Floating Deck in Grayscale/Titanium */}
+        {/* Right Column: Genuine 3D Perspective Floating Deck in Grayscale/Titanium (Desktop Only) */}
         <div
           onWheel={handleDeckWheel}
+          className="hidden lg:flex"
           style={{
             perspective: '1400px',
             perspectiveOrigin: 'center center',
-            display: 'flex',
             justifyContent: 'center',
             position: 'relative',
           }}

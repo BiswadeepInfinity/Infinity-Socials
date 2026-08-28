@@ -31,14 +31,19 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-body);
-  overflow-x: hidden;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+}
+
+button, a {
+  touch-action: manipulation;
 }
 
 /* iOS Liquid Glass Design System */

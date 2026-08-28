@@ -25,9 +25,12 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#050508]/90 backdrop-blur-2xl border-b border-white/[0.08]">
+    <header
+      className="sticky top-0 z-50 w-full border-b border-white/[0.08]"
+      style={{ backgroundColor: '#050508' }}
+    >
       {/* Polished High-Precision Infinity Reading Numberline Bar */}
-      <div className="w-full bg-[#040408] border-b border-white/[0.06] px-3 sm:px-5 py-1 flex items-center justify-between gap-2 sm:gap-3.5 select-none">
+      <div className="w-full bg-[#030306] border-b border-white/[0.06] px-3 sm:px-5 py-1 flex items-center justify-between gap-2 sm:gap-3.5 select-none">
         {/* Left: -∞ Continuum Start */}
         <div className="flex items-center gap-1.5 shrink-0">
           <span className="font-mono text-xs sm:text-[13px] font-black text-rose-500 tracking-tight drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
@@ -65,11 +68,11 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="max-w-[1240px] h-16 sm:h-[72px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
+      <div className="max-w-[1240px] h-14 sm:h-[70px] mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
         
         {/* Left: Brand Identity */}
-        <Link href="/" className="flex items-center gap-2.5 sm:gap-3 text-white no-underline shrink-0 group">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-black border border-white/[0.14] flex items-center justify-center shadow-lg p-1 overflow-hidden shrink-0 group-hover:border-white/30 transition-all">
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 text-white no-underline shrink-0 group">
+          <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-black border border-white/[0.14] flex items-center justify-center shadow-lg p-1 overflow-hidden shrink-0 group-hover:border-white/30 transition-all">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
@@ -78,11 +81,11 @@ export default function Navbar() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="font-display font-extrabold text-base sm:text-lg tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent">
+          <div className="flex items-center gap-1.5">
+            <span className="font-display font-extrabold text-sm sm:text-base lg:text-lg tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent whitespace-nowrap">
               INFINITY SOCIALS
             </span>
-            <span className="font-mono text-[8px] sm:text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white uppercase tracking-wider hidden xs:inline">
+            <span className="font-mono text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white uppercase tracking-wider hidden md:inline">
               BETA
             </span>
           </div>
@@ -112,16 +115,16 @@ export default function Navbar() {
         </nav>
 
         {/* Right: Search & Profile & Mobile Toggle */}
-        <div className="flex items-center gap-2 sm:gap-3.5">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Desktop/Tablet Search */}
-          <div className="relative hidden sm:flex items-center">
+          <div className="relative hidden md:flex items-center">
             <input
               type="text"
               placeholder="Search..."
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
-              className={`h-9 rounded-full bg-white/[0.06] border text-xs text-white placeholder-white/40 pl-8 pr-3 outline-none transition-all duration-200 ${
-                searchFocused ? 'w-48 sm:w-56 border-white/40 bg-white/[0.1]' : 'w-28 sm:w-36 border-white/[0.12]'
+              className={`h-8 sm:h-9 rounded-full bg-white/[0.06] border text-xs text-white placeholder-white/40 pl-8 pr-3 outline-none transition-all duration-200 ${
+                searchFocused ? 'w-48 border-white/40 bg-white/[0.1]' : 'w-28 border-white/[0.12]'
               }`}
             />
             <span className="absolute left-2.5 text-xs text-white/40 pointer-events-none">
@@ -134,15 +137,15 @@ export default function Navbar() {
           {/* Mobile Hamburger Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white transition-all cursor-pointer"
+            className="lg:hidden p-1.5 sm:p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white transition-all cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? (
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             )}
@@ -153,13 +156,16 @@ export default function Navbar() {
 
       {/* Mobile Slide-Down Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-white/10 bg-[#07070c]/98 backdrop-blur-2xl px-5 py-5 space-y-4 shadow-2xl animate-dropdown">
+        <div
+          className="lg:hidden border-t border-white/10 px-4 py-4 space-y-3 shadow-2xl animate-dropdown"
+          style={{ backgroundColor: '#07070c' }}
+        >
           {/* Mobile Search */}
           <div className="relative w-full">
             <input
               type="text"
               placeholder="Search articles, reviews, anime..."
-              className="w-full h-10 rounded-xl bg-white/[0.06] border border-white/[0.12] text-xs text-white placeholder-white/40 pl-9 pr-4 outline-none focus:border-white/40"
+              className="w-full h-9 rounded-xl bg-white/[0.06] border border-white/[0.12] text-xs text-white placeholder-white/40 pl-9 pr-4 outline-none focus:border-white/40"
             />
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-white/40 pointer-events-none">
               🔍
@@ -171,7 +177,7 @@ export default function Navbar() {
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
+              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
             >
               <span>🏠</span>
               <span>Feed</span>
@@ -180,7 +186,7 @@ export default function Navbar() {
             <Link
               href="/reviews"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
+              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
             >
               <span>✍️</span>
               <span>Reviews</span>
@@ -189,7 +195,7 @@ export default function Navbar() {
             <Link
               href="/interviews"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
+              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
             >
               <span>🎙️</span>
               <span>Interviews</span>
@@ -198,7 +204,7 @@ export default function Navbar() {
             <Link
               href="/anime"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
+              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
             >
               <span>⛩️</span>
               <span>Anime</span>
@@ -207,7 +213,7 @@ export default function Navbar() {
             <Link
               href="/gaming"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
+              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
             >
               <span>🎮</span>
               <span>Gaming</span>
@@ -216,7 +222,7 @@ export default function Navbar() {
             <Link
               href="/community"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
+              className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
             >
               <div className="flex items-center gap-2">
                 <span>💬</span>
@@ -247,7 +253,7 @@ function NavbarAuthSection() {
   }, []);
 
   if (loading) {
-    return <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />;
+    return <div className="w-7 h-7 rounded-full bg-white/10 animate-pulse" />;
   }
 
   if (user && profile) {
@@ -255,25 +261,26 @@ function NavbarAuthSection() {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-2.5 p-1 pr-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 transition-all cursor-pointer"
+          className="flex items-center gap-1.5 sm:gap-2.5 p-1 pr-2 sm:pr-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 transition-all cursor-pointer shrink-0"
         >
-          <div className="w-7 h-7 rounded-full overflow-hidden bg-violet-600/30 border border-white/20 flex items-center justify-center">
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden bg-violet-600/30 border border-white/20 flex items-center justify-center shrink-0">
             {profile.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={profile.avatar_url} alt={profile.username} className="w-full h-full object-cover" />
             ) : (
-              <span className="text-xs font-bold text-white">
-                {profile.username ? profile.username.charAt(0).toUpperCase() : 'U'}
+              <span className="text-[10px] font-bold text-white uppercase">
+                {profile.username?.charAt(0) || 'U'}
               </span>
             )}
           </div>
-          <span className="text-xs font-semibold text-white tracking-tight">
+          <span className="text-xs font-semibold text-white/90 max-w-[80px] sm:max-w-[120px] truncate hidden xs:inline">
             @{profile.username}
           </span>
-          <span className="text-[10px] text-white/40">▾</span>
+          <span className="text-[9px] text-white/40">▾</span>
         </button>
 
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2.5 w-56 p-2 bg-[#100f16]/95 border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.06)] z-50 backdrop-blur-2xl animate-dropdown">
+          <div className="absolute right-0 mt-2.5 w-56 p-2 bg-[#100f16]/98 border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.06)] z-50 backdrop-blur-2xl animate-dropdown">
             {/* Header info */}
             <div className="px-3.5 py-2.5 border-b border-white/[0.06] mb-1.5 bg-white/[0.02] rounded-xl">
               <p className="text-[13px] font-bold text-white truncate">{profile.display_name || profile.username}</p>
@@ -328,7 +335,7 @@ function NavbarAuthSection() {
               )}
             </div>
 
-            {/* Logout Row matching reference pill style */}
+            {/* Logout Row */}
             <div className="pt-2 mt-1.5 border-t border-white/[0.06]">
               <button
                 onClick={() => {
@@ -352,15 +359,9 @@ function NavbarAuthSection() {
   return (
     <Link
       href="/auth/login"
-      className="btn-editorial-primary"
-      style={{
-        padding: '8px 20px',
-        fontSize: '12px',
-        fontWeight: 600,
-      }}
+      className="inline-flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white text-black text-xs font-bold whitespace-nowrap hover:bg-zinc-200 active:scale-95 transition-all shadow-md no-underline shrink-0"
     >
       Sign In
     </Link>
   );
 }
-
