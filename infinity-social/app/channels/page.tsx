@@ -15,8 +15,13 @@ import {
   Clock, 
   Plus, 
   Search,
-  MessageSquare
+  MessageSquare,
+  RotateCw,
+  Award,
+  BookOpen
 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 export default function ChannelsPage() {
   const { posts, channels } = useChannelsStore();
@@ -25,6 +30,20 @@ export default function ChannelsPage() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefreshFeed = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      toast.success('⚡ Feed refreshed with latest live takes!');
+    }, 600);
+  };
+
+  // Top upvoted article forums
+  const topUpvotedArticleForums = [...posts]
+    .sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes))
+    .slice(0, 5);
 
   // Filtered and sorted posts
   const filteredPosts = posts
@@ -62,21 +81,34 @@ export default function ChannelsPage() {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="px-3 py-0.5 rounded-full text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 uppercase tracking-wider">
-                  Reddit-Style Channels
+                  Article-Derived Discussion Channels
+                </span>
+                <span className="flex items-center gap-1 text-[11px] font-mono text-emerald-400">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Live Dynamic Feed
                 </span>
               </div>
               <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight">
                 Discussion Channels & Forums
               </h1>
               <p className="text-zinc-400 text-sm md:text-base mt-1 max-w-2xl">
-                Explore dedicated topic communities, join nested deep-dive threads, earn Top 1% Commenter badges, and share your takes.
+                Every forum is rooted in an official article. Read or watch the breakdown in the mini-preview window, vote on community takes, and join deep debates.
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <button
+                onClick={handleRefreshFeed}
+                disabled={isRefreshing}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-bold text-xs sm:text-sm transition-all cursor-pointer active:scale-95 shadow-md"
+                title="Refresh Instagram-style feed"
+              >
+                <RotateCw className={`w-4 h-4 text-cyan-400 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <span>{isRefreshing ? 'Refreshing...' : 'Refresh Feed'}</span>
+              </button>
+
+              <button
                 onClick={() => setIsCreatePostOpen(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-black font-bold text-sm transition-all shadow-lg shadow-cyan-500/25"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-black font-bold text-sm transition-all shadow-lg shadow-cyan-500/25 cursor-pointer active:scale-95"
               >
                 <Plus className="w-4 h-4" /> Create Post
               </button>
@@ -97,18 +129,18 @@ export default function ChannelsPage() {
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => setFilterSort('hot')}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     filterSort === 'hot'
                       ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
                   }`}
                 >
-                  <Flame className="w-4 h-4" /> Hot
+                  <Flame className="w-4 h-4" /> Most Upvoted (Hot)
                 </button>
 
                 <button
                   onClick={() => setFilterSort('new')}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     filterSort === 'new'
                       ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40'
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
@@ -119,7 +151,7 @@ export default function ChannelsPage() {
 
                 <button
                   onClick={() => setFilterSort('top')}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     filterSort === 'top'
                       ? 'bg-purple-500/20 text-purple-400 border border-purple-500/40'
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
@@ -150,7 +182,7 @@ export default function ChannelsPage() {
                 </span>
                 <button
                   onClick={() => setSelectedTag(null)}
-                  className={`px-3 py-1 rounded-lg border transition-colors whitespace-nowrap ${
+                  className={`px-3 py-1 rounded-lg border transition-colors whitespace-nowrap cursor-pointer ${
                     selectedTag === null
                       ? 'bg-white/15 text-white border-white/30 font-bold'
                       : 'bg-white/5 text-zinc-400 border-white/5 hover:border-white/15'
@@ -162,7 +194,7 @@ export default function ChannelsPage() {
                   <button
                     key={tag}
                     onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                    className={`px-3 py-1 rounded-lg border transition-colors whitespace-nowrap ${
+                    className={`px-3 py-1 rounded-lg border transition-colors whitespace-nowrap cursor-pointer ${
                       selectedTag === tag
                         ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
                         : 'bg-white/5 text-zinc-400 border-white/5 hover:border-white/15'
@@ -199,18 +231,60 @@ export default function ChannelsPage() {
           </section>
 
           {/* Right Trending Communities Panel */}
-          <aside className="hidden xl:flex flex-col gap-5 w-72 flex-shrink-0">
+          <aside className="hidden xl:flex flex-col gap-5 w-80 flex-shrink-0">
+            
+            {/* Most Upvoted Article Forums Box */}
+            <div className="bg-[#0a0a10]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl">
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <div className="flex items-center gap-2">
+                  <Flame className="w-4 h-4 text-orange-400" />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-200">
+                    Most Upvoted Forums
+                  </h3>
+                </div>
+                <span className="text-[10px] font-mono text-zinc-500">Karma</span>
+              </div>
+
+              <div className="flex flex-col gap-2.5">
+                {topUpvotedArticleForums.map((p, idx) => (
+                  <Link
+                    key={p.id}
+                    href={`/channels/${p.channel_id.replace('ch-', '')}/${p.id}`}
+                    className="group p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/20 transition-all flex items-start gap-2.5 no-underline"
+                  >
+                    <span className="font-mono text-xs font-extrabold text-orange-400 w-4 pt-0.5 shrink-0">
+                      #{idx + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-xs font-bold text-zinc-200 group-hover:text-cyan-300 transition-colors line-clamp-2 leading-snug">
+                        {p.title}
+                      </h4>
+                      <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 mt-1">
+                        <span className="text-cyan-400 font-semibold">{p.flair}</span>
+                        <span className="font-bold text-orange-400">▲ {p.upvotes}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Trending Communities */}
             <div className="bg-[#0a0a10]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-4 h-4 text-cyan-400" />
                 <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
-                  Trending Communities
+                  Topic Channels
                 </h3>
               </div>
 
               <div className="flex flex-col gap-3">
                 {channels.map((ch, idx) => (
-                  <div key={ch.id} className="flex items-center justify-between gap-2">
+                  <Link
+                    key={ch.id}
+                    href={`/channels/${ch.slug}`}
+                    className="flex items-center justify-between gap-2 p-1.5 rounded-xl hover:bg-white/[0.04] transition-colors no-underline group"
+                  >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <span className="text-xs font-bold text-zinc-500 w-4">
                         {idx + 1}
@@ -222,7 +296,7 @@ export default function ChannelsPage() {
                         className="w-7 h-7 rounded-full object-cover border border-white/10 flex-shrink-0"
                       />
                       <div className="min-w-0">
-                        <div className="text-xs font-bold text-zinc-200 truncate">
+                        <div className="text-xs font-bold text-zinc-200 group-hover:text-cyan-300 transition-colors truncate">
                           r/{ch.slug}
                         </div>
                         <div className="text-[10px] text-zinc-500">
@@ -230,7 +304,7 @@ export default function ChannelsPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -238,7 +312,7 @@ export default function ChannelsPage() {
             {/* Achievement Badges Guide Card */}
             <div className="bg-gradient-to-br from-cyan-950/30 to-purple-950/30 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-5">
               <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2 flex items-center gap-1.5">
-                <span>🪐</span> Community Badges
+                <Award className="w-4 h-4 text-amber-400" /> Community Badges
               </h4>
               <p className="text-xs text-zinc-300 leading-relaxed">
                 Post thoughtful analyses, participate in discussions, and earn exclusive badges like{' '}

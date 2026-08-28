@@ -13,7 +13,8 @@ import {
   Bookmark, 
   MoreHorizontal,
   Pin,
-  ExternalLink
+  ExternalLink,
+  BookOpen
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -184,8 +185,58 @@ export default function ChannelPostCard({ post, channelSlug, isDetailed = false 
             {post.content}
           </div>
 
+          {/* Linked Source Article Cinema Window */}
+          {post.article_slug && (
+            <Link
+              href={`/articles/${post.article_slug}`}
+              className="mt-4 group/article flex flex-col sm:flex-row items-stretch gap-3.5 p-3 rounded-2xl bg-gradient-to-r from-white/[0.04] to-white/[0.02] border border-white/[0.12] hover:border-cyan-400/50 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(6,182,212,0.15)] no-underline overflow-hidden relative"
+            >
+              {/* Thumbnail with Play/Read Overlay */}
+              <div className="relative w-full sm:w-[140px] h-[100px] rounded-xl overflow-hidden bg-black shrink-0 border border-white/10">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={post.article_thumbnail || post.media_url || '/placeholder.png'}
+                  alt={post.article_title || 'Article cover'}
+                  className="w-full h-full object-cover group-hover/article:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-black/30 group-hover/article:bg-black/10 transition-colors flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-black/70 border border-white/30 backdrop-blur-md flex items-center justify-center text-white shadow-md group-hover/article:scale-110 transition-transform">
+                    <BookOpen className="w-4 h-4 text-cyan-400" />
+                  </div>
+                </div>
+
+                {post.article_score && (
+                  <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-black/80 border border-amber-400/40 text-[9px] font-mono font-bold text-amber-300 backdrop-blur-sm">
+                    ★ {post.article_score}
+                  </div>
+                )}
+              </div>
+
+              {/* Text Info */}
+              <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-[9px] uppercase tracking-wider font-bold text-cyan-400">
+                      {post.article_category || 'Original Article'}
+                    </span>
+                    <span className="text-white/30 text-[10px]">•</span>
+                    <span className="font-mono text-[10px] text-white/50">{post.article_read_time || 'Read Story'}</span>
+                  </div>
+                  <h4 className="font-display font-bold text-xs sm:text-sm text-white group-hover/article:text-cyan-300 transition-colors line-clamp-2 leading-snug">
+                    {post.article_title || post.title}
+                  </h4>
+                </div>
+
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-semibold mt-2 group-hover/article:translate-x-1 transition-transform">
+                  <span>Read Full Article & Watch Video</span>
+                  <span>→</span>
+                </div>
+              </div>
+            </Link>
+          )}
+
           {/* Optional Media Image */}
-          {post.media_url && (
+          {post.media_url && !post.article_slug && (
             <div className="mt-4 rounded-xl overflow-hidden border border-white/10 bg-black/40 max-h-[500px] flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -197,7 +248,7 @@ export default function ChannelPostCard({ post, channelSlug, isDetailed = false 
           )}
 
           {/* Optional Link Preview */}
-          {post.link_url && (
+          {post.link_url && !post.article_slug && (
             <a
               href={post.link_url}
               target="_blank"

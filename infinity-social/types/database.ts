@@ -156,6 +156,13 @@ export type ChannelPost = {
   flair?: string;
   media_url?: string | null;
   link_url?: string | null;
+  // Article linkage for derived forums
+  article_slug?: string | null;
+  article_title?: string | null;
+  article_thumbnail?: string | null;
+  article_score?: string | null;
+  article_read_time?: string | null;
+  article_category?: string | null;
   upvotes: number;
   downvotes: number;
   user_vote?: 'up' | 'down' | null;
