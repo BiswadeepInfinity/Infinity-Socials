@@ -13,7 +13,24 @@ interface ChannelsState {
   leaveChannel: (channelId: string) => void;
   createChannel: (channel: Omit<Channel, 'id' | 'member_count' | 'weekly_visitors' | 'weekly_contributions' | 'created_at'>) => Channel;
   
-  createPost: (post: { channel_id: string; title: string; content: string; flair?: string; media_url?: string; user_id: string; author_name: string; author_username: string; author_avatar: string }) => ChannelPost;
+  createPost: (post: { 
+    channel_id: string; 
+    title: string; 
+    content: string; 
+    flair?: string; 
+    media_url?: string; 
+    link_url?: string;
+    article_slug?: string;
+    article_title?: string;
+    article_thumbnail?: string;
+    article_score?: string;
+    article_read_time?: string;
+    article_category?: string;
+    user_id: string; 
+    author_name: string; 
+    author_username: string; 
+    author_avatar: string; 
+  }) => ChannelPost;
   votePost: (postId: string, type: 'up' | 'down') => void;
   
   addComment: (postId: string, parentId: string | null, content: string, user: { id: string; name: string; username: string; avatar: string; badges?: ChannelBadgeType[] }) => void;
@@ -74,6 +91,13 @@ export const useChannelsStore = create<ChannelsState>((set, get) => ({
       content: data.content,
       flair: data.flair || 'Discussion',
       media_url: data.media_url || null,
+      link_url: data.link_url || null,
+      article_slug: data.article_slug || null,
+      article_title: data.article_title || null,
+      article_thumbnail: data.article_thumbnail || null,
+      article_score: data.article_score || null,
+      article_read_time: data.article_read_time || null,
+      article_category: data.article_category || null,
       upvotes: 1,
       downvotes: 0,
       user_vote: 'up',

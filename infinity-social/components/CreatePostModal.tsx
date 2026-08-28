@@ -2,22 +2,38 @@
 
 import React, { useState } from 'react';
 import { useChannelsStore } from '@/lib/channels-store';
-import { X, Image, Link as LinkIcon, FileText, Sparkles } from 'lucide-react';
+import { useAuth } from '@/components/AuthProvider';
+import { X, Image, Link as LinkIcon, FileText, Sparkles, BookOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface CreatePostModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultChannelId?: string;
+  articleSlug?: string;
+  articleTitle?: string;
+  articleThumbnail?: string;
+  articleScore?: string;
+  articleCategory?: string;
 }
 
-export default function CreatePostModal({ isOpen, onClose, defaultChannelId }: CreatePostModalProps) {
+export default function CreatePostModal({ 
+  isOpen, 
+  onClose, 
+  defaultChannelId,
+  articleSlug,
+  articleTitle,
+  articleThumbnail,
+  articleScore,
+  articleCategory
+}: CreatePostModalProps) {
+  const { user, profile } = useAuth();
   const { channels, createPost } = useChannelsStore();
   const [selectedChannelId, setSelectedChannelId] = useState(defaultChannelId || channels[0]?.id || '');
   const [activeTab, setActiveTab] = useState<'text' | 'media' | 'link'>('text');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [flair, setFlair] = useState('Discussion');
+  const [flair, setFlair] = useState(articleSlug ? 'Fan Theory' : 'Discussion');
   const [mediaUrl, setMediaUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
 
@@ -30,16 +46,26 @@ export default function CreatePostModal({ isOpen, onClose, defaultChannelId }: C
       return;
     }
 
+    const authorName = profile?.display_name || user?.email?.split('@')[0] || 'Community Critic';
+    const authorUsername = profile?.username || 'user_' + Math.floor(Math.random() * 1000);
+    const authorAvatar = profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorUsername}`;
+
     createPost({
       channel_id: selectedChannelId,
       title: title.trim(),
       content: content.trim(),
       flair: flair.trim(),
       media_url: activeTab === 'media' ? mediaUrl.trim() : undefined,
-      user_id: 'current-user',
-      author_name: 'Cosmic Traveler',
-      author_username: 'cosmic_explorer',
-      author_avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=cosmic_explorer',
+      link_url: activeTab === 'link' ? linkUrl.trim() : undefined,
+      article_slug: articleSlug,
+      article_title: articleTitle,
+      article_thumbnail: articleThumbnail,
+      article_score: articleScore,
+      article_category: articleCategory,
+      user_id: user?.id || `anon-${Date.now()}`,
+      author_name: authorName,
+      author_username: authorUsername,
+      author_avatar: authorAvatar,
     });
 
     toast.success('Discussion posted successfully!');
@@ -50,7 +76,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultChannelId }: C
     onClose();
   };
 
-  const flairs = ['Discussion', 'Deep Analysis', 'Tech Breakdown', 'Theory', 'Feedback', 'News'];
+  const flairs = ['Discussion', 'Deep Analysis', 'Tech Breakdown', 'Fan Theory', 'Feedback', 'News'];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
@@ -68,6 +94,21 @@ export default function CreatePostModal({ isOpen, onClose, defaultChannelId }: C
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Linked Article Notice */}
+        {articleTitle && (
+          <div className="mt-3 p-3 rounded-2xl bg-cyan-950/40 border border-cyan-500/30 flex items-center gap-2.5">
+            <BookOpen className="w-4 h-4 text-cyan-400 shrink-0" />
+            <div className="min-w-0 flex-1">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-300 font-bold block">
+                Linked Source Article
+              </span>
+              <p className="text-xs text-zinc-200 truncate font-medium">
+                {articleTitle}
+              </p>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
           {/* Channel selector */}

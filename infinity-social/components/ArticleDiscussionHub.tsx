@@ -356,14 +356,15 @@ export default function ArticleDiscussionHub({
 
       </div>
 
-      {/* Create New Post Modal */}
-      {showCreatePostModal && (
-        <CreatePostModal
-          channelId={targetChannel.id}
-          channelName={targetChannel.name}
-          onClose={() => setShowCreatePostModal(false)}
-        />
-      )}
+      {/* Create New Post Modal with Article Linkage */}
+      <CreatePostModal
+        isOpen={showCreatePostModal}
+        defaultChannelId={targetChannel.id}
+        articleSlug={articleSlug}
+        articleTitle={articleTitle}
+        articleCategory={category}
+        onClose={() => setShowCreatePostModal(false)}
+      />
 
     </section>
   );
