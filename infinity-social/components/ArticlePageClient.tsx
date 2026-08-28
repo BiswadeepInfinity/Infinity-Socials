@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ForumSection from '@/components/ForumSection';
+import ArticleDiscussionHub from '@/components/ArticleDiscussionHub';
 import Toolkit from '@/components/Toolkit';
 import ArticleRenderer from '@/components/ArticleRenderer';
 import ButterflyLoader from '@/components/ButterflyLoader';
@@ -985,8 +985,12 @@ export default function ArticlePageClient({ slug, reviewId }: ArticlePageClientP
           </div>
         </article>
 
-        {/* Discord-like Community Forums */}
-        <ForumSection articleId={article.id} articleTitle={article.title} />
+        {/* Pop Culture Reddit-style Discussion Hub */}
+        <ArticleDiscussionHub
+          articleSlug={slug || article.slug}
+          articleTitle={currentTitle}
+          category={currentCategory}
+        />
 
         {/* More Articles Deck */}
         <section className="max-w-5xl mx-auto px-6 mt-20">
