@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 const HERO_FEATURED = [
@@ -106,6 +106,38 @@ export default function HeroSection() {
     };
   }, []);
 
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    // Detect horizontal swipe if deltaX is greater than vertical deltaY
+    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        // Swiped Left -> Next Story
+        setActiveIndex((prev) => {
+          const next = (prev + 1) % HERO_FEATURED.length;
+          setDeckOffset(Math.max(0, Math.min(next, HERO_FEATURED.length - 3)));
+          return next;
+        });
+      } else {
+        // Swiped Right -> Previous Story
+        setActiveIndex((prev) => {
+          const prevIdx = (prev - 1 + HERO_FEATURED.length) % HERO_FEATURED.length;
+          setDeckOffset(Math.max(0, Math.min(prevIdx, HERO_FEATURED.length - 3)));
+          return prevIdx;
+        });
+      }
+    }
+  };
+
   const current = HERO_FEATURED[activeIndex];
 
   const scrollToWindow = () => {
@@ -125,7 +157,11 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative w-full min-h-[460px] sm:min-h-[540px] lg:h-[calc(100vh-72px)] bg-[#030305] flex flex-col justify-between items-center overflow-hidden select-none py-4 sm:py-6 lg:py-4">
+    <section
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      className="relative w-full min-h-[460px] sm:min-h-[540px] lg:h-[calc(100vh-72px)] bg-[#030305] flex flex-col justify-between items-center overflow-hidden select-none py-4 sm:py-6 lg:py-4 touch-pan-y"
+    >
       
       {/* Background Photography */}
       {HERO_FEATURED.map((item, idx) => (
