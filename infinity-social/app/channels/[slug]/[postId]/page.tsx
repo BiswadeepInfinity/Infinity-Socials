@@ -10,6 +10,7 @@ import CommentItem from '@/components/CommentItem';
 import CreatePostModal from '@/components/CreatePostModal';
 import CreateChannelModal from '@/components/CreateChannelModal';
 import { useChannelsStore } from '@/lib/channels-store';
+import { useAuth } from '@/components/AuthProvider';
 import { 
   ArrowLeft, 
   Send, 
@@ -27,6 +28,7 @@ export default function PostDiscussionPage({
   params: Promise<{ slug: string; postId: string }>;
 }) {
   const resolvedParams = use(params);
+  const { user, profile } = useAuth();
   const { channels, posts, commentsByPostId, addComment } = useChannelsStore();
   const [commentInput, setCommentInput] = useState('');
   const [commentSort, setCommentSort] = useState<'top' | 'new'>('top');
@@ -55,15 +57,19 @@ export default function PostDiscussionPage({
     return b.id.localeCompare(a.id);
   });
 
+  const authorName = profile?.display_name || user?.email?.split('@')[0] || 'Community Critic';
+  const authorUsername = profile?.username || 'user_' + Math.floor(Math.random() * 1000);
+  const authorAvatar = profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorUsername}`;
+
   const handleSendRootComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!commentInput.trim()) return;
 
     addComment(post.id, null, commentInput.trim(), {
-      id: 'current-user',
-      name: 'Cosmic Traveler',
-      username: 'cosmic_explorer',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=cosmic_explorer',
+      id: user?.id || `anon-${Date.now()}`,
+      name: authorName,
+      username: authorUsername,
+      avatar: authorAvatar,
       badges: ['top_1_percent_commenter'],
     });
 
@@ -90,7 +96,7 @@ export default function PostDiscussionPage({
           {/* Left Sidebar */}
           <ChannelsSidebar onOpenCreateChannel={() => setIsCreateChannelOpen(true)} />
 
-          {/* Main Discussion Thread (Screenshot 2 & 3) */}
+          {/* Main Discussion Thread */}
           <div className="flex-1 min-w-0 w-full flex flex-col gap-6">
             {/* Main Post Detailed Card */}
             <ChannelPostCard
@@ -105,7 +111,7 @@ export default function PostDiscussionPage({
               <form onSubmit={handleSendRootComment} className="mb-6">
                 <div className="text-xs text-zinc-400 mb-2 flex items-center justify-between">
                   <span>
-                    Comment as <span className="text-cyan-400 font-bold">u/cosmic_explorer</span> (🪐 Top 1% Commenter)
+                    Comment as <span className="text-cyan-400 font-bold">u/{authorUsername}</span> (🪐 Top 1% Commenter)
                   </span>
                 </div>
 
