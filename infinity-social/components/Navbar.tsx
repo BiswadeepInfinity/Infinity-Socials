@@ -240,6 +240,10 @@ export default function Navbar() {
           <Link href="/gaming" className="nav-link-zoom" style={{ color: 'rgba(255, 255, 255, 0.65)', textDecoration: 'none' }}>
             Gaming
           </Link>
+          <Link href="/channels" className="nav-link-zoom" style={{ color: 'rgba(255, 255, 255, 0.65)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>Channels</span>
+            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#06b6d4', boxShadow: '0 0 8px rgba(6, 182, 212, 0.8)' }} />
+          </Link>
           <Link href="/community" className="nav-link-zoom" style={{ color: 'rgba(255, 255, 255, 0.65)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>Community</span>
             <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#ef4444', boxShadow: '0 0 8px rgba(239, 68, 68, 0.8)' }} />

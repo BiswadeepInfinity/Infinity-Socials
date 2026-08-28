@@ -119,3 +119,71 @@ export type WatchlistItem = {
   created_at: string;
 };
 
+export type ChannelBadgeType = 
+  | 'top_1_percent_commenter'
+  | 'top_5_percent_poster'
+  | 'moderator'
+  | 'original_poster'
+  | 'verified_critic';
+
+export type Channel = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  avatar_url: string;
+  banner_url?: string;
+  created_by?: string;
+  is_restricted?: boolean;
+  member_count: number;
+  weekly_visitors: number;
+  weekly_contributions: number;
+  rules?: string[];
+  created_at: string;
+};
+
+export type ChannelPost = {
+  id: string;
+  channel_id: string;
+  user_id: string;
+  author_name: string;
+  author_username: string;
+  author_avatar: string;
+  author_badges?: ChannelBadgeType[];
+  title: string;
+  content: string;
+  flair?: string;
+  media_url?: string | null;
+  link_url?: string | null;
+  upvotes: number;
+  downvotes: number;
+  user_vote?: 'up' | 'down' | null;
+  comments_count: number;
+  is_pinned?: boolean;
+  created_at: string;
+  channel?: Channel;
+};
+
+export type ChannelComment = {
+  id: string;
+  post_id: string;
+  parent_id?: string | null;
+  user_id: string;
+  author_name: string;
+  author_username: string;
+  author_avatar: string;
+  author_badges?: ChannelBadgeType[];
+  content: string;
+  upvotes: number;
+  downvotes: number;
+  user_vote?: 'up' | 'down' | null;
+  is_op?: boolean;
+  is_mod?: boolean;
+  is_pinned?: boolean;
+  is_edited?: boolean;
+  created_at: string;
+  replies?: ChannelComment[];
+};
+
+
