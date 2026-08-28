@@ -226,7 +226,7 @@ export default function CommunityArticles() {
 
         {/* Redesigned Clean & Premium Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          {filteredItems.map((item) => {
+          {filteredItems.map((item, index) => {
             const v = votes[item.id];
             const netKarma = v.up - v.down;
             const isJoined = joinedCreators[item.creator.name] || false;
@@ -235,7 +235,8 @@ export default function CommunityArticles() {
             return (
               <div
                 key={item.id}
-                className="group relative rounded-[20px] sm:rounded-[24px] bg-[#0c0c14]/80 border border-white/[0.12] hover:border-white/30 transition-all duration-300 backdrop-blur-xl p-4 sm:p-6 flex flex-col justify-between gap-4 sm:gap-5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.85)] hover:-translate-y-0.5"
+                style={{ animationDelay: `${index * 80}ms` }}
+                className="animate-card-reveal touch-spring group relative rounded-[20px] sm:rounded-[24px] bg-[#0c0c14]/80 border border-white/[0.12] hover:border-white/30 transition-all duration-300 backdrop-blur-xl p-4 sm:p-6 flex flex-col justify-between gap-4 sm:gap-5 shadow-[0_12px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.85)] hover:-translate-y-0.5 active:border-white/30"
               >
                 {/* Top Subtle Specular Highlight */}
                 <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
@@ -248,10 +249,10 @@ export default function CommunityArticles() {
                       <img
                         src={item.creator.avatar}
                         alt={item.creator.name}
-                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border border-white/20 shadow-sm"
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border border-white/20 shadow-sm transition-transform duration-300 group-hover:scale-105"
                       />
                       <span
-                        className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-white rounded-full border-2 border-[#0c0c14] flex items-center justify-center text-[8px] text-black font-black"
+                        className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-white rounded-full border-2 border-[#0c0c14] flex items-center justify-center text-[8px] text-black font-black shadow-sm"
                         title="Verified Creator"
                       >
                         ✓
@@ -278,10 +279,10 @@ export default function CommunityArticles() {
                   {/* Join / Follow Button */}
                   <button
                     onClick={() => toggleJoin(item.creator.name)}
-                    className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-1 flex-shrink-0 ${
+                    className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-1 flex-shrink-0 active:scale-90 ${
                       isJoined
                         ? 'bg-white/10 text-white/90 border border-white/25 hover:bg-white/15'
-                        : 'bg-white text-black hover:bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+                        : 'bg-white text-black hover:bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.3)] hover:shadow-[0_0_18px_rgba(255,255,255,0.5)]'
                     }`}
                   >
                     <span>{isJoined ? '✓ Joined' : '+ Follow'}</span>
@@ -301,7 +302,11 @@ export default function CommunityArticles() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
                     {/* Rank Badge */}
-                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md font-mono font-bold text-[10px] backdrop-blur-md border border-white/20 bg-black/75 text-white shadow-sm flex items-center gap-1">
+                    <div className={`absolute top-2 left-2 px-2 py-0.5 rounded-md font-mono font-bold text-[10px] backdrop-blur-md border shadow-sm flex items-center gap-1 transition-all ${
+                      item.rank === 1
+                        ? 'bg-amber-950/85 border-amber-400/50 text-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.35)]'
+                        : 'bg-black/75 border-white/20 text-white'
+                    }`}>
                       <span>#{item.rank}</span>
                     </div>
                   </div>
@@ -337,14 +342,14 @@ export default function CommunityArticles() {
                     <div className="flex items-center bg-white/[0.05] p-0.5 rounded-full border border-white/[0.1]">
                       <button
                         onClick={() => handleVote(item.id, 'up')}
-                        className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold transition-all ${
+                        className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold transition-all active:scale-125 ${
                           v.userVote === 'up'
                             ? 'bg-white text-black shadow-[0_0_12px_rgba(255,255,255,0.4)]'
                             : 'text-white/70 hover:text-white hover:bg-white/[0.08]'
                         }`}
                         title="Upvote"
                       >
-                        <span>▲</span>
+                        <span className="active:scale-125 transition-transform">▲</span>
                         <span>{v.up.toLocaleString()}</span>
                       </button>
 
@@ -352,14 +357,14 @@ export default function CommunityArticles() {
 
                       <button
                         onClick={() => handleVote(item.id, 'down')}
-                        className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-mono transition-all ${
+                        className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-mono transition-all active:scale-125 ${
                           v.userVote === 'down'
                             ? 'bg-rose-500/20 text-rose-300 border border-rose-400/30'
                             : 'text-white/40 hover:text-white/70 hover:bg-white/[0.08]'
                         }`}
                         title="Downvote"
                       >
-                        <span>▼</span>
+                        <span className="active:scale-125 transition-transform">▼</span>
                         <span>{v.down}</span>
                       </button>
                     </div>
@@ -379,7 +384,7 @@ export default function CommunityArticles() {
 
                     <Link
                       href={`/articles/${item.slug}`}
-                      className="text-[11px] sm:text-xs font-mono font-semibold text-white/80 hover:text-white flex items-center gap-1 group/link"
+                      className="text-[11px] sm:text-xs font-mono font-semibold text-white/80 hover:text-white flex items-center gap-1 group/link active:translate-x-1 transition-transform"
                     >
                       <span>Read Story</span>
                       <span className="group-hover/link:translate-x-0.5 transition-transform">→</span>
