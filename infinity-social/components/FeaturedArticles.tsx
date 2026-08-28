@@ -383,7 +383,7 @@ export default function FeaturedArticlesWindow() {
 
       <section
         id="featured-articles-window"
-        className="w-full py-10 sm:py-16 lg:py-24 bg-[#020204] flex flex-col items-center relative overflow-hidden"
+        className="w-full pt-3 pb-8 sm:py-16 lg:py-24 bg-[#020204] flex flex-col items-center relative overflow-hidden"
       >
         <div className="w-full max-w-[1240px] px-4 sm:px-6 mx-auto">
           

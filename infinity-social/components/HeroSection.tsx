@@ -160,7 +160,7 @@ export default function HeroSection() {
     <section
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="relative w-full min-h-[460px] sm:min-h-[540px] lg:h-[calc(100vh-72px)] bg-[#030305] flex flex-col justify-between items-center overflow-hidden select-none py-4 sm:py-6 lg:py-4 touch-pan-y"
+      className="relative w-full min-h-0 sm:min-h-[480px] lg:h-[calc(100vh-72px)] bg-[#030305] flex flex-col justify-between items-center overflow-hidden select-none pt-4 pb-5 sm:py-6 lg:py-4 touch-pan-y"
     >
       
       {/* Background Photography */}

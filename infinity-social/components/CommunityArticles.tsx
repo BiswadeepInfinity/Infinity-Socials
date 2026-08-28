@@ -227,7 +227,7 @@ export default function CommunityArticles() {
   });
 
   return (
-    <section ref={sectionRef} className="py-12 sm:py-20 bg-[#030306] w-full flex justify-center border-t border-white/[0.06] relative overflow-hidden">
+    <section ref={sectionRef} className="py-6 sm:py-16 bg-[#030306] w-full flex justify-center border-t border-white/[0.06] relative overflow-hidden">
       {/* Background Ambient Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-r from-white/[0.02] via-white/[0.04] to-transparent rounded-full blur-3xl pointer-events-none" />
       
