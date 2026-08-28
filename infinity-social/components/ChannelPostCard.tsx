@@ -67,8 +67,8 @@ export default function ChannelPostCard({
       }}
     >
       <div className="flex items-start gap-3 sm:gap-4">
-        {/* Left Voting Column (Infinity Continuum Style) */}
-        <div className="flex flex-col items-center bg-white/[0.03] border border-white/[0.06] rounded-xl p-1 min-w-[38px] select-none shrink-0">
+        {/* Left Reputation Pillar (Infinity Continuum Style) */}
+        <div className="flex flex-col items-center bg-white/[0.03] border border-white/[0.06] rounded-xl p-1 min-w-[38px] select-none shrink-0" title="Community Reputation Score">
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -80,8 +80,8 @@ export default function ChannelPostCard({
                 ? 'text-cyan-300 bg-cyan-500/20 border border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.4)]'
                 : 'text-zinc-500 hover:text-cyan-400 hover:bg-white/5'
             }`}
-            title="Upvote"
-            aria-label="Upvote"
+            title="+Reputation (+Rep)"
+            aria-label="+Reputation"
           >
             <ChevronUp className="w-5 h-5 stroke-[2.5]" />
           </button>
@@ -95,7 +95,7 @@ export default function ChannelPostCard({
                 : 'text-zinc-400'
             }`}
           >
-            {score}
+            {score > 0 ? `+${score}` : score}
           </span>
 
           <button
@@ -109,8 +109,8 @@ export default function ChannelPostCard({
                 ? 'text-rose-300 bg-rose-500/20 border border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.4)]'
                 : 'text-zinc-500 hover:text-rose-400 hover:bg-white/5'
             }`}
-            title="Downvote"
-            aria-label="Downvote"
+            title="-Reputation (-Rep)"
+            aria-label="-Reputation"
           >
             <ChevronDown className="w-5 h-5 stroke-[2.5]" />
           </button>

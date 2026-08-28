@@ -206,8 +206,8 @@ export default function ArticleDiscussionHub({
                     <span className="px-2 py-0.5 rounded-md bg-white/[0.06] text-white/70 font-mono text-[9px] font-semibold uppercase">
                       {spinoff.flair}
                     </span>
-                    <span className="font-mono text-[10px] text-orange-400 font-bold">
-                      ▲ {spinoff.upvotes}
+                    <span className="font-mono text-[10px] text-cyan-400 font-bold">
+                      +{spinoff.upvotes} Rep
                     </span>
                   </div>
                   <h4 className="font-display font-bold text-xs text-white group-hover:text-cyan-300 transition-colors line-clamp-2 leading-snug">

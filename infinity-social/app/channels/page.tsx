@@ -233,12 +233,12 @@ export default function ChannelsPage() {
             <div className="bg-[#090910]/90 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-4 shadow-lg">
               <div className="flex items-center justify-between gap-2 mb-3 px-1">
                 <div className="flex items-center gap-1.5">
-                  <Flame className="w-3.5 h-3.5 text-orange-400" />
+                  <TrendingUp className="w-3.5 h-3.5 text-cyan-400" />
                   <h3 className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
                     Trending Debates
                   </h3>
                 </div>
-                <span className="text-[9px] font-mono text-zinc-500 uppercase">Karma</span>
+                <span className="text-[9px] font-mono text-zinc-500 uppercase">Reputation</span>
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -259,7 +259,7 @@ export default function ChannelsPage() {
                         </h4>
                         <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 mt-1">
                           <span className="text-zinc-400">{p.flair}</span>
-                          <span className="font-bold text-cyan-400">▲ {p.upvotes}</span>
+                          <span className="font-bold text-cyan-400">+{p.upvotes} Rep</span>
                         </div>
                       </div>
                     </Link>

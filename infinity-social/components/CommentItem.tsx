@@ -178,8 +178,8 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
 
               {/* Action Buttons Bar */}
               <div className="flex items-center gap-3 text-xs text-zinc-400 mt-2">
-                {/* Voting counter (Infinity style) */}
-                <div className="flex items-center bg-white/[0.03] rounded-lg px-1 py-0.5 border border-white/[0.06]">
+                {/* Reputation counter (Infinity style) */}
+                <div className="flex items-center bg-white/[0.03] rounded-lg px-1 py-0.5 border border-white/[0.06]" title="Comment Reputation">
                   <button
                     onClick={() => handleVote('up')}
                     className={`p-0.5 rounded transition-all active:scale-90 cursor-pointer ${
@@ -187,7 +187,8 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
                         ? 'text-cyan-300 bg-cyan-500/20 border border-cyan-500/30'
                         : 'text-zinc-500 hover:text-cyan-400'
                     }`}
-                    title="Upvote"
+                    title="+Reputation (+Rep)"
+                    aria-label="+Reputation"
                   >
                     <ChevronUp className="w-4 h-4 stroke-[2.5]" />
                   </button>
@@ -201,7 +202,7 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
                         : 'text-zinc-400'
                     }`}
                   >
-                    {score}
+                    {score > 0 ? `+${score}` : score}
                   </span>
 
                   <button
@@ -211,7 +212,8 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
                         ? 'text-rose-300 bg-rose-500/20 border border-rose-500/30'
                         : 'text-zinc-500 hover:text-rose-400'
                     }`}
-                    title="Downvote"
+                    title="-Reputation (-Rep)"
+                    aria-label="-Reputation"
                   >
                     <ChevronDown className="w-4 h-4 stroke-[2.5]" />
                   </button>
