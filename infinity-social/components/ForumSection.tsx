@@ -93,23 +93,22 @@ export default function ForumSection({ articleId, articleTitle }: { articleId: s
   };
 
   return (
-    <section id="community-forum" style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px 80px' }}>
-      <div className="mb-8">
-        <div className="chip mb-3">💬 Community Forum</div>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>Discussion Channels</h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '4px' }}>
+    <section id="community-forum" className="w-full max-w-[1100px] mx-auto px-4 sm:px-6 pb-20">
+      <div className="mb-6 sm:mb-8">
+        <div className="chip mb-2 sm:mb-3">💬 Community Forum</div>
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold">Discussion Channels</h2>
+        <p className="text-white/50 text-xs sm:text-sm mt-1">
           Create and join channels for this article
         </p>
       </div>
 
       <div
-        className="glass-heavy"
-        style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid var(--glass-border)', minHeight: '520px', display: 'flex' }}
+        className="glass-heavy rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 min-h-[480px] sm:min-h-[520px] flex flex-col md:flex-row"
       >
-        {/* Sidebar — Channel List */}
-        <div style={{ width: '220px', flexShrink: 0, borderRight: '1px solid rgba(255,255,255,0.06)', padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: '4px', background: 'rgba(0,0,0,0.3)' }}>
-          <div style={{ padding: '8px 12px 12px', borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: '8px' }}>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        {/* Sidebar / Top Channels Bar on mobile */}
+        <div className="w-full md:w-[220px] shrink-0 border-b md:border-b-0 md:border-r border-white/[0.06] p-3 sm:p-4 flex flex-row md:flex-col gap-1.5 overflow-x-auto bg-black/40">
+          <div className="hidden md:block p-2 border-b border-white/[0.06] mb-2">
+            <div className="text-[10px] font-bold text-white/40 tracking-wider uppercase">
               Channels
             </div>
           </div>
@@ -119,18 +118,20 @@ export default function ForumSection({ articleId, articleTitle }: { articleId: s
               key={ch.id}
               id={`channel-${ch.id}`}
               onClick={() => setActiveChannel(ch)}
-              className={`forum-channel w-full text-left ${activeChannel.id === ch.id ? 'active' : ''}`}
+              className={`forum-channel shrink-0 md:w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between gap-2 ${
+                activeChannel.id === ch.id ? 'active bg-white/10 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/[0.05]'
+              }`}
             >
-              <span style={{ fontSize: '0.85rem', fontWeight: activeChannel.id === ch.id ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <span className="whitespace-nowrap truncate">
                 {ch.isPinned ? '📌 ' : ''}{ch.name}
               </span>
-              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginLeft: 'auto', flexShrink: 0 }}>{ch.messageCount}</span>
+              <span className="text-[10px] text-white/40">{ch.messageCount}</span>
             </button>
           ))}
 
           {/* Create Channel */}
           {showCreateChannel ? (
-            <div className="mt-3 flex flex-col gap-2">
+            <div className="mt-2 flex flex-col gap-2 min-w-[160px]">
               <input
                 id="new-channel-input"
                 type="text"
@@ -138,21 +139,19 @@ export default function ForumSection({ articleId, articleTitle }: { articleId: s
                 value={newChannelName}
                 onChange={e => setNewChannelName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && createChannel()}
-                className="glass rounded-xl px-3 py-2 text-xs w-full"
-                style={{ color: 'var(--text-primary)', border: '1px solid var(--glass-border)', background: 'transparent', outline: 'none' }}
+                className="glass rounded-xl px-3 py-1.5 text-xs w-full text-white bg-white/5 border border-white/15 outline-none"
                 autoFocus
               />
-              <div className="flex gap-2">
-                <button onClick={createChannel} className="flex-1 text-xs py-1.5 rounded-xl font-bold" style={{ background: 'rgba(124,58,237,0.3)', color: '#a78bfa' }}>Create</button>
-                <button onClick={() => setShowCreateChannel(false)} className="flex-1 text-xs py-1.5 rounded-xl" style={{ color: 'var(--text-muted)' }}>Cancel</button>
+              <div className="flex gap-1.5">
+                <button onClick={createChannel} className="flex-1 text-xs py-1 rounded-lg font-bold bg-purple-600/40 text-purple-200">Create</button>
+                <button onClick={() => setShowCreateChannel(false)} className="flex-1 text-xs py-1 rounded-lg text-white/50">Cancel</button>
               </div>
             </div>
           ) : (
             <button
               id="create-channel-btn"
               onClick={() => setShowCreateChannel(true)}
-              className="forum-channel mt-2 w-full text-left"
-              style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}
+              className="forum-channel shrink-0 md:mt-2 text-left px-3 py-1.5 text-xs text-white/50 hover:text-white"
             >
               + Create Channel
             </button>
@@ -160,7 +159,7 @@ export default function ForumSection({ articleId, articleTitle }: { articleId: s
         </div>
 
         {/* Main — Messages */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div className="flex-1 flex flex-col min-w-0">
           {/* Channel Header */}
           <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div>

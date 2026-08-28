@@ -29,6 +29,7 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/components/AuthProvider";
 import PageTransitionProvider from "@/components/PageTransitionProvider";
+import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 import { Suspense } from "react";
 
 export default function RootLayout({
@@ -46,7 +47,9 @@ export default function RootLayout({
         <AuthProvider>
           <Suspense fallback={null}>
             <PageTransitionProvider>
-              {children}
+              <ScrollRevealProvider>
+                {children}
+              </ScrollRevealProvider>
             </PageTransitionProvider>
           </Suspense>
         </AuthProvider>

@@ -145,15 +145,15 @@ export default function LoginPage() {
       </div>
 
       {/* Center Auth Form */}
-      <div className="relative z-10 w-full max-w-sm mx-auto my-auto py-8">
-        <div className="space-y-5 bg-[#090912]/80 backdrop-blur-xl border border-white/[0.08] p-7 sm:p-8 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+      <div className="relative z-10 w-full max-w-md sm:max-w-lg mx-auto my-auto py-8">
+        <div className="space-y-6 bg-[#090912]/80 backdrop-blur-xl border border-white/[0.08] p-8 sm:p-10 rounded-[28px] shadow-[0_24px_60px_rgba(0,0,0,0.65)]">
           
           {/* Headline */}
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">
+            <h1 className="text-3xl font-bold tracking-tight text-white">
               {isLogin ? 'Sign in to Infinity' : 'Create an account'}
             </h1>
-            <p className="text-xs text-white/50 mt-1">
+            <p className="text-sm text-white/60 mt-1.5 leading-relaxed">
               {isLogin
                 ? 'Enter your credentials to access your saved reviews & voting.'
                 : 'Join critics and readers discussing modern media.'}
@@ -162,23 +162,23 @@ export default function LoginPage() {
 
           {/* Feedback Alerts */}
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs leading-relaxed">
+            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs sm:text-sm leading-relaxed">
               {errorMessage}
             </div>
           )}
 
           {successMessage && (
-            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs leading-relaxed">
+            <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-sm leading-relaxed">
               {successMessage}
             </div>
           )}
 
           {/* Clean Segmented Tab Control */}
-          <div className="grid grid-cols-2 p-1 bg-white/[0.04] border border-white/[0.08] rounded-xl">
+          <div className="grid grid-cols-2 p-1.5 bg-white/[0.04] border border-white/[0.08] rounded-xl">
             <button
               type="button"
               onClick={() => { setIsLogin(true); setErrorMessage(null); setSuccessMessage(null); }}
-              className={`py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
                 isLogin
                   ? 'bg-white text-black shadow-sm'
                   : 'text-white/50 hover:text-white'
@@ -189,7 +189,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => { setIsLogin(false); setErrorMessage(null); setSuccessMessage(null); }}
-              className={`py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
                 !isLogin
                   ? 'bg-white text-black shadow-sm'
                   : 'text-white/50 hover:text-white'
@@ -200,12 +200,12 @@ export default function LoginPage() {
           </div>
 
           {/* Social Connect Buttons (Google & GitHub) */}
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               disabled={loading}
               onClick={() => handleOAuthLogin('google')}
-              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] text-xs font-medium text-white transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+              className="flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] text-sm font-medium text-white transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.2 9 5 12 5z"/>
@@ -219,7 +219,7 @@ export default function LoginPage() {
               type="button"
               disabled={loading}
               onClick={() => handleOAuthLogin('github')}
-              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] text-xs font-medium text-white transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+              className="flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] text-sm font-medium text-white transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
             >
               <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                 <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
@@ -231,14 +231,14 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-white/[0.08]" />
-            <span className="text-[10px] text-white/30 tracking-widest uppercase">or with email</span>
+            <span className="text-xs text-white/35 tracking-widest uppercase font-medium">or with email</span>
             <div className="flex-1 h-px bg-white/[0.08]" />
           </div>
 
           {/* Input Fields */}
-          <form onSubmit={handleSubmit} className="space-y-3.5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-[11px] font-medium text-white/70 mb-1">
+              <label className="block text-xs font-semibold text-white/80 mb-1.5">
                 Email Address
               </label>
               <input
@@ -247,17 +247,17 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full px-3.5 py-2.5 rounded-xl text-xs bg-white/[0.03] border border-white/[0.1] focus:border-white/40 text-white placeholder-white/20 outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-xl text-sm bg-white/[0.03] border border-white/[0.1] focus:border-white/40 text-white placeholder-white/25 outline-none transition-colors"
               />
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-[11px] font-medium text-white/70">
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-white/80">
                   Password
                 </label>
                 {isLogin && (
-                  <a href="#" className="text-[10px] text-white/40 hover:text-white transition-colors">
+                  <a href="#" className="text-xs text-white/40 hover:text-white transition-colors">
                     Forgot password?
                   </a>
                 )}
@@ -269,12 +269,12 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full px-3.5 py-2.5 pr-10 rounded-xl text-xs bg-white/[0.03] border border-white/[0.1] focus:border-white/40 text-white placeholder-white/20 outline-none transition-colors"
+                  className="w-full px-4 py-3 pr-12 rounded-xl text-sm bg-white/[0.03] border border-white/[0.1] focus:border-white/40 text-white placeholder-white/25 outline-none transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white/40 hover:text-white transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-medium text-white/40 hover:text-white transition-colors"
                 >
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
@@ -282,8 +282,8 @@ export default function LoginPage() {
 
               {/* Real-time Password Strength Criteria (Shown on Sign Up) */}
               {!isLogin && password.length > 0 && (
-                <div className="mt-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2">
-                  <div className="flex items-center justify-between text-[10px]">
+                <div className="mt-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+                  <div className="flex items-center justify-between text-xs">
                     <span className="text-white/50">Password Strength</span>
                     <span className={`font-semibold ${
                       passwordAnalysis.score <= 2 ? 'text-red-400' :
@@ -294,7 +294,7 @@ export default function LoginPage() {
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden flex gap-1">
+                  <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden flex gap-1">
                     {[1, 2, 3, 4, 5].map((lvl) => (
                       <div
                         key={lvl}
@@ -312,7 +312,7 @@ export default function LoginPage() {
                   </div>
 
                   {/* Criteria Checklist */}
-                  <div className="grid grid-cols-2 gap-1 pt-1 text-[10px]">
+                  <div className="grid grid-cols-2 gap-1.5 pt-1 text-xs">
                     <span className={passwordAnalysis.hasMinLength ? 'text-emerald-400' : 'text-white/30'}>
                       {passwordAnalysis.hasMinLength ? '✓' : '○'} 8+ Characters
                     </span>
@@ -336,7 +336,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading || (!isLogin && !passwordAnalysis.isStrong)}
-              className="w-full mt-2 py-2.5 px-4 rounded-xl text-xs font-semibold bg-white text-black hover:bg-white/90 active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-lg cursor-pointer"
+              className="w-full mt-3 py-3.5 px-4 rounded-xl text-sm font-bold bg-white text-black hover:bg-white/90 active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-lg cursor-pointer"
             >
               {loading ? 'Please wait…' : isLogin ? 'Sign In' : 'Create Account'}
             </button>

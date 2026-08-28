@@ -97,11 +97,32 @@ export default function FeaturedArticlesWindow() {
     ? FEATURED_ARTICLES
     : FEATURED_ARTICLES.filter((a) => a.domain === activeDomain);
 
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
   const checkScrollState = () => {
     if (!scrollRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+
+    // Calculate active visible card on mobile for dynamic spotlight effect
+    if (window.innerWidth < 640) {
+      const cardElements = scrollRef.current.querySelectorAll('.card-slot');
+      let closestIdx = 0;
+      let minDistance = Infinity;
+      const containerLeft = scrollRef.current.getBoundingClientRect().left;
+
+      cardElements.forEach((el, idx) => {
+        const rect = el.getBoundingClientRect();
+        const distance = Math.abs(rect.left - containerLeft - 16);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIdx = idx;
+        }
+      });
+      setMobileActiveIndex(closestIdx);
+    }
   };
 
   const scrollByAmount = (amount: number) => {
@@ -121,7 +142,7 @@ export default function FeaturedArticlesWindow() {
     };
 
     el.addEventListener('wheel', handleWheel, { passive: false });
-    el.addEventListener('scroll', checkScrollState);
+    el.addEventListener('scroll', checkScrollState, { passive: true });
     checkScrollState();
 
     return () => {
@@ -130,14 +151,41 @@ export default function FeaturedArticlesWindow() {
     };
   }, [displayedArticles.length]);
 
-  // Calculate dynamic reactive shift offset for every tile based on which tile is hovered
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Calculate dynamic reactive shift offset for every tile based on which tile is active or hovered
   const getCardTransform = (index: number) => {
+    if (isMobile) {
+      const isCardActive = mobileActiveIndex === index;
+      return {
+        width: '100%',
+        transform: isCardActive ? 'scale(1) translateY(0px)' : 'scale(0.93) translateY(4px)',
+        zIndex: isCardActive ? 10 : 1,
+        opacity: isCardActive ? 1 : 0.42,
+        filter: isCardActive ? 'brightness(1) saturate(1.2)' : 'brightness(0.5) saturate(0.7)',
+        borderColor: isCardActive ? 'rgba(255, 255, 255, 0.45)' : 'rgba(255, 255, 255, 0.08)',
+        boxShadow: isCardActive
+          ? '0 24px 50px rgba(0,0,0,0.9), 0 0 25px rgba(255,255,255,0.12), inset 0 1px 1px rgba(255,255,255,0.4)'
+          : '0 8px 20px rgba(0,0,0,0.5)',
+      };
+    }
+
     if (hoveredIndex === null) {
       return {
         width: '340px',
         transform: 'translateX(0px) translateY(0px) scale(1)',
         zIndex: 1,
         opacity: 1,
+        filter: 'none',
+        borderColor: 'rgba(255, 255, 255, 0.16)',
+        boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.4)',
       };
     }
 
@@ -156,6 +204,9 @@ export default function FeaturedArticlesWindow() {
         transform: `translateX(${shiftX}px) translateY(-6px) scale(1)`,
         zIndex: 50,
         opacity: 1,
+        filter: 'none',
+        borderColor: 'rgba(255, 255, 255, 0.6)',
+        boxShadow: '0 35px 85px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 255, 255, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 0.7)',
       };
     }
 
@@ -163,55 +214,66 @@ export default function FeaturedArticlesWindow() {
     let otherShiftX = 0;
 
     if (isFirst) {
-      // First card expanded to the right, shift all right-hand cards +180px
-      if (index > hoveredIndex) {
-        otherShiftX = 180;
-      }
+      if (index > hoveredIndex) otherShiftX = 180;
     } else if (isLast) {
-      // Last card expanded to the left, shift all left-hand cards -180px
-      if (index < hoveredIndex) {
-        otherShiftX = -180;
-      }
+      if (index < hoveredIndex) otherShiftX = -180;
     } else {
-      // Middle card expanded symmetrically (-90px left, +90px right)
-      if (index < hoveredIndex) {
-        otherShiftX = -90; // push left
-      } else if (index > hoveredIndex) {
-        otherShiftX = 90; // push right
-      }
+      if (index < hoveredIndex) otherShiftX = -90;
+      else if (index > hoveredIndex) otherShiftX = 90;
     }
 
     return {
       width: '340px',
       transform: `translateX(${otherShiftX}px) translateY(0px) scale(0.97)`,
       zIndex: 1,
-      opacity: 0.7, // Subtle focus dimming
+      opacity: 0.7,
+      filter: 'none',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      boxShadow: '0 16px 40px rgba(0, 0, 0, 0.6)',
     };
   };
 
   return (
     <>
       <style>{`
-        /* Track with hidden scrollbar and generous padding for floating expansion */
+        /* Track with hidden scrollbar and snap-scrolling on mobile */
         .isolated-deck-track {
           display: flex;
-          gap: 24px;
+          gap: 14px;
           overflow-x: auto;
           scrollbar-width: none;
           -ms-overflow-style: none;
-          padding: 20px 40px 40px 20px;
+          -webkit-overflow-scrolling: touch;
+          scroll-snap-type: x mandatory;
+          padding: 8px 16px 24px 16px;
           align-items: center;
+        }
+        @media (min-width: 640px) {
+          .isolated-deck-track {
+            gap: 24px;
+            scroll-snap-type: none;
+            padding: 20px 40px 40px 20px;
+          }
         }
         .isolated-deck-track::-webkit-scrollbar {
           display: none;
         }
 
-        /* Fixed slot container */
+        /* Fixed slot container with horizontal landscape aspect ratio on mobile */
         .card-slot {
           flex-shrink: 0;
-          width: 340px;
-          height: 480px;
+          width: 82vw;
+          max-width: 320px;
+          height: 240px;
           position: relative;
+          scroll-snap-align: start;
+        }
+        @media (min-width: 640px) {
+          .card-slot {
+            width: 340px;
+            height: 480px;
+            scroll-snap-align: unset;
+          }
         }
 
         /* Cinema card inside slot */
@@ -219,8 +281,9 @@ export default function FeaturedArticlesWindow() {
           position: absolute;
           top: 0;
           left: 0;
-          height: 480px;
-          border-radius: 30px;
+          width: 100%;
+          height: 100%;
+          border-radius: 22px;
           overflow: hidden;
           text-decoration: none;
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(10, 10, 16, 0.7);
@@ -231,8 +294,14 @@ export default function FeaturedArticlesWindow() {
           transition: width 0.45s cubic-bezier(0.2, 0.9, 0.3, 1),
                       transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1),
                       opacity 0.4s ease,
+                      filter 0.4s ease,
                       border-color 0.35s ease,
                       box-shadow 0.35s ease;
+        }
+        @media (min-width: 640px) {
+          .cinema-poster-card {
+            border-radius: 30px;
+          }
         }
 
         /* Active Hover Highlights */
@@ -314,87 +383,31 @@ export default function FeaturedArticlesWindow() {
 
       <section
         id="featured-articles-window"
-        style={{
-          width: '100%',
-          padding: '90px 0 110px',
-          backgroundColor: '#020204',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
+        className="w-full pt-3 pb-8 sm:py-16 lg:py-24 bg-[#020204] flex flex-col items-center relative overflow-hidden"
       >
-        <div style={{
-          width: '100%',
-          maxWidth: '1240px',
-          padding: '0 24px',
-          margin: '0 auto',
-        }}>
+        <div className="w-full max-w-[1240px] px-4 sm:px-6 mx-auto">
           
           {/* Section Header */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '20px',
-            marginBottom: '36px',
-          }}>
+          <div className="scroll-reveal flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-9">
             <div>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '8px',
-              }}>
-                <span style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 0 10px rgba(255,255,255,0.8)',
-                }} />
-                <span style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '11px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.12em',
-                  color: '#a1a1aa',
-                  fontWeight: 600,
-                }}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">
                   Curated Features
                 </span>
               </div>
 
-              <h2 style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2rem, 3.8vw, 3rem)',
-                fontWeight: 700,
-                color: '#ffffff',
-                letterSpacing: '-0.02em',
-                lineHeight: 1.12,
-                margin: 0,
-              }}>
+              <h2 className="font-display text-xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-tight m-0">
                 Recent Reviews & Deep Dives
               </h2>
             </div>
 
-            {/* Middle: Domain Filter Pills */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '4px',
-              borderRadius: '99px',
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(16px)',
-            }}>
+            {/* Middle: Domain Filter Pills (Horizontally Scrollable on Mobile) */}
+            <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl overflow-x-auto max-w-full scrollbar-none">
               {(['all', 'movies', 'games', 'tech', 'anime'] as ReviewDomain[]).map((dom) => {
                 const isActive = activeDomain === dom;
                 const labels: Record<ReviewDomain, string> = {
-                  all: 'All Domains',
+                  all: 'All',
                   movies: '🎬 Movies',
                   games: '🎮 Games',
                   tech: '⚡ Tech',
@@ -408,19 +421,11 @@ export default function FeaturedArticlesWindow() {
                       setHoveredIndex(null);
                       if (scrollRef.current) scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
                     }}
-                    style={{
-                      padding: '6px 14px',
-                      borderRadius: '99px',
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '11px',
-                      fontWeight: isActive ? 700 : 500,
-                      color: isActive ? '#000000' : 'rgba(255, 255, 255, 0.6)',
-                      backgroundColor: isActive ? '#ffffff' : 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s ease',
-                      boxShadow: isActive ? '0 2px 10px rgba(255,255,255,0.3)' : 'none',
-                    }}
+                    className={`px-3 py-1.5 rounded-full font-mono text-[11px] font-semibold whitespace-nowrap transition-all duration-200 border-none cursor-pointer ${
+                      isActive
+                        ? 'bg-white text-black shadow-[0_2px_10px_rgba(255,255,255,0.3)] font-bold'
+                        : 'bg-transparent text-white/60 hover:text-white'
+                    }`}
                   >
                     {labels[dom]}
                   </button>
@@ -428,27 +433,14 @@ export default function FeaturedArticlesWindow() {
               })}
             </div>
 
-            {/* Navigation Controls */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* Navigation Controls (Desktop only) */}
+            <div className="hidden sm:flex items-center gap-2">
               <button
                 onClick={() => scrollByAmount(-440)}
                 disabled={!canScrollLeft}
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#ffffff',
-                  fontSize: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: canScrollLeft ? 'pointer' : 'not-allowed',
-                  opacity: canScrollLeft ? 1 : 0.3,
-                  transition: 'all 0.2s ease',
-                  backdropFilter: 'blur(16px)',
-                }}
+                className={`w-10 h-10 rounded-full bg-white/[0.05] border border-white/15 text-white flex items-center justify-center transition-all ${
+                  canScrollLeft ? 'cursor-pointer hover:bg-white/10 opacity-100' : 'cursor-not-allowed opacity-30'
+                }`}
                 title="Previous Story"
               >
                 ←
@@ -456,22 +448,9 @@ export default function FeaturedArticlesWindow() {
               <button
                 onClick={() => scrollByAmount(440)}
                 disabled={!canScrollRight}
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#ffffff',
-                  fontSize: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: canScrollRight ? 'pointer' : 'not-allowed',
-                  opacity: canScrollRight ? 1 : 0.3,
-                  transition: 'all 0.2s ease',
-                  backdropFilter: 'blur(16px)',
-                }}
+                className={`w-10 h-10 rounded-full bg-white/[0.05] border border-white/15 text-white flex items-center justify-center transition-all ${
+                  canScrollRight ? 'cursor-pointer hover:bg-white/10 opacity-100' : 'cursor-not-allowed opacity-30'
+                }`}
                 title="Next Story"
               >
                 →
@@ -501,6 +480,9 @@ export default function FeaturedArticlesWindow() {
                       width: cardStyle.width,
                       transform: cardStyle.transform,
                       opacity: cardStyle.opacity,
+                      filter: cardStyle.filter,
+                      borderColor: cardStyle.borderColor,
+                      boxShadow: cardStyle.boxShadow,
                     }}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
@@ -605,24 +587,24 @@ export default function FeaturedArticlesWindow() {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        padding: '24px 26px',
+                        padding: isMobile ? '10px 14px' : '22px 24px',
                         zIndex: 10,
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '10px',
+                        gap: isMobile ? '3px' : '8px',
                       }}
                     >
                       <h3 style={{
                         fontFamily: 'var(--font-display)',
-                        fontSize: '19px',
+                        fontSize: isMobile ? '14px' : '18px',
                         fontWeight: 700,
                         color: '#ffffff',
-                        lineHeight: 1.25,
+                        lineHeight: 1.2,
                         letterSpacing: '-0.01em',
                         margin: 0,
                         textShadow: '0 2px 10px rgba(0,0,0,0.9)',
                         display: '-webkit-box',
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: isMobile ? 2 : 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
                       }}>
@@ -630,13 +612,13 @@ export default function FeaturedArticlesWindow() {
                       </h3>
 
                       <p style={{
-                        fontSize: '12.5px',
+                        fontSize: isMobile ? '10px' : '12px',
                         color: 'rgba(255, 255, 255, 0.75)',
                         fontWeight: 300,
-                        lineHeight: 1.45,
+                        lineHeight: 1.3,
                         margin: 0,
                         display: '-webkit-box',
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: isMobile ? 1 : 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
                       }}>
@@ -645,19 +627,19 @@ export default function FeaturedArticlesWindow() {
 
                       {/* Meta Footer */}
                       <div style={{
-                        paddingTop: '10px',
+                        paddingTop: isMobile ? '4px' : '8px',
                         borderTop: '1px solid rgba(255, 255, 255, 0.12)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         fontFamily: 'var(--font-mono)',
-                        fontSize: '11px',
+                        fontSize: isMobile ? '9px' : '11px',
                         color: 'rgba(255, 255, 255, 0.5)',
                       }}>
-                        <span style={{ color: 'rgba(255, 255, 255, 0.85)', fontWeight: 500 }}>
+                        <span style={{ color: 'rgba(255, 255, 255, 0.85)', fontWeight: 500 }} className="truncate max-w-[140px]">
                           by {article.author}
                         </span>
-                        <span>{article.readTime} READ</span>
+                        <span className="shrink-0">{article.readTime}</span>
                       </div>
                     </div>
                   </Link>

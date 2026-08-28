@@ -42,13 +42,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data) {
         setProfile(data as Profile);
       } else {
-        // Fallback: create basic profile record if absent
-        const username = userMeta?.user_metadata?.username || userMeta?.email?.split('@')[0] || `user_${userId.slice(0, 5)}`;
+        // Fallback: create temporary profile record requiring onboarding
         const fallbackProfile = {
           id: userId,
-          username,
-          display_name: userMeta?.user_metadata?.full_name || username,
-          avatar_url: userMeta?.user_metadata?.avatar_url || null,
+          username: `user_temp_${userId.slice(0, 8)}`,
+          display_name: userMeta?.user_metadata?.full_name || userMeta?.user_metadata?.name || '',
+          avatar_url: userMeta?.user_metadata?.avatar_url || userMeta?.user_metadata?.picture || null,
           role: 'user' as const,
         };
         const { data: createdProf } = await supabase
