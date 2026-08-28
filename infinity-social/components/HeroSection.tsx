@@ -160,7 +160,7 @@ export default function HeroSection() {
     <section
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="relative w-full min-h-0 sm:min-h-[480px] lg:h-[calc(100vh-72px)] bg-[#030305] flex flex-col justify-between items-center overflow-hidden select-none pt-4 pb-5 sm:py-6 lg:py-4 touch-pan-y"
+      className="relative w-full min-h-[460px] sm:min-h-[520px] lg:h-[calc(100vh-72px)] bg-[#030305] flex flex-col justify-center items-center overflow-hidden select-none py-8 sm:py-10 lg:py-4 touch-pan-y"
     >
       
       {/* Background Photography */}
@@ -182,38 +182,38 @@ export default function HeroSection() {
       ))}
 
       {/* Main Hero Stage - Stacked on Mobile, 2-Column on Desktop */}
-      <div className="relative z-10 w-full max-w-[1200px] my-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] gap-5 sm:gap-8 lg:gap-12 items-center">
+      <div className="relative z-10 w-full max-w-[1200px] my-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] gap-6 sm:gap-8 lg:gap-12 items-center">
         
         {/* Left Column: Headline & Action Stage */}
         <div className="flex flex-col items-start text-left">
           
           {/* Category Tag */}
-          <div className="mb-2 sm:mb-3">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3.5 sm:py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-zinc-100 font-mono text-[9px] sm:text-xs uppercase tracking-wider font-semibold backdrop-blur-md">
-              <span className="w-1 h-1 rounded-full bg-zinc-200" />
+          <div className="mb-3 sm:mb-4">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-zinc-100 font-mono text-[10px] sm:text-xs uppercase tracking-wider font-semibold backdrop-blur-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-200" />
               {current.category}
             </span>
           </div>
 
           {/* Headline */}
-          <div className="min-h-0 sm:min-h-[90px] lg:min-h-[110px] flex items-center mb-2 sm:mb-3">
-            <h1 className="font-display text-xl xs:text-2xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.2] tracking-tight m-0 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+          <div className="min-h-0 sm:min-h-[90px] lg:min-h-[110px] flex items-center mb-3 sm:mb-4">
+            <h1 className="font-display text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.18] tracking-tight m-0 drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
               {current.title}
             </h1>
           </div>
 
           {/* Subtitle */}
-          <div className="min-h-0 sm:min-h-[44px] lg:min-h-[48px] flex items-center mb-4 sm:mb-6">
-            <p className="text-[11px] xs:text-xs sm:text-sm lg:text-base font-light text-white/65 leading-relaxed m-0 max-w-xl line-clamp-2 sm:line-clamp-none">
+          <div className="min-h-0 sm:min-h-[44px] lg:min-h-[48px] flex items-center mb-5 sm:mb-7">
+            <p className="text-xs xs:text-sm lg:text-base font-light text-white/75 leading-relaxed m-0 max-w-xl line-clamp-3 sm:line-clamp-none">
               {current.subtitle}
             </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2.5 sm:gap-4 flex-wrap mb-4 sm:mb-6 w-full sm:w-auto">
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap mb-5 sm:mb-6 w-full sm:w-auto">
             <Link
               href={`/articles/${current.slug}`}
-              className="btn-editorial-primary flex-1 sm:flex-initial justify-center px-4 sm:px-7 py-2 sm:py-3 text-[11px] sm:text-sm font-bold text-white no-underline text-center"
+              className="btn-editorial-primary flex-1 sm:flex-initial justify-center px-5 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-white no-underline text-center shadow-lg"
             >
               <span>Read Full Story</span>
               <span>→</span>
@@ -229,7 +229,7 @@ export default function HeroSection() {
           </div>
 
           {/* Slide Indicator Bars */}
-          <div className="flex items-center gap-1.5 sm:gap-2 h-3 sm:h-4">
+          <div className="flex items-center gap-2 h-4">
             {HERO_FEATURED.map((_, idx) => (
               <button
                 key={idx}
