@@ -22,9 +22,15 @@ interface ChannelPostCardProps {
   post: ChannelPost;
   channelSlug?: string;
   isDetailed?: boolean;
+  hideArticlePreview?: boolean;
 }
 
-export default function ChannelPostCard({ post, channelSlug, isDetailed = false }: ChannelPostCardProps) {
+export default function ChannelPostCard({ 
+  post, 
+  channelSlug, 
+  isDetailed = false,
+  hideArticlePreview = false 
+}: ChannelPostCardProps) {
   const { votePost, channels } = useChannelsStore();
   const [saved, setSaved] = useState(false);
 
@@ -186,7 +192,7 @@ export default function ChannelPostCard({ post, channelSlug, isDetailed = false 
           </div>
 
           {/* Linked Source Article Cinema Window */}
-          {post.article_slug && (
+          {post.article_slug && !hideArticlePreview && (
             <Link
               href={`/articles/${post.article_slug}`}
               className="mt-4 group/article flex flex-col sm:flex-row items-stretch gap-3.5 p-3 rounded-2xl bg-gradient-to-r from-white/[0.04] to-white/[0.02] border border-white/[0.12] hover:border-cyan-400/50 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(6,182,212,0.15)] no-underline overflow-hidden relative"

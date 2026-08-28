@@ -246,12 +246,14 @@ export default function ChannelsPage() {
               </div>
 
               <div className="flex flex-col gap-2.5">
-                {topUpvotedArticleForums.map((p, idx) => (
-                  <Link
-                    key={p.id}
-                    href={`/channels/${p.channel_id.replace('ch-', '')}/${p.id}`}
-                    className="group p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/20 transition-all flex items-start gap-2.5 no-underline"
-                  >
+                {topUpvotedArticleForums.map((p, idx) => {
+                  const chSlug = channels.find((c) => c.id === p.channel_id)?.slug || 'gaming';
+                  return (
+                    <Link
+                      key={p.id}
+                      href={`/channels/${chSlug}/${p.id}`}
+                      className="group p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/20 transition-all flex items-start gap-2.5 no-underline"
+                    >
                     <span className="font-mono text-xs font-extrabold text-orange-400 w-4 pt-0.5 shrink-0">
                       #{idx + 1}
                     </span>
@@ -265,7 +267,8 @@ export default function ChannelsPage() {
                       </div>
                     </div>
                   </Link>
-                ))}
+                );
+              })}
               </div>
             </div>
 

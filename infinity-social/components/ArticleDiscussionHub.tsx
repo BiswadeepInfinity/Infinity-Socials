@@ -48,15 +48,41 @@ export default function ArticleDiscussionHub({
     return channels.find((c) => c.slug === targetChannelSlug) || channels[0];
   }, [channels, targetChannelSlug]);
 
-  // Find canonical discussion thread for this article or fallback to top channel post
+  // Find canonical discussion thread for this article or dynamically map one
   const canonicalPost = useMemo(() => {
-    const matching = posts.find(
+    // 1. Direct article_slug match
+    const directMatch = posts.find((p) => p.article_slug === articleSlug);
+    if (directMatch) return directMatch;
+
+    // 2. Title / keyword match within same channel
+    const keywordMatch = posts.find(
       (p) =>
-        p.title.toLowerCase().includes(articleSlug.split('-')[0]) ||
-        p.channel_id === targetChannel?.id
+        p.channel_id === targetChannel?.id &&
+        p.title.toLowerCase().includes(articleSlug.split('-')[0])
     );
-    return matching || posts[0];
-  }, [posts, articleSlug, targetChannel]);
+    if (keywordMatch) return keywordMatch;
+
+    // 3. Synthesize a clean canonical thread for any newly published article
+    return {
+      id: `post-art-${articleSlug}`,
+      channel_id: targetChannel?.id || 'ch-gaming',
+      user_id: 'editorial_infinity',
+      author_name: 'Infinity Editorial Staff',
+      author_username: 'infinity_critics',
+      author_avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=InfinityEditorial',
+      author_badges: ['top_1_percent_commenter' as const],
+      title: `${articleTitle}: Official Discussion & Review Megathread`,
+      content: `Welcome to the official discussion forum for "${articleTitle}". Share your gameplay impressions, review scores, and fan theories below!`,
+      flair: 'Official Megathread',
+      article_slug: articleSlug,
+      article_title: articleTitle,
+      upvotes: 42,
+      downvotes: 0,
+      comments_count: (commentsByPostId[`post-art-${articleSlug}`] || []).length,
+      is_pinned: true,
+      created_at: 'Just now',
+    };
+  }, [posts, articleSlug, articleTitle, targetChannel, commentsByPostId]);
 
   // Related spin-off discussion threads
   const relatedSpinoffPosts = useMemo(() => {
@@ -207,6 +233,7 @@ export default function ArticleDiscussionHub({
               post={canonicalPost}
               channelSlug={targetChannel.slug}
               isDetailed={true}
+              hideArticlePreview={true}
             />
           </div>
 

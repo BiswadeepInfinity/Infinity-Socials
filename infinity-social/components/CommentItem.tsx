@@ -15,15 +15,19 @@ import {
   Pin,
   Send
 } from 'lucide-react';
+import { useAuth } from '@/components/AuthProvider';
 import toast from 'react-hot-toast';
 
 interface CommentItemProps {
   comment: ChannelComment;
   postId: string;
   depth?: number;
+  onVote?: (postId: string, commentId: string, type: 'up' | 'down') => void;
+  onReply?: (postId: string, parentId: string | null, content: string, user: any) => void;
 }
 
-export default function CommentItem({ comment, postId, depth = 0 }: CommentItemProps) {
+export default function CommentItem({ comment, postId, depth = 0, onVote, onReply }: CommentItemProps) {
+  const { user, profile } = useAuth();
   const { voteComment, addComment } = useChannelsStore();
   const [collapsed, setCollapsed] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
@@ -33,19 +37,33 @@ export default function CommentItem({ comment, postId, depth = 0 }: CommentItemP
   const hasReplies = comment.replies && comment.replies.length > 0;
 
   const handleVote = (type: 'up' | 'down') => {
-    voteComment(postId, comment.id, type);
+    if (onVote) {
+      onVote(postId, comment.id, type);
+    } else {
+      voteComment(postId, comment.id, type);
+    }
   };
 
   const handleSendReply = () => {
     if (!replyText.trim()) return;
 
-    addComment(postId, comment.id, replyText.trim(), {
-      id: 'current-user',
-      name: 'Cosmic Traveler',
-      username: 'cosmic_explorer',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=cosmic_explorer',
-      badges: ['top_1_percent_commenter'],
-    });
+    const authorName = profile?.display_name || user?.email?.split('@')[0] || 'Community Critic';
+    const authorUsername = profile?.username || 'user_' + Math.floor(Math.random() * 1000);
+    const authorAvatar = profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorUsername}`;
+
+    const userData = {
+      id: user?.id || `anon-${Date.now()}`,
+      name: authorName,
+      username: authorUsername,
+      avatar: authorAvatar,
+      badges: ['top_1_percent_commenter' as const],
+    };
+
+    if (onReply) {
+      onReply(postId, comment.id, replyText.trim(), userData);
+    } else {
+      addComment(postId, comment.id, replyText.trim(), userData);
+    }
 
     setReplyText('');
     setIsReplying(false);
