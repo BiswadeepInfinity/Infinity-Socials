@@ -97,11 +97,32 @@ export default function FeaturedArticlesWindow() {
     ? FEATURED_ARTICLES
     : FEATURED_ARTICLES.filter((a) => a.domain === activeDomain);
 
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
   const checkScrollState = () => {
     if (!scrollRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+
+    // Calculate active visible card on mobile for dynamic spotlight effect
+    if (window.innerWidth < 640) {
+      const cardElements = scrollRef.current.querySelectorAll('.card-slot');
+      let closestIdx = 0;
+      let minDistance = Infinity;
+      const containerLeft = scrollRef.current.getBoundingClientRect().left;
+
+      cardElements.forEach((el, idx) => {
+        const rect = el.getBoundingClientRect();
+        const distance = Math.abs(rect.left - containerLeft - 16);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIdx = idx;
+        }
+      });
+      setMobileActiveIndex(closestIdx);
+    }
   };
 
   const scrollByAmount = (amount: number) => {
@@ -121,7 +142,7 @@ export default function FeaturedArticlesWindow() {
     };
 
     el.addEventListener('wheel', handleWheel, { passive: false });
-    el.addEventListener('scroll', checkScrollState);
+    el.addEventListener('scroll', checkScrollState, { passive: true });
     checkScrollState();
 
     return () => {
@@ -129,8 +150,6 @@ export default function FeaturedArticlesWindow() {
       el.removeEventListener('scroll', checkScrollState);
     };
   }, [displayedArticles.length]);
-
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -141,14 +160,20 @@ export default function FeaturedArticlesWindow() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Calculate dynamic reactive shift offset for every tile based on which tile is hovered
+  // Calculate dynamic reactive shift offset for every tile based on which tile is active or hovered
   const getCardTransform = (index: number) => {
     if (isMobile) {
+      const isCardActive = mobileActiveIndex === index;
       return {
         width: '100%',
-        transform: 'none',
-        zIndex: 1,
-        opacity: 1,
+        transform: isCardActive ? 'scale(1) translateY(0px)' : 'scale(0.93) translateY(4px)',
+        zIndex: isCardActive ? 10 : 1,
+        opacity: isCardActive ? 1 : 0.42,
+        filter: isCardActive ? 'brightness(1) saturate(1.2)' : 'brightness(0.5) saturate(0.7)',
+        borderColor: isCardActive ? 'rgba(255, 255, 255, 0.45)' : 'rgba(255, 255, 255, 0.08)',
+        boxShadow: isCardActive
+          ? '0 24px 50px rgba(0,0,0,0.9), 0 0 25px rgba(255,255,255,0.12), inset 0 1px 1px rgba(255,255,255,0.4)'
+          : '0 8px 20px rgba(0,0,0,0.5)',
       };
     }
 
@@ -158,6 +183,9 @@ export default function FeaturedArticlesWindow() {
         transform: 'translateX(0px) translateY(0px) scale(1)',
         zIndex: 1,
         opacity: 1,
+        filter: 'none',
+        borderColor: 'rgba(255, 255, 255, 0.16)',
+        boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.4)',
       };
     }
 
@@ -176,6 +204,9 @@ export default function FeaturedArticlesWindow() {
         transform: `translateX(${shiftX}px) translateY(-6px) scale(1)`,
         zIndex: 50,
         opacity: 1,
+        filter: 'none',
+        borderColor: 'rgba(255, 255, 255, 0.6)',
+        boxShadow: '0 35px 85px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 255, 255, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 0.7)',
       };
     }
 
@@ -183,29 +214,22 @@ export default function FeaturedArticlesWindow() {
     let otherShiftX = 0;
 
     if (isFirst) {
-      // First card expanded to the right, shift all right-hand cards +180px
-      if (index > hoveredIndex) {
-        otherShiftX = 180;
-      }
+      if (index > hoveredIndex) otherShiftX = 180;
     } else if (isLast) {
-      // Last card expanded to the left, shift all left-hand cards -180px
-      if (index < hoveredIndex) {
-        otherShiftX = -180;
-      }
+      if (index < hoveredIndex) otherShiftX = -180;
     } else {
-      // Middle card expanded symmetrically (-90px left, +90px right)
-      if (index < hoveredIndex) {
-        otherShiftX = -90; // push left
-      } else if (index > hoveredIndex) {
-        otherShiftX = 90; // push right
-      }
+      if (index < hoveredIndex) otherShiftX = -90;
+      else if (index > hoveredIndex) otherShiftX = 90;
     }
 
     return {
       width: '340px',
       transform: `translateX(${otherShiftX}px) translateY(0px) scale(0.97)`,
       zIndex: 1,
-      opacity: 0.7, // Subtle focus dimming
+      opacity: 0.7,
+      filter: 'none',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      boxShadow: '0 16px 40px rgba(0, 0, 0, 0.6)',
     };
   };
 
@@ -270,6 +294,7 @@ export default function FeaturedArticlesWindow() {
           transition: width 0.45s cubic-bezier(0.2, 0.9, 0.3, 1),
                       transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1),
                       opacity 0.4s ease,
+                      filter 0.4s ease,
                       border-color 0.35s ease,
                       box-shadow 0.35s ease;
         }
@@ -455,6 +480,9 @@ export default function FeaturedArticlesWindow() {
                       width: cardStyle.width,
                       transform: cardStyle.transform,
                       opacity: cardStyle.opacity,
+                      filter: cardStyle.filter,
+                      borderColor: cardStyle.borderColor,
+                      boxShadow: cardStyle.boxShadow,
                     }}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
