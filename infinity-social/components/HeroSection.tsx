@@ -69,6 +69,7 @@ const HERO_FEATURED = [
 export default function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [deckOffset, setDeckOffset] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -79,6 +80,30 @@ export default function HeroSection() {
       });
     }, 7000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Idle Scroll Hint: Only appear if user stays idle for >3.5s at the top of the page
+  useEffect(() => {
+    const idleTimer = setTimeout(() => {
+      if (typeof window !== 'undefined' && window.scrollY < 30) {
+        setShowScrollHint(true);
+      }
+    }, 3500);
+
+    const handleDismiss = () => {
+      setShowScrollHint(false);
+    };
+
+    window.addEventListener('scroll', handleDismiss, { passive: true });
+    window.addEventListener('touchstart', handleDismiss, { passive: true });
+    window.addEventListener('wheel', handleDismiss, { passive: true });
+
+    return () => {
+      clearTimeout(idleTimer);
+      window.removeEventListener('scroll', handleDismiss);
+      window.removeEventListener('touchstart', handleDismiss);
+      window.removeEventListener('wheel', handleDismiss);
+    };
   }, []);
 
   const current = HERO_FEATURED[activeIndex];
@@ -418,32 +443,17 @@ export default function HeroSection() {
 
       </div>
 
-      {/* Subtle "Scroll to Explore" Cue at bottom center */}
+      {/* Floating Idle Scroll Hint (Only appears after idle period, disappears on any scroll) */}
       <div
         onClick={scrollToWindow}
-        style={{
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '4px',
-          opacity: 0.6,
-          transition: 'opacity 0.2s ease',
-          zIndex: 10,
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.6')}
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a0a10]/90 border border-white/20 backdrop-blur-xl text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] cursor-pointer transition-all duration-500 select-none ${
+          showScrollHint ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
       >
-        <span style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '10px',
-          textTransform: 'uppercase',
-          letterSpacing: '0.12em',
-          color: 'rgba(255,255,255,0.6)',
-        }}>
-          Scroll Down
+        <span className="font-mono text-[10px] text-white/80 font-medium tracking-wide uppercase">
+          Scroll to explore
         </span>
-        <span style={{ color: '#ffffff', fontSize: '12px', animation: 'bounce-down 1.8s infinite' }}>↓</span>
+        <span className="text-white text-xs animate-bounce">↓</span>
       </div>
 
     </section>
