@@ -30,6 +30,20 @@ export default function OnboardingPage() {
     }
   }, [user, profile, authLoading, router]);
 
+  // Pre-fill display name and avatar from Google OAuth metadata if available
+  useEffect(() => {
+    if (user) {
+      if (!displayName) {
+        const oAuthName = user.user_metadata?.full_name || user.user_metadata?.name || '';
+        if (oAuthName) setDisplayName(oAuthName);
+      }
+      if (!avatarPreview) {
+        const oAuthAvatar = user.user_metadata?.avatar_url || user.user_metadata?.picture || profile?.avatar_url;
+        if (oAuthAvatar) setAvatarPreview(oAuthAvatar);
+      }
+    }
+  }, [user, profile, displayName, avatarPreview]);
+
   // Handle Username availability check with debounce
   useEffect(() => {
     if (!username || username.length < 3) {
@@ -98,9 +112,9 @@ export default function OnboardingPage() {
     setErrorMsg(null);
 
     try {
-      let finalAvatarUrl: string | null = profile?.avatar_url || null;
+      let finalAvatarUrl: string | null = avatarPreview || profile?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
 
-      // 1. Upload avatar if selected and not skipped
+      // 1. Upload avatar if custom file selected and not skipped
       if (!skipAvatar && avatarFile) {
         const fileExt = avatarFile.name.split('.').pop();
         const filePath = `${user.id}/${Date.now()}.${fileExt}`;
