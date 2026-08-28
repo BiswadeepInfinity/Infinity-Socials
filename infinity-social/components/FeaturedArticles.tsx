@@ -130,8 +130,28 @@ export default function FeaturedArticlesWindow() {
     };
   }, [displayedArticles.length]);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Calculate dynamic reactive shift offset for every tile based on which tile is hovered
   const getCardTransform = (index: number) => {
+    if (isMobile) {
+      return {
+        width: '100%',
+        transform: 'none',
+        zIndex: 1,
+        opacity: 1,
+      };
+    }
+
     if (hoveredIndex === null) {
       return {
         width: '340px',
@@ -192,20 +212,22 @@ export default function FeaturedArticlesWindow() {
   return (
     <>
       <style>{`
-        /* Track with hidden scrollbar and generous padding for floating expansion */
+        /* Track with hidden scrollbar and snap-scrolling on mobile */
         .isolated-deck-track {
           display: flex;
-          gap: 16px;
+          gap: 14px;
           overflow-x: auto;
           scrollbar-width: none;
           -ms-overflow-style: none;
           -webkit-overflow-scrolling: touch;
-          padding: 16px 20px 32px 16px;
+          scroll-snap-type: x mandatory;
+          padding: 8px 16px 24px 16px;
           align-items: center;
         }
         @media (min-width: 640px) {
           .isolated-deck-track {
             gap: 24px;
+            scroll-snap-type: none;
             padding: 20px 40px 40px 20px;
           }
         }
@@ -216,14 +238,17 @@ export default function FeaturedArticlesWindow() {
         /* Fixed slot container */
         .card-slot {
           flex-shrink: 0;
-          width: 280px;
+          width: 80vw;
+          max-width: 300px;
           height: 420px;
           position: relative;
+          scroll-snap-align: start;
         }
         @media (min-width: 640px) {
           .card-slot {
             width: 340px;
             height: 480px;
+            scroll-snap-align: unset;
           }
         }
 
@@ -232,8 +257,9 @@ export default function FeaturedArticlesWindow() {
           position: absolute;
           top: 0;
           left: 0;
-          height: 420px;
-          border-radius: 24px;
+          width: 100%;
+          height: 100%;
+          border-radius: 22px;
           overflow: hidden;
           text-decoration: none;
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(10, 10, 16, 0.7);
@@ -249,7 +275,6 @@ export default function FeaturedArticlesWindow() {
         }
         @media (min-width: 640px) {
           .cinema-poster-card {
-            height: 480px;
             border-radius: 30px;
           }
         }
@@ -534,16 +559,16 @@ export default function FeaturedArticlesWindow() {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        padding: '24px 26px',
+                        padding: isMobile ? '16px 18px' : '22px 24px',
                         zIndex: 10,
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '10px',
+                        gap: '8px',
                       }}
                     >
                       <h3 style={{
                         fontFamily: 'var(--font-display)',
-                        fontSize: '19px',
+                        fontSize: isMobile ? '16px' : '18px',
                         fontWeight: 700,
                         color: '#ffffff',
                         lineHeight: 1.25,
@@ -559,10 +584,10 @@ export default function FeaturedArticlesWindow() {
                       </h3>
 
                       <p style={{
-                        fontSize: '12.5px',
+                        fontSize: isMobile ? '11px' : '12px',
                         color: 'rgba(255, 255, 255, 0.75)',
                         fontWeight: 300,
-                        lineHeight: 1.45,
+                        lineHeight: 1.4,
                         margin: 0,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
@@ -574,19 +599,19 @@ export default function FeaturedArticlesWindow() {
 
                       {/* Meta Footer */}
                       <div style={{
-                        paddingTop: '10px',
+                        paddingTop: '8px',
                         borderTop: '1px solid rgba(255, 255, 255, 0.12)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         fontFamily: 'var(--font-mono)',
-                        fontSize: '11px',
+                        fontSize: isMobile ? '10px' : '11px',
                         color: 'rgba(255, 255, 255, 0.5)',
                       }}>
-                        <span style={{ color: 'rgba(255, 255, 255, 0.85)', fontWeight: 500 }}>
+                        <span style={{ color: 'rgba(255, 255, 255, 0.85)', fontWeight: 500 }} className="truncate max-w-[140px]">
                           by {article.author}
                         </span>
-                        <span>{article.readTime} READ</span>
+                        <span className="shrink-0">{article.readTime}</span>
                       </div>
                     </div>
                   </Link>
