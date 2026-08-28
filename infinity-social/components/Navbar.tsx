@@ -164,72 +164,103 @@ export default function Navbar() {
           <div className="relative w-full">
             <input
               type="text"
-              placeholder="Search articles, reviews, anime..."
-              className="w-full h-9 rounded-xl bg-white/[0.06] border border-white/[0.12] text-xs text-white placeholder-white/40 pl-9 pr-4 outline-none focus:border-white/40"
+              placeholder="Search reviews, anime, gaming..."
+              className="w-full h-8.5 rounded-lg bg-white/[0.05] border border-white/[0.12] text-xs text-white placeholder-white/40 pl-8 pr-3 outline-none focus:border-white/40 transition-all font-mono"
             />
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-white/40 pointer-events-none">
-              🔍
-            </span>
+            <svg
+              className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
 
-          {/* Mobile Nav Links */}
-          <div className="grid grid-cols-2 gap-2">
-            <Link
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
-            >
-              <span>🏠</span>
-              <span>Feed</span>
-            </Link>
-
-            <Link
-              href="/reviews"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
-            >
-              <span>✍️</span>
-              <span>Reviews</span>
-            </Link>
-
-            <Link
-              href="/interviews"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
-            >
-              <span>🎙️</span>
-              <span>Interviews</span>
-            </Link>
-
-            <Link
-              href="/anime"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
-            >
-              <span>⛩️</span>
-              <span>Anime</span>
-            </Link>
-
-            <Link
-              href="/gaming"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
-            >
-              <span>🎮</span>
-              <span>Gaming</span>
-            </Link>
-
-            <Link
-              href="/community"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-white no-underline border border-white/[0.06]"
-            >
-              <div className="flex items-center gap-2">
-                <span>💬</span>
-                <span>Community</span>
-              </div>
-              <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.9)]" />
-            </Link>
+          {/* Clean Editorial Nav List */}
+          <div className="flex flex-col rounded-xl bg-white/[0.03] border border-white/[0.08] divide-y divide-white/[0.05] overflow-hidden">
+            {[
+              {
+                name: 'Feed',
+                href: '/',
+                icon: (
+                  <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
+                ),
+              },
+              {
+                name: 'Reviews & Deep Dives',
+                href: '/reviews',
+                icon: (
+                  <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                ),
+              },
+              {
+                name: 'Creator Interviews',
+                href: '/interviews',
+                icon: (
+                  <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  </svg>
+                ),
+              },
+              {
+                name: 'Anime Hub',
+                href: '/anime',
+                icon: (
+                  <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                ),
+              },
+              {
+                name: 'Gaming & Tech',
+                href: '/gaming',
+                icon: (
+                  <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                  </svg>
+                ),
+              },
+              {
+                name: 'Community & Discussions',
+                href: '/community',
+                badge: 'Live',
+                icon: (
+                  <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                  </svg>
+                ),
+              },
+            ].map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between px-3.5 py-2.5 hover:bg-white/[0.06] active:bg-white/[0.1] text-xs font-medium text-white/90 no-underline transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center group-hover:border-white/20 transition-colors">
+                    {link.icon}
+                  </div>
+                  <span className="font-display font-medium text-[13px]">{link.name}</span>
+                </div>
+                {link.badge ? (
+                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 uppercase tracking-wider">
+                    {link.badge}
+                  </span>
+                ) : (
+                  <span className="text-white/30 text-xs group-hover:text-white/70 group-hover:translate-x-0.5 transition-all">
+                    →
+                  </span>
+                )}
+              </Link>
+            ))}
           </div>
         </div>
       )}
