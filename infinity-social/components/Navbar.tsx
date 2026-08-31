@@ -96,6 +96,10 @@ export default function Navbar() {
           <Link href="/" className="nav-link-zoom text-white no-underline">
             Feed
           </Link>
+          <Link href="/browse" className="nav-link-zoom text-white/90 hover:text-white no-underline flex items-center gap-1.5">
+            <span>Explore</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
+          </Link>
           <Link href="/reviews" className="nav-link-zoom text-white/70 no-underline">
             Reviews
           </Link>

@@ -21,12 +21,13 @@ export default function OnboardingPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    // If auth finishes loading and there is definitely no user, redirect to login
     if (!authLoading && !user) {
-      router.push('/auth/login');
+      router.replace('/auth/login');
     }
+    // If user already has a customized username, redirect to home
     if (profile?.username && !profile.username.startsWith('user_temp_') && !profile.username.includes('@')) {
-      // Already has a valid username
-      router.push('/');
+      router.replace('/');
     }
   }, [user, profile, authLoading, router]);
 
