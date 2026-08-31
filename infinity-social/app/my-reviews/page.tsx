@@ -272,18 +272,22 @@ export default function MyReviewsPage() {
         finalVoiceUrl = voiceUrlData.publicUrl;
       }
 
-      const payload = {
+      // Fallback: If score is greater than 10 but table might be scale 0-10 or 0-100, we preserve number
+      let normalizedScore = Number(score);
+      if (isNaN(normalizedScore)) normalizedScore = 0;
+
+      const payload: Record<string, any> = {
         user_id: user.id,
         title: title.trim(),
         category,
-        release_year: Number(releaseYear),
+        release_year: Number(releaseYear) || new Date().getFullYear(),
         verdict,
-        score: Number(score),
+        score: normalizedScore,
         content: content.trim(),
         youtube_url: youtubeUrl.trim(),
         voice_url: finalVoiceUrl || null,
-        pros,
-        cons,
+        pros: pros || [],
+        cons: cons || [],
         bottom_line: bottomLine.trim() || null,
         cover_url: finalCoverUrl || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&q=80',
         updated_at: new Date().toISOString(),
@@ -298,7 +302,10 @@ export default function MyReviewsPage() {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Update review error:', error);
+          throw new Error(error.message || 'Failed to update review in database');
+        }
         setReviews((prev) => prev.map((r) => (r.id === editingReview.id ? (data as UserReview) : r)));
       } else {
         const { data, error } = await supabase
@@ -314,13 +321,17 @@ export default function MyReviewsPage() {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Insert review error:', error);
+          throw new Error(error.message || 'Failed to save review in database');
+        }
         setReviews((prev) => [data as UserReview, ...prev]);
       }
 
       setIsModalOpen(false);
     } catch (err: any) {
-      setFormError(err.message || 'Failed to save review');
+      console.error('Submission failed:', err);
+      setFormError(err.message || 'Failed to publish review. Please verify Supabase schema.');
     } finally {
       setIsSubmitting(false);
     }
