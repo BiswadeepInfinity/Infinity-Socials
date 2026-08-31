@@ -978,9 +978,12 @@ export default function MyReviewsPage() {
                   </button>
                 ) : (
                   <button
-                    type="submit"
-                    form="wizard-review-form"
+                    type="button"
                     disabled={isSubmitting}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }}
                     className="px-7 py-2.5 rounded-2xl bg-white/[0.12] hover:bg-white/[0.22] border border-white/25 backdrop-blur-xl transition-all cursor-pointer disabled:opacity-50 flex items-center gap-2 ios-tap-active group"
                   >
                     {isSubmitting ? (
