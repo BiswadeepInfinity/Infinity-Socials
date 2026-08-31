@@ -582,18 +582,18 @@ export default function MyReviewsPage() {
         )}
       </main>
 
-      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (AUTHENTIC iOS 26 LIQUID GLASS) */}
+      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (PURE TRANSLUCENT LIQUID GLASS) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/40 backdrop-blur-xl animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/50 backdrop-blur-xl animate-in fade-in duration-300">
           
-          {/* iOS 26 Liquid Glass Floating Card with Volumetric Internal Refraction */}
-          <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[36px] ios26-liquid-modal overflow-hidden animate-ios-modal">
+          {/* Pure Liquid Glass Floating Card */}
+          <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[32px] ios26-liquid-modal overflow-hidden animate-ios-modal">
             
-            {/* Header: Title + Step Progress Bar with Volumetric Sheen */}
-            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.15] bg-white/[0.04] backdrop-blur-2xl shrink-0">
+            {/* Header: Clean Glass Top */}
+            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shrink-0">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-mono font-bold tracking-widest text-cyan-300 uppercase drop-shadow-[0_0_10px_rgba(6,182,212,0.8)] transition-all duration-300">
+                  <span className="text-[10px] font-mono font-bold tracking-widest text-white/50 uppercase transition-all duration-300">
                     Step {currentStep} of 4 • {currentStep === 1 ? 'Media Info & Score' : currentStep === 2 ? 'Editorial Breakdown' : currentStep === 3 ? 'Highlights & Flaws' : 'Verdict & Summary'}
                   </span>
                   <h3 className="text-base sm:text-lg font-bold text-white tracking-tight mt-0.5">
@@ -603,13 +603,13 @@ export default function MyReviewsPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/[0.12] hover:bg-white/[0.25] border border-white/25 flex items-center justify-center text-white/80 hover:text-white text-sm cursor-pointer transition-all ios-tap-active shadow-sm"
+                  className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.18] border border-white/15 flex items-center justify-center text-white/70 hover:text-white text-sm cursor-pointer transition-all ios-tap-active"
                 >
                   ✕
                 </button>
               </div>
 
-              {/* Visual Step Progress Pill Indicator with iOS 26 Cyan-Orange Glow */}
+              {/* Minimal Clean Step Progress Bar */}
               <div className="grid grid-cols-4 gap-2.5 mt-4">
                 {[
                   { step: 1, label: '1. Basic Info' },
@@ -626,10 +626,10 @@ export default function MyReviewsPage() {
                         setCurrentStep(s.step);
                       }
                     }}
-                    className={`h-2 rounded-full transition-all duration-500 cursor-pointer ${
+                    className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
                       currentStep >= s.step
-                        ? 'bg-gradient-to-r from-cyan-400 via-sky-400 to-orange-400 shadow-[0_0_15px_rgba(6,182,212,0.9)] scale-[1.02]'
-                        : 'bg-white/[0.15] hover:bg-white/[0.25]'
+                        ? 'bg-gradient-to-r from-cyan-400 to-amber-400 shadow-[0_0_10px_rgba(255,255,255,0.4)]'
+                        : 'bg-white/[0.1] hover:bg-white/[0.15]'
                     }`}
                   />
                 ))}
@@ -639,7 +639,7 @@ export default function MyReviewsPage() {
             {/* Scrollable Step Content Body */}
             <form id="wizard-review-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin">
               {formError && (
-                <div className="p-3.5 rounded-2xl bg-rose-500/25 backdrop-blur-xl border border-rose-500/50 text-rose-100 text-xs flex items-center gap-2.5 shadow-lg animate-ios-step">
+                <div className="p-3.5 rounded-2xl bg-rose-500/15 backdrop-blur-xl border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2.5 shadow-lg animate-ios-step">
                   <span className="text-sm">⚠️</span>
                   <span>{formError}</span>
                 </div>
@@ -650,8 +650,8 @@ export default function MyReviewsPage() {
                 <div className="space-y-6 animate-ios-step">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-white/90">
-                        Media Title <span className="text-orange-400">*</span>
+                      <label className="text-xs font-semibold text-white/80">
+                        Media Title <span className="text-rose-400">*</span>
                       </label>
                       <input
                         type="text"
@@ -660,16 +660,16 @@ export default function MyReviewsPage() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="e.g. Elden Ring / Dune: Part Two"
-                        className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs sm:text-sm outline-none placeholder:text-white/35 font-medium"
+                        className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs sm:text-sm outline-none placeholder:text-white/30 font-medium"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-white/90">Category</label>
+                      <label className="text-xs font-semibold text-white/80">Category</label>
                       <select
                         value={category}
                         onChange={(e: any) => setCategory(e.target.value)}
-                        className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs sm:text-sm outline-none cursor-pointer [&>option]:bg-[#0f172a] [&>option]:text-white"
+                        className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs sm:text-sm outline-none cursor-pointer [&>option]:bg-[#121218] [&>option]:text-white"
                       >
                         <option value="Game">🎮 Game</option>
                         <option value="Movie">🎬 Movie</option>
@@ -681,22 +681,22 @@ export default function MyReviewsPage() {
                     </div>
                   </div>
 
-                  {/* Poster / Cover Art (iOS 26 Frosted Lens Card) */}
+                  {/* Poster / Cover Art */}
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-white/90 block">Cover Poster / Key Art</label>
-                    <div className="flex items-center gap-4 p-4 sm:p-5 rounded-3xl ios26-lens-cyan backdrop-blur-2xl">
-                      <div className="w-16 h-22 rounded-2xl overflow-hidden bg-black/40 border border-cyan-300/30 flex items-center justify-center shrink-0 shadow-[0_8px_20px_rgba(0,0,0,0.5)] relative">
+                    <label className="text-xs font-semibold text-white/80 block">Cover Poster / Key Art</label>
+                    <div className="flex items-center gap-4 p-4 sm:p-5 rounded-3xl ios26-lens-cyan">
+                      <div className="w-16 h-22 rounded-2xl overflow-hidden bg-white/[0.04] border border-white/15 flex items-center justify-center shrink-0 shadow-lg relative">
                         {coverPreview || existingCoverUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={coverPreview || existingCoverUrl} alt="Cover Preview" className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-2xl text-cyan-200/50">🖼️</span>
+                          <span className="text-2xl text-white/30">🖼️</span>
                         )}
                       </div>
                       <div className="space-y-1.5">
                         <label
                           htmlFor="wizard-cover-file"
-                          className="inline-block px-4 py-2.5 rounded-xl bg-white/[0.15] hover:bg-white/[0.25] backdrop-blur-md text-xs font-semibold text-white border border-white/25 transition-all cursor-pointer shadow-md ios-tap-active"
+                          className="inline-block px-4 py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-xs font-semibold text-white border border-white/15 transition-all cursor-pointer shadow-sm ios-tap-active"
                         >
                           {coverFile || coverPreview ? 'Change Poster' : 'Upload Poster File'}
                         </label>
@@ -707,7 +707,7 @@ export default function MyReviewsPage() {
                           onChange={handleImageFileChange}
                           className="hidden"
                         />
-                        <p className="text-[11px] text-white/60">Vertical artwork (PNG, JPG, WEBP, up to 8MB).</p>
+                        <p className="text-[11px] text-white/45">Vertical artwork (PNG, JPG, WEBP, up to 8MB).</p>
                       </div>
                     </div>
                   </div>
@@ -715,11 +715,11 @@ export default function MyReviewsPage() {
                   {/* Score, Verdict Tier, Release Year */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-white/90">Verdict Tier</label>
+                      <label className="text-xs font-semibold text-white/80">Verdict Tier</label>
                       <select
                         value={verdict}
                         onChange={(e: any) => setVerdict(e.target.value)}
-                        className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs outline-none [&>option]:bg-[#0f172a] [&>option]:text-white cursor-pointer"
+                        className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs outline-none [&>option]:bg-[#121218] [&>option]:text-white cursor-pointer"
                       >
                         <option value="must_buy">🔥 Must Buy / Watch</option>
                         <option value="wait_sale">🏷️ Wait for Sale</option>
@@ -729,7 +729,7 @@ export default function MyReviewsPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-white/90">Score (0% to 100%)</label>
+                      <label className="text-xs font-semibold text-white/80">Score (0% to 100%)</label>
                       <div className="relative">
                         <input
                           type="number"
@@ -740,12 +740,12 @@ export default function MyReviewsPage() {
                           onChange={(e) => setScore(Number(e.target.value))}
                           className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs outline-none font-mono pr-8"
                         />
-                        <span className="absolute right-4 top-3.5 text-xs text-cyan-300/70 font-mono">%</span>
+                        <span className="absolute right-4 top-3.5 text-xs text-white/40 font-mono">%</span>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-white/90">Release Year</label>
+                      <label className="text-xs font-semibold text-white/80">Release Year</label>
                       <input
                         type="number"
                         value={releaseYear}
@@ -761,10 +761,10 @@ export default function MyReviewsPage() {
               {currentStep === 2 && (
                 <div className="space-y-3 animate-ios-step">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-white/90">
-                      Detailed Breakdown & Editorial Review <span className="text-orange-400">*</span>
+                    <label className="text-xs font-semibold text-white/80">
+                      Detailed Breakdown & Editorial Review <span className="text-rose-400">*</span>
                     </label>
-                    <span className="text-[11px] text-cyan-300/70 font-mono">
+                    <span className="text-[11px] text-white/40 font-mono">
                       Markdown & Inline Images Supported
                     </span>
                   </div>
@@ -780,14 +780,14 @@ export default function MyReviewsPage() {
               {/* STEP 3: Key Highlights (Pros) & Shortcomings (Cons) */}
               {currentStep === 3 && (
                 <div className="space-y-5 animate-ios-step">
-                  <div className="text-xs text-white/70">
+                  <div className="text-xs text-white/60">
                     Add bulleted highlights and flaws to give readers a fast executive summary of your rating.
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Pros */}
-                    <div className="space-y-3 p-4 sm:p-5 rounded-3xl bg-emerald-500/[0.12] backdrop-blur-2xl border border-emerald-400/30 shadow-lg">
-                      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300 font-mono">
+                    <div className="space-y-3 p-4 sm:p-5 rounded-3xl bg-emerald-500/[0.04] backdrop-blur-xl border border-emerald-500/20 shadow-inner">
+                      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-400 font-mono">
                         <span>✓</span>
                         <span>Key Highlights (Pros)</span>
                       </div>
@@ -798,29 +798,29 @@ export default function MyReviewsPage() {
                           onChange={(e) => setProInput(e.target.value)}
                           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddPro(); } }}
                           placeholder="e.g. Masterful sound design..."
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-emerald-300/30 text-white text-xs outline-none focus:border-emerald-300"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs outline-none focus:border-emerald-400/50"
                         />
                         <button
                           type="button"
                           onClick={handleAddPro}
-                          className="px-4 py-2.5 rounded-xl bg-emerald-400/30 hover:bg-emerald-400/40 text-emerald-200 text-xs font-bold transition-colors cursor-pointer shrink-0 ios-tap-active"
+                          className="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-bold transition-colors cursor-pointer shrink-0 ios-tap-active"
                         >
                           Add
                         </button>
                       </div>
                       <ul className="space-y-2 max-h-40 overflow-y-auto pr-1">
                         {pros.map((p, i) => (
-                          <li key={i} className="text-xs text-white/95 flex items-center justify-between bg-emerald-400/15 border border-emerald-400/25 px-3 py-2 rounded-xl">
+                          <li key={i} className="text-xs text-white/90 flex items-center justify-between bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 rounded-xl">
                             <span>✓ {p}</span>
-                            <button type="button" onClick={() => setPros(pros.filter((_, idx) => idx !== i))} className="text-white/60 hover:text-white ml-2 text-xs cursor-pointer ios-tap-active">✕</button>
+                            <button type="button" onClick={() => setPros(pros.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs cursor-pointer ios-tap-active">✕</button>
                           </li>
                         ))}
                       </ul>
                     </div>
 
                     {/* Cons */}
-                    <div className="space-y-3 p-4 sm:p-5 rounded-3xl bg-rose-500/[0.12] backdrop-blur-2xl border border-rose-400/30 shadow-lg">
-                      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-300 font-mono">
+                    <div className="space-y-3 p-4 sm:p-5 rounded-3xl bg-rose-500/[0.04] backdrop-blur-xl border border-rose-500/20 shadow-inner">
+                      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-400 font-mono">
                         <span>✕</span>
                         <span>Shortcomings (Cons)</span>
                       </div>
@@ -831,21 +831,21 @@ export default function MyReviewsPage() {
                           onChange={(e) => setConInput(e.target.value)}
                           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddCon(); } }}
                           placeholder="e.g. Minor frame rate drops..."
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-rose-300/30 text-white text-xs outline-none focus:border-rose-300"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs outline-none focus:border-rose-400/50"
                         />
                         <button
                           type="button"
                           onClick={handleAddCon}
-                          className="px-4 py-2.5 rounded-xl bg-rose-400/30 hover:bg-rose-400/40 text-rose-200 text-xs font-bold transition-colors cursor-pointer shrink-0 ios-tap-active"
+                          className="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold transition-colors cursor-pointer shrink-0 ios-tap-active"
                         >
                           Add
                         </button>
                       </div>
                       <ul className="space-y-2 max-h-40 overflow-y-auto pr-1">
                         {cons.map((c, i) => (
-                          <li key={i} className="text-xs text-white/95 flex items-center justify-between bg-rose-400/15 border border-rose-400/25 px-3 py-2 rounded-xl">
+                          <li key={i} className="text-xs text-white/90 flex items-center justify-between bg-rose-500/10 border border-rose-500/20 px-3 py-2 rounded-xl">
                             <span>✕ {c}</span>
-                            <button type="button" onClick={() => setCons(cons.filter((_, idx) => idx !== i))} className="text-white/60 hover:text-white ml-2 text-xs cursor-pointer ios-tap-active">✕</button>
+                            <button type="button" onClick={() => setCons(cons.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs cursor-pointer ios-tap-active">✕</button>
                           </li>
                         ))}
                       </ul>
@@ -857,10 +857,10 @@ export default function MyReviewsPage() {
               {/* STEP 4: Video Link, Voice Commentary & Bottom Line */}
               {currentStep === 4 && (
                 <div className="space-y-5 animate-ios-step">
-                  {/* YouTube & Voice Links (iOS 26 Dual Pill Lenses) */}
+                  {/* YouTube & Voice Links */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2 p-4 sm:p-5 rounded-3xl ios26-lens-orange backdrop-blur-2xl">
-                      <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-orange-300 font-mono">
+                    <div className="space-y-2 p-4 sm:p-5 rounded-3xl ios26-lens-orange">
+                      <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-white/70 font-mono">
                         <span>▶</span>
                         <span>YouTube Video (Optional)</span>
                       </div>
@@ -869,20 +869,20 @@ export default function MyReviewsPage() {
                         value={youtubeUrl}
                         onChange={(e) => setYoutubeUrl(e.target.value)}
                         placeholder="https://youtube.com/watch?v=..."
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-orange-300/30 text-white text-xs outline-none focus:border-orange-300 font-mono"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/30 border border-white/10 text-white text-xs outline-none focus:border-white/30 font-mono"
                       />
-                      <p className="text-[10px] text-white/60">Attach gameplay or trailer video link.</p>
+                      <p className="text-[10px] text-white/40">Attach gameplay or trailer video link.</p>
                     </div>
 
-                    <div className="space-y-2 p-4 sm:p-5 rounded-3xl ios26-lens-cyan backdrop-blur-2xl">
-                      <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-cyan-300 font-mono">
+                    <div className="space-y-2 p-4 sm:p-5 rounded-3xl ios26-lens-cyan">
+                      <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-white/70 font-mono">
                         <span>🎙️</span>
                         <span>Voice Commentary (Optional)</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <label
                           htmlFor="wizard-voice-file"
-                          className="px-4 py-2 rounded-xl bg-white/[0.15] hover:bg-white/[0.25] backdrop-blur-md text-xs font-semibold text-white border border-white/25 transition-all cursor-pointer shadow-sm ios-tap-active"
+                          className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-xs font-semibold text-white border border-white/15 transition-all cursor-pointer shadow-sm ios-tap-active"
                         >
                           {voiceFile ? 'Change Audio File' : 'Upload Audio (.mp3, .m4a)'}
                         </label>
@@ -894,16 +894,16 @@ export default function MyReviewsPage() {
                           className="hidden"
                         />
                         {(voicePreview || existingVoiceUrl) && (
-                          <span className="text-xs text-cyan-200 font-mono">Ready ✓</span>
+                          <span className="text-xs text-cyan-300 font-mono">Ready ✓</span>
                         )}
                       </div>
-                      <p className="text-[10px] text-white/60">Upload recorded audio critique (max 25MB).</p>
+                      <p className="text-[10px] text-white/40">Upload recorded audio critique (max 25MB).</p>
                     </div>
                   </div>
 
                   {/* One-Sentence Bottom Line */}
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-white/90 block">
+                    <label className="text-xs font-semibold text-white/80 block">
                       The Bottom Line (Final Summary)
                     </label>
                     <input
@@ -911,15 +911,15 @@ export default function MyReviewsPage() {
                       value={bottomLine}
                       onChange={(e) => setBottomLine(e.target.value)}
                       placeholder="e.g. A generational masterpiece that sets the new gold standard for RPGs."
-                      className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs sm:text-sm outline-none italic placeholder:text-white/35"
+                      className="w-full px-4 py-3.5 rounded-2xl ios26-liquid-input text-white text-xs sm:text-sm outline-none italic placeholder:text-white/30"
                     />
                   </div>
                 </div>
               )}
             </form>
 
-            {/* Pinned Liquid Glass Footer Dock with iOS 26 Glass Finish */}
-            <div className="flex items-center justify-between px-6 sm:px-8 py-4 border-t border-white/[0.15] bg-white/[0.04] backdrop-blur-2xl shrink-0">
+            {/* Pinned Clean Glass Footer Dock */}
+            <div className="flex items-center justify-between px-6 sm:px-8 py-4 border-t border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shrink-0">
               {/* Back button */}
               <div>
                 {currentStep > 1 ? (
@@ -929,7 +929,7 @@ export default function MyReviewsPage() {
                       setFormError(null);
                       setCurrentStep((prev) => Math.max(1, prev - 1));
                     }}
-                    className="px-5 py-2.5 rounded-2xl text-xs font-bold text-white/90 hover:text-white bg-white/[0.1] hover:bg-white/[0.2] border border-white/20 backdrop-blur-md transition-all cursor-pointer flex items-center gap-1.5 ios-tap-active"
+                    className="px-5 py-2.5 rounded-2xl text-xs font-bold text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 transition-all cursor-pointer flex items-center gap-1.5 ios-tap-active"
                   >
                     <span>← Back</span>
                   </button>
@@ -937,7 +937,7 @@ export default function MyReviewsPage() {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-4 py-2.5 rounded-2xl text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer ios-tap-active"
+                    className="px-4 py-2.5 rounded-2xl text-xs font-medium text-white/50 hover:text-white transition-colors cursor-pointer ios-tap-active"
                   >
                     Cancel
                   </button>
@@ -961,9 +961,9 @@ export default function MyReviewsPage() {
                       setFormError(null);
                       setCurrentStep((prev) => Math.min(4, prev + 1));
                     }}
-                    className="px-6 py-2.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/20 backdrop-blur-xl transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] cursor-pointer flex items-center gap-1.5 ios-tap-active group"
+                    className="px-6 py-2.5 rounded-2xl bg-white/[0.1] hover:bg-white/[0.2] border border-white/20 backdrop-blur-xl transition-all cursor-pointer flex items-center gap-1.5 ios-tap-active group"
                   >
-                    <span className="text-xs font-bold bg-gradient-to-r from-cyan-300 via-sky-200 to-orange-300 bg-clip-text text-transparent group-hover:brightness-125 transition-all">
+                    <span className="text-xs font-bold bg-gradient-to-r from-cyan-300 to-amber-300 bg-clip-text text-transparent group-hover:brightness-125 transition-all">
                       Next →
                     </span>
                   </button>
@@ -972,17 +972,17 @@ export default function MyReviewsPage() {
                     type="submit"
                     form="wizard-review-form"
                     disabled={isSubmitting}
-                    className="px-7 py-2.5 rounded-2xl bg-white/[0.1] hover:bg-white/[0.18] border border-white/25 backdrop-blur-xl transition-all shadow-[0_8px_30px_rgba(0,0,0,0.5),inset_0_1px_1.5px_rgba(255,255,255,0.5)] cursor-pointer disabled:opacity-50 flex items-center gap-2 ios-tap-active group"
+                    className="px-7 py-2.5 rounded-2xl bg-white/[0.12] hover:bg-white/[0.22] border border-white/25 backdrop-blur-xl transition-all cursor-pointer disabled:opacity-50 flex items-center gap-2 ios-tap-active group"
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-3.5 h-3.5 border-2 border-cyan-300/30 border-t-cyan-300 rounded-full animate-spin" />
-                        <span className="text-xs font-extrabold bg-gradient-to-r from-cyan-300 to-orange-300 bg-clip-text text-transparent">
+                        <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span className="text-xs font-extrabold bg-gradient-to-r from-cyan-300 to-amber-300 bg-clip-text text-transparent">
                           Publishing...
                         </span>
                       </>
                     ) : (
-                      <span className="text-xs font-extrabold bg-gradient-to-r from-cyan-300 via-amber-200 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(6,182,212,0.6)] group-hover:brightness-125 transition-all">
+                      <span className="text-xs font-extrabold bg-gradient-to-r from-cyan-300 via-amber-200 to-rose-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(255,255,255,0.4)] group-hover:brightness-125 transition-all">
                         {editingReview ? 'Update Critique' : 'Publish Review 🔥'}
                       </span>
                     )}

@@ -267,75 +267,67 @@ button, a {
   animation: ios-float 6s ease-in-out infinite;
 }
 
-/* iOS 26 Volumetric Liquid Glass Design System */
+/* iOS 26 Pure Neutral Liquid Glass Design System */
 .ios26-liquid-modal {
   position: relative;
-  background: 
-    radial-gradient(130% 100% at 85% 10%, rgba(249, 115, 22, 0.28) 0%, transparent 60%),
-    radial-gradient(110% 90% at 15% 15%, rgba(6, 182, 212, 0.32) 0%, transparent 65%),
-    radial-gradient(100% 100% at 50% 90%, rgba(139, 92, 246, 0.25) 0%, transparent 70%),
-    linear-gradient(145deg, rgba(30, 41, 59, 0.55) 0%, rgba(15, 23, 42, 0.75) 100%);
-  backdrop-filter: blur(48px) saturate(220%) brightness(110%);
-  -webkit-backdrop-filter: blur(48px) saturate(220%) brightness(110%);
-  border: 1.2px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    rgba(255, 255, 255, 0.05) 100%
+  ), rgba(18, 18, 26, 0.65);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 
-    0 40px 100px -20px rgba(0, 0, 0, 0.9),
-    0 20px 40px -10px rgba(6, 182, 212, 0.15),
-    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.7),
-    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.4),
-    inset 1px 0 2px 0 rgba(255, 255, 255, 0.25);
+    0 32px 80px -20px rgba(0, 0, 0, 0.85),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .ios26-liquid-modal::before {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(249, 115, 22, 0.4) 75%, rgba(6, 182, 212, 0.5) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
   pointer-events: none;
 }
 
 .ios26-liquid-input {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.04) 100%
-  ), rgba(15, 23, 42, 0.35);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 
-    0 8px 24px -4px rgba(0, 0, 0, 0.3),
-    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
 }
 
 .ios26-liquid-input:focus-within,
 .ios26-liquid-input:focus {
-  border-color: rgba(255, 255, 255, 0.45);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.07) 100%
-  ), rgba(15, 23, 42, 0.45);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.07);
   box-shadow: 
-    0 12px 30px -4px rgba(6, 182, 212, 0.25),
-    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.6);
+    0 6px 20px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
 }
 
 .ios26-lens-cyan {
-  background: radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.4) 0%, rgba(14, 116, 144, 0.25) 100%);
-  border: 1px solid rgba(103, 232, 249, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .ios26-lens-orange {
-  background: radial-gradient(circle at 70% 30%, rgba(249, 115, 22, 0.4) 0%, rgba(194, 65, 12, 0.25) 100%);
-  border: 1px solid rgba(253, 186, 116, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .isolated-scroll-track {
