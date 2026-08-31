@@ -220,6 +220,14 @@ export default function MyReviewsPage() {
     setFormError(null);
 
     try {
+      // 1. Double check active authenticated user directly from supabase
+      const { data: { user: currentUser }, error: authErr } = await supabase.auth.getUser();
+      const activeUser = currentUser || user;
+
+      if (!activeUser?.id) {
+        throw new Error('Authentication session not found. Please log in again.');
+      }
+
       let finalCoverUrl = existingCoverUrl;
       let finalVoiceUrl = existingVoiceUrl;
 
@@ -231,21 +239,20 @@ export default function MyReviewsPage() {
           quality: 0.85,
         });
 
-        const filePath = `${user.id}/reviews/covers/${Date.now()}.webp`;
+        const filePath = `${activeUser.id}/reviews/covers/${Date.now()}.webp`;
 
         const { error: uploadErr } = await supabase.storage
           .from('avatars')
           .upload(filePath, compressedCover, { upsert: true });
 
         if (uploadErr) {
-          throw new Error(`Cover upload error: ${uploadErr.message}`);
+          console.warn('Cover upload failed, continuing with fallback:', uploadErr.message);
+        } else {
+          const { data: publicUrlData } = supabase.storage
+            .from('avatars')
+            .getPublicUrl(filePath);
+          finalCoverUrl = publicUrlData.publicUrl;
         }
-
-        const { data: publicUrlData } = supabase.storage
-          .from('avatars')
-          .getPublicUrl(filePath);
-
-        finalCoverUrl = publicUrlData.publicUrl;
       }
 
       // Upload Voice Review Audio file to Supabase storage if selected
