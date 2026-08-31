@@ -961,24 +961,30 @@ export default function MyReviewsPage() {
                       setFormError(null);
                       setCurrentStep((prev) => Math.min(4, prev + 1));
                     }}
-                    className="px-6 py-2.5 rounded-2xl bg-white text-slate-950 hover:bg-white/95 text-xs font-bold transition-all shadow-[0_4px_25px_rgba(255,255,255,0.4)] cursor-pointer flex items-center gap-1.5 ios-tap-active"
+                    className="px-6 py-2.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/20 backdrop-blur-xl transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] cursor-pointer flex items-center gap-1.5 ios-tap-active group"
                   >
-                    <span>Next →</span>
+                    <span className="text-xs font-bold bg-gradient-to-r from-cyan-300 via-sky-200 to-orange-300 bg-clip-text text-transparent group-hover:brightness-125 transition-all">
+                      Next →
+                    </span>
                   </button>
                 ) : (
                   <button
                     type="submit"
                     form="wizard-review-form"
                     disabled={isSubmitting}
-                    className="px-7 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-orange-400 hover:from-cyan-300 hover:to-orange-300 text-slate-950 text-xs font-extrabold transition-all shadow-[0_0_35px_rgba(6,182,212,0.8)] cursor-pointer disabled:opacity-50 flex items-center gap-2 ios-tap-active"
+                    className="px-7 py-2.5 rounded-2xl bg-white/[0.1] hover:bg-white/[0.18] border border-white/25 backdrop-blur-xl transition-all shadow-[0_8px_30px_rgba(0,0,0,0.5),inset_0_1px_1.5px_rgba(255,255,255,0.5)] cursor-pointer disabled:opacity-50 flex items-center gap-2 ios-tap-active group"
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-3.5 h-3.5 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin" />
-                        <span>Publishing...</span>
+                        <div className="w-3.5 h-3.5 border-2 border-cyan-300/30 border-t-cyan-300 rounded-full animate-spin" />
+                        <span className="text-xs font-extrabold bg-gradient-to-r from-cyan-300 to-orange-300 bg-clip-text text-transparent">
+                          Publishing...
+                        </span>
                       </>
                     ) : (
-                      <span>{editingReview ? 'Update Critique' : 'Publish Review 🔥'}</span>
+                      <span className="text-xs font-extrabold bg-gradient-to-r from-cyan-300 via-amber-200 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(6,182,212,0.6)] group-hover:brightness-125 transition-all">
+                        {editingReview ? 'Update Critique' : 'Publish Review 🔥'}
+                      </span>
                     )}
                   </button>
                 )}
