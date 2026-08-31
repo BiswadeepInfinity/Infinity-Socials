@@ -267,13 +267,75 @@ button, a {
   animation: ios-float 6s ease-in-out infinite;
 }
 
-.ios-tap-active {
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+/* iOS 26 Volumetric Liquid Glass Design System */
+.ios26-liquid-modal {
+  position: relative;
+  background: 
+    radial-gradient(130% 100% at 85% 10%, rgba(249, 115, 22, 0.28) 0%, transparent 60%),
+    radial-gradient(110% 90% at 15% 15%, rgba(6, 182, 212, 0.32) 0%, transparent 65%),
+    radial-gradient(100% 100% at 50% 90%, rgba(139, 92, 246, 0.25) 0%, transparent 70%),
+    linear-gradient(145deg, rgba(30, 41, 59, 0.55) 0%, rgba(15, 23, 42, 0.75) 100%);
+  backdrop-filter: blur(48px) saturate(220%) brightness(110%);
+  -webkit-backdrop-filter: blur(48px) saturate(220%) brightness(110%);
+  border: 1.2px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 40px 100px -20px rgba(0, 0, 0, 0.9),
+    0 20px 40px -10px rgba(6, 182, 212, 0.15),
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.4),
+    inset 1px 0 2px 0 rgba(255, 255, 255, 0.25);
 }
 
-.ios-tap-active:active {
-  transform: scale(0.94);
-  opacity: 0.85;
+.ios26-liquid-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(249, 115, 22, 0.4) 75%, rgba(6, 182, 212, 0.5) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.ios26-liquid-input {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  ), rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 24px -4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios26-liquid-input:focus-within,
+.ios26-liquid-input:focus {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.07) 100%
+  ), rgba(15, 23, 42, 0.45);
+  box-shadow: 
+    0 12px 30px -4px rgba(6, 182, 212, 0.25),
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.6);
+}
+
+.ios26-lens-cyan {
+  background: radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.4) 0%, rgba(14, 116, 144, 0.25) 100%);
+  border: 1px solid rgba(103, 232, 249, 0.35);
+}
+
+.ios26-lens-orange {
+  background: radial-gradient(circle at 70% 30%, rgba(249, 115, 22, 0.4) 0%, rgba(194, 65, 12, 0.25) 100%);
+  border: 1px solid rgba(253, 186, 116, 0.35);
 }
 
 .isolated-scroll-track {
