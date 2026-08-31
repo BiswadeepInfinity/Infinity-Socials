@@ -581,38 +581,44 @@ export default function MyReviewsPage() {
 
       {/* FIXED STRUCTURED REVIEW MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-          <div className="w-full max-w-3xl p-6 sm:p-8 rounded-3xl bg-[#111116] border border-white/10 shadow-2xl my-8">
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.08]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md">
+          <div className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl bg-[#0f0f14] border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.9)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Sticky Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-[#14141b] shrink-0">
               <div>
-                <h3 className="text-base font-bold text-white">
+                <h3 className="text-sm sm:text-base font-bold text-white">
                   {editingReview ? 'Edit Structured Review' : 'New Standardized Review'}
                 </h3>
-                <p className="text-xs text-white/40">Rich editorial critique editor with inline media support</p>
+                <p className="text-[11px] text-white/40">Rich editorial critique editor with inline media support</p>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="text-white/40 hover:text-white text-base">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center text-white/60 hover:text-white text-sm cursor-pointer transition-colors"
+              >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Scrollable Form Body */}
+            <form id="review-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-5 scrollbar-thin">
               {formError && (
-                <div className="p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
-                  {formError}
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center gap-2">
+                  <span>⚠️</span>
+                  <span>{formError}</span>
                 </div>
               )}
 
               {/* 1. Header Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-white/50">Media Title</label>
+                  <label className="text-[11px] font-medium text-white/60">Media Title <span className="text-rose-400">*</span></label>
                   <input
                     type="text"
                     required
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Elden Ring / Dune 2"
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs outline-none focus:border-white/30"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs outline-none focus:border-white/30 transition-all"
                   />
                 </div>
 
@@ -832,7 +838,7 @@ export default function MyReviewsPage() {
 
               {/* 7. Bottom Line */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-white/50 block">The Bottom Line (One-Sentence Summary)</label>
+                <label className="text-[11px] font-medium text-white/60 block">The Bottom Line (One-Sentence Summary)</label>
                 <input
                   type="text"
                   value={bottomLine}
@@ -841,25 +847,39 @@ export default function MyReviewsPage() {
                   className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white text-xs outline-none focus:border-white/30 italic"
                 />
               </div>
+            </form>
 
-              {/* Modal Footer */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.06]">
+            {/* Sticky Pinned Modal Footer */}
+            <div className="flex items-center justify-between px-6 py-4 border-t border-white/[0.08] bg-[#14141b] shrink-0">
+              <span className="text-[11px] text-white/40">
+                All changes save to your public profile & reviews feed.
+              </span>
+
+              <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-white/60 hover:text-white transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
+                  form="review-form"
                   disabled={isSubmitting}
-                  className="px-5 py-2.5 rounded-xl bg-white text-black hover:bg-neutral-200 text-xs font-bold transition-all shadow-md cursor-pointer disabled:opacity-50"
+                  className="px-6 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer disabled:opacity-50 flex items-center gap-2"
                 >
-                  {isSubmitting ? 'Publishing...' : editingReview ? 'Update Critique' : 'Publish Review'}
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                      <span>Publishing...</span>
+                    </>
+                  ) : (
+                    <span>{editingReview ? 'Update Critique' : 'Publish Review'}</span>
+                  )}
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
