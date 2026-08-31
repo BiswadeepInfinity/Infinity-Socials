@@ -582,18 +582,18 @@ export default function MyReviewsPage() {
         )}
       </main>
 
-      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (TRANSPARENT LIQUID GLASS) */}
+      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (TRUE TRANSLUCENT LIQUID GLASS) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-2xl animate-in fade-in duration-300">
-          {/* Ambient Colorful Light Orbs for Liquid Glass Effect */}
-          <div className="absolute w-96 h-96 rounded-full bg-gradient-to-tr from-purple-600/30 to-rose-600/30 blur-[120px] pointer-events-none -top-10 -left-10 animate-pulse" />
-          <div className="absolute w-96 h-96 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-600/20 blur-[130px] pointer-events-none -bottom-10 -right-10 animate-pulse" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/30 backdrop-blur-md animate-in fade-in duration-300">
+          {/* Ambient Iridescent Liquid Glow Orbs */}
+          <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-rose-500/25 via-purple-600/20 to-indigo-500/25 blur-[100px] pointer-events-none -top-16 -left-16 animate-pulse" />
+          <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-cyan-400/20 via-blue-500/15 to-emerald-400/20 blur-[110px] pointer-events-none -bottom-16 -right-16 animate-pulse" />
 
-          {/* Liquid Glassmorphic Modal Card */}
-          <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[32px] bg-white/[0.04] backdrop-blur-3xl border border-white/[0.15] shadow-[0_30px_100px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.25)] overflow-hidden">
+          {/* Liquid Glassmorphic Floating Card */}
+          <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[32px] bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.18] shadow-[0_20px_80px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_1px_rgba(255,255,255,0.1)] overflow-hidden">
             
-            {/* Header: Title + Step Progress Bar with Frosted Glass */}
-            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.1] bg-white/[0.02] backdrop-blur-xl shrink-0">
+            {/* Header: Title + Step Progress Bar with Ultra-Clear Glass */}
+            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.1] bg-white/[0.03] backdrop-blur-md shrink-0">
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-mono font-bold tracking-widest text-rose-400 uppercase drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
@@ -606,7 +606,7 @@ export default function MyReviewsPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.18] border border-white/15 flex items-center justify-center text-white/70 hover:text-white text-sm cursor-pointer transition-all active:scale-95"
+                  className="w-8 h-8 rounded-full bg-white/[0.1] hover:bg-white/[0.2] border border-white/20 flex items-center justify-center text-white/80 hover:text-white text-sm cursor-pointer transition-all active:scale-95 shadow-sm"
                 >
                   ✕
                 </button>
@@ -631,8 +631,8 @@ export default function MyReviewsPage() {
                     }}
                     className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                       currentStep >= s.step
-                        ? 'bg-gradient-to-r from-rose-500 via-amber-500 to-purple-500 shadow-[0_0_12px_rgba(244,63,94,0.8)]'
-                        : 'bg-white/[0.08]'
+                        ? 'bg-gradient-to-r from-rose-500 via-amber-400 to-purple-500 shadow-[0_0_12px_rgba(244,63,94,0.9)]'
+                        : 'bg-white/[0.12]'
                     }`}
                   />
                 ))}
@@ -642,7 +642,7 @@ export default function MyReviewsPage() {
             {/* Scrollable Step Content Body */}
             <form id="wizard-review-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin">
               {formError && (
-                <div className="p-3.5 rounded-2xl bg-rose-500/15 backdrop-blur-md border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2.5 shadow-lg">
+                <div className="p-3.5 rounded-2xl bg-rose-500/20 backdrop-blur-xl border border-rose-500/40 text-rose-100 text-xs flex items-center gap-2.5 shadow-lg">
                   <span className="text-sm">⚠️</span>
                   <span>{formError}</span>
                 </div>
@@ -663,7 +663,7 @@ export default function MyReviewsPage() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="e.g. Elden Ring / Dune: Part Two"
-                        className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] focus:bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] focus:border-white/40 text-white text-xs sm:text-sm outline-none transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] placeholder:text-white/25 font-medium"
+                        className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.08] focus:bg-white/[0.12] backdrop-blur-xl border border-white/[0.15] focus:border-white/40 text-white text-xs sm:text-sm outline-none transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] placeholder:text-white/30 font-medium"
                       />
                     </div>
 
@@ -672,7 +672,7 @@ export default function MyReviewsPage() {
                       <select
                         value={category}
                         onChange={(e: any) => setCategory(e.target.value)}
-                        className="w-full px-4 py-3.5 rounded-2xl bg-[#14141e]/90 backdrop-blur-xl border border-white/[0.12] focus:border-white/40 text-white text-xs sm:text-sm outline-none cursor-pointer shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
+                        className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.1] backdrop-blur-xl border border-white/[0.15] focus:border-white/40 text-white text-xs sm:text-sm outline-none cursor-pointer shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] [&>option]:bg-[#121218] [&>option]:text-white"
                       >
                         <option value="Game">🎮 Game</option>
                         <option value="Movie">🎬 Movie</option>
@@ -687,19 +687,19 @@ export default function MyReviewsPage() {
                   {/* Poster / Cover Art */}
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-white/90 block">Cover Poster / Key Art</label>
-                    <div className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl bg-white/[0.02] backdrop-blur-xl border border-white/[0.1] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-                      <div className="w-16 h-22 rounded-2xl overflow-hidden bg-black/40 border border-white/15 flex items-center justify-center shrink-0 shadow-2xl relative">
+                    <div className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                      <div className="w-16 h-22 rounded-2xl overflow-hidden bg-white/[0.05] border border-white/20 flex items-center justify-center shrink-0 shadow-2xl relative">
                         {coverPreview || existingCoverUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={coverPreview || existingCoverUrl} alt="Cover Preview" className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-2xl text-white/30">🖼️</span>
+                          <span className="text-2xl text-white/40">🖼️</span>
                         )}
                       </div>
                       <div className="space-y-1.5">
                         <label
                           htmlFor="wizard-cover-file"
-                          className="inline-block px-4 py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.16] backdrop-blur-md text-xs font-semibold text-white border border-white/20 transition-all cursor-pointer shadow-md active:scale-95"
+                          className="inline-block px-4 py-2.5 rounded-xl bg-white/[0.1] hover:bg-white/[0.2] backdrop-blur-md text-xs font-semibold text-white border border-white/20 transition-all cursor-pointer shadow-md active:scale-95"
                         >
                           {coverFile || coverPreview ? 'Change Poster' : 'Upload Poster File'}
                         </label>
@@ -710,7 +710,7 @@ export default function MyReviewsPage() {
                           onChange={handleImageFileChange}
                           className="hidden"
                         />
-                        <p className="text-[11px] text-white/40">Vertical artwork (PNG, JPG, WEBP, up to 8MB).</p>
+                        <p className="text-[11px] text-white/50">Vertical artwork (PNG, JPG, WEBP, up to 8MB).</p>
                       </div>
                     </div>
                   </div>
@@ -722,7 +722,7 @@ export default function MyReviewsPage() {
                       <select
                         value={verdict}
                         onChange={(e: any) => setVerdict(e.target.value)}
-                        className="w-full px-4 py-3.5 rounded-2xl bg-[#14141e]/90 backdrop-blur-xl border border-white/[0.12] text-white text-xs outline-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
+                        className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.1] backdrop-blur-xl border border-white/[0.15] text-white text-xs outline-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] [&>option]:bg-[#121218] [&>option]:text-white cursor-pointer"
                       >
                         <option value="must_buy">🔥 Must Buy / Watch</option>
                         <option value="wait_sale">🏷️ Wait for Sale</option>
@@ -741,9 +741,9 @@ export default function MyReviewsPage() {
                           max="100"
                           value={score}
                           onChange={(e) => setScore(Number(e.target.value))}
-                          className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] focus:bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] focus:border-white/40 text-white text-xs outline-none font-mono pr-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
+                          className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.08] focus:bg-white/[0.12] backdrop-blur-xl border border-white/[0.15] focus:border-white/40 text-white text-xs outline-none font-mono pr-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]"
                         />
-                        <span className="absolute right-4 top-3.5 text-xs text-white/40 font-mono">%</span>
+                        <span className="absolute right-4 top-3.5 text-xs text-white/50 font-mono">%</span>
                       </div>
                     </div>
 
@@ -753,7 +753,7 @@ export default function MyReviewsPage() {
                         type="number"
                         value={releaseYear}
                         onChange={(e) => setReleaseYear(Number(e.target.value))}
-                        className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] focus:bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] focus:border-white/40 text-white text-xs outline-none font-mono shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
+                        className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.08] focus:bg-white/[0.12] backdrop-blur-xl border border-white/[0.15] focus:border-white/40 text-white text-xs outline-none font-mono shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]"
                       />
                     </div>
                   </div>
