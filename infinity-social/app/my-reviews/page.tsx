@@ -637,7 +637,16 @@ export default function MyReviewsPage() {
             </div>
 
             {/* Scrollable Step Content Body */}
-            <form id="wizard-review-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin">
+            <form
+              id="wizard-review-form"
+              onSubmit={handleSubmit}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+                  e.preventDefault();
+                }
+              }}
+              className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin"
+            >
               {formError && (
                 <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center gap-2.5 shadow-lg animate-ios-step">
                   <span className="text-sm">⚠️</span>
