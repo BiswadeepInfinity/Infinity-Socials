@@ -582,21 +582,21 @@ export default function MyReviewsPage() {
         )}
       </main>
 
-      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (TRUE TRANSLUCENT LIQUID GLASS) */}
+      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (TRUE TRANSLUCENT LIQUID GLASS + iOS MOTION) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/30 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/40 backdrop-blur-xl animate-in fade-in duration-300">
           {/* Ambient Iridescent Liquid Glow Orbs */}
-          <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-rose-500/25 via-purple-600/20 to-indigo-500/25 blur-[100px] pointer-events-none -top-16 -left-16 animate-pulse" />
-          <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-cyan-400/20 via-blue-500/15 to-emerald-400/20 blur-[110px] pointer-events-none -bottom-16 -right-16 animate-pulse" />
+          <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-rose-500/30 via-purple-600/25 to-indigo-500/30 blur-[120px] pointer-events-none -top-16 -left-16 animate-ios-float" />
+          <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-cyan-400/25 via-blue-500/20 to-emerald-400/25 blur-[130px] pointer-events-none -bottom-16 -right-16 animate-ios-float" />
 
-          {/* Liquid Glassmorphic Floating Card */}
-          <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[32px] bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.18] shadow-[0_20px_80px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_1px_rgba(255,255,255,0.1)] overflow-hidden">
+          {/* Liquid Glassmorphic Floating Card with iOS Spring Motion */}
+          <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[34px] bg-gradient-to-b from-white/[0.09] via-white/[0.03] to-white/[0.05] backdrop-blur-3xl border border-white/[0.2] shadow-[0_30px_90px_rgba(0,0,0,0.7),inset_0_1.5px_1px_rgba(255,255,255,0.45),inset_0_-1px_1px_rgba(255,255,255,0.1)] overflow-hidden animate-ios-modal">
             
             {/* Header: Title + Step Progress Bar with Ultra-Clear Glass */}
             <div className="px-6 sm:px-8 py-5 border-b border-white/[0.1] bg-white/[0.03] backdrop-blur-md shrink-0">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-mono font-bold tracking-widest text-rose-400 uppercase drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
+                  <span className="text-[10px] font-mono font-bold tracking-widest text-rose-400 uppercase drop-shadow-[0_0_10px_rgba(244,63,94,0.7)] transition-all duration-300">
                     Step {currentStep} of 4 • {currentStep === 1 ? 'Media Info & Score' : currentStep === 2 ? 'Editorial Breakdown' : currentStep === 3 ? 'Highlights & Flaws' : 'Verdict & Summary'}
                   </span>
                   <h3 className="text-base sm:text-lg font-bold text-white tracking-tight mt-0.5">
@@ -606,14 +606,14 @@ export default function MyReviewsPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/[0.1] hover:bg-white/[0.2] border border-white/20 flex items-center justify-center text-white/80 hover:text-white text-sm cursor-pointer transition-all active:scale-95 shadow-sm"
+                  className="w-8 h-8 rounded-full bg-white/[0.1] hover:bg-white/[0.22] border border-white/20 flex items-center justify-center text-white/80 hover:text-white text-sm cursor-pointer transition-all ios-tap-active shadow-sm"
                 >
                   ✕
                 </button>
               </div>
 
-              {/* Visual Step Progress Pill Indicator */}
-              <div className="grid grid-cols-4 gap-2 mt-4">
+              {/* Visual Step Progress Pill Indicator with Smooth Spring Fill */}
+              <div className="grid grid-cols-4 gap-2.5 mt-4">
                 {[
                   { step: 1, label: '1. Basic Info' },
                   { step: 2, label: '2. Review Body' },
@@ -629,20 +629,20 @@ export default function MyReviewsPage() {
                         setCurrentStep(s.step);
                       }
                     }}
-                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    className={`h-2 rounded-full transition-all duration-500 cursor-pointer ${
                       currentStep >= s.step
-                        ? 'bg-gradient-to-r from-rose-500 via-amber-400 to-purple-500 shadow-[0_0_12px_rgba(244,63,94,0.9)]'
-                        : 'bg-white/[0.12]'
+                        ? 'bg-gradient-to-r from-rose-500 via-amber-400 to-purple-500 shadow-[0_0_14px_rgba(244,63,94,0.9)] scale-[1.02]'
+                        : 'bg-white/[0.12] hover:bg-white/[0.18]'
                     }`}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Scrollable Step Content Body */}
+            {/* Scrollable Step Content Body with Dynamic iOS Slide Transitions */}
             <form id="wizard-review-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin">
               {formError && (
-                <div className="p-3.5 rounded-2xl bg-rose-500/20 backdrop-blur-xl border border-rose-500/40 text-rose-100 text-xs flex items-center gap-2.5 shadow-lg">
+                <div className="p-3.5 rounded-2xl bg-rose-500/20 backdrop-blur-xl border border-rose-500/40 text-rose-100 text-xs flex items-center gap-2.5 shadow-lg animate-ios-step">
                   <span className="text-sm">⚠️</span>
                   <span>{formError}</span>
                 </div>
@@ -650,7 +650,7 @@ export default function MyReviewsPage() {
 
               {/* STEP 1: Title, Category, Poster, Score & Tier */}
               {currentStep === 1 && (
-                <div className="space-y-6 animate-in fade-in duration-200">
+                <div className="space-y-6 animate-ios-step">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-xs font-semibold text-white/90">
@@ -699,7 +699,7 @@ export default function MyReviewsPage() {
                       <div className="space-y-1.5">
                         <label
                           htmlFor="wizard-cover-file"
-                          className="inline-block px-4 py-2.5 rounded-xl bg-white/[0.1] hover:bg-white/[0.2] backdrop-blur-md text-xs font-semibold text-white border border-white/20 transition-all cursor-pointer shadow-md active:scale-95"
+                          className="inline-block px-4 py-2.5 rounded-xl bg-white/[0.1] hover:bg-white/[0.2] backdrop-blur-md text-xs font-semibold text-white border border-white/20 transition-all cursor-pointer shadow-md ios-tap-active"
                         >
                           {coverFile || coverPreview ? 'Change Poster' : 'Upload Poster File'}
                         </label>
@@ -762,7 +762,7 @@ export default function MyReviewsPage() {
 
               {/* STEP 2: Rich Editorial Critique Editor */}
               {currentStep === 2 && (
-                <div className="space-y-3 animate-in fade-in duration-200">
+                <div className="space-y-3 animate-ios-step">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-semibold text-white/90">
                       Detailed Breakdown & Editorial Review <span className="text-rose-400">*</span>
@@ -782,7 +782,7 @@ export default function MyReviewsPage() {
 
               {/* STEP 3: Key Highlights (Pros) & Shortcomings (Cons) */}
               {currentStep === 3 && (
-                <div className="space-y-5 animate-in fade-in duration-200">
+                <div className="space-y-5 animate-ios-step">
                   <div className="text-xs text-white/60">
                     Add bulleted highlights and flaws to give readers a fast executive summary of your rating.
                   </div>
@@ -806,7 +806,7 @@ export default function MyReviewsPage() {
                         <button
                           type="button"
                           onClick={handleAddPro}
-                          className="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-bold transition-colors cursor-pointer shrink-0"
+                          className="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-bold transition-colors cursor-pointer shrink-0 ios-tap-active"
                         >
                           Add
                         </button>
@@ -815,7 +815,7 @@ export default function MyReviewsPage() {
                         {pros.map((p, i) => (
                           <li key={i} className="text-xs text-white/90 flex items-center justify-between bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 rounded-xl">
                             <span>✓ {p}</span>
-                            <button type="button" onClick={() => setPros(pros.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs cursor-pointer">✕</button>
+                            <button type="button" onClick={() => setPros(pros.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs cursor-pointer ios-tap-active">✕</button>
                           </li>
                         ))}
                       </ul>
@@ -839,7 +839,7 @@ export default function MyReviewsPage() {
                         <button
                           type="button"
                           onClick={handleAddCon}
-                          className="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold transition-colors cursor-pointer shrink-0"
+                          className="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold transition-colors cursor-pointer shrink-0 ios-tap-active"
                         >
                           Add
                         </button>
@@ -848,7 +848,7 @@ export default function MyReviewsPage() {
                         {cons.map((c, i) => (
                           <li key={i} className="text-xs text-white/90 flex items-center justify-between bg-rose-500/10 border border-rose-500/20 px-3 py-2 rounded-xl">
                             <span>✕ {c}</span>
-                            <button type="button" onClick={() => setCons(cons.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs cursor-pointer">✕</button>
+                            <button type="button" onClick={() => setCons(cons.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs cursor-pointer ios-tap-active">✕</button>
                           </li>
                         ))}
                       </ul>
@@ -859,7 +859,7 @@ export default function MyReviewsPage() {
 
               {/* STEP 4: Video Link, Voice Commentary & Bottom Line */}
               {currentStep === 4 && (
-                <div className="space-y-5 animate-in fade-in duration-200">
+                <div className="space-y-5 animate-ios-step">
                   {/* YouTube & Voice Links */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2 p-4 rounded-2xl bg-white/[0.02] backdrop-blur-xl border border-white/[0.1]">
@@ -885,7 +885,7 @@ export default function MyReviewsPage() {
                       <div className="flex items-center gap-3">
                         <label
                           htmlFor="wizard-voice-file"
-                          className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.16] backdrop-blur-md text-xs font-semibold text-white border border-white/15 transition-all cursor-pointer shadow-sm active:scale-95"
+                          className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.16] backdrop-blur-md text-xs font-semibold text-white border border-white/15 transition-all cursor-pointer shadow-sm ios-tap-active"
                         >
                           {voiceFile ? 'Change Audio File' : 'Upload Audio (.mp3, .m4a)'}
                         </label>
@@ -932,7 +932,7 @@ export default function MyReviewsPage() {
                       setFormError(null);
                       setCurrentStep((prev) => Math.max(1, prev - 1));
                     }}
-                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/90 hover:text-white bg-white/[0.06] hover:bg-white/[0.14] border border-white/15 backdrop-blur-md transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/90 hover:text-white bg-white/[0.06] hover:bg-white/[0.14] border border-white/15 backdrop-blur-md transition-all cursor-pointer flex items-center gap-1.5 ios-tap-active"
                   >
                     <span>← Back</span>
                   </button>
@@ -940,7 +940,7 @@ export default function MyReviewsPage() {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-4 py-2.5 rounded-xl text-xs font-medium text-white/50 hover:text-white transition-colors cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl text-xs font-medium text-white/50 hover:text-white transition-colors cursor-pointer ios-tap-active"
                   >
                     Cancel
                   </button>
@@ -964,7 +964,7 @@ export default function MyReviewsPage() {
                       setFormError(null);
                       setCurrentStep((prev) => Math.min(4, prev + 1));
                     }}
-                    className="px-6 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 text-xs font-bold transition-all shadow-[0_0_25px_rgba(255,255,255,0.3)] cursor-pointer flex items-center gap-1.5 active:scale-95"
+                    className="px-6 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 text-xs font-bold transition-all shadow-[0_0_25px_rgba(255,255,255,0.3)] cursor-pointer flex items-center gap-1.5 ios-tap-active"
                   >
                     <span>Next →</span>
                   </button>
@@ -973,7 +973,7 @@ export default function MyReviewsPage() {
                     type="submit"
                     form="wizard-review-form"
                     disabled={isSubmitting}
-                    className="px-7 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-purple-500 hover:from-rose-400 hover:to-purple-400 text-white text-xs font-bold transition-all shadow-[0_0_30px_rgba(244,63,94,0.7)] cursor-pointer disabled:opacity-50 flex items-center gap-2 active:scale-95"
+                    className="px-7 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-purple-500 hover:from-rose-400 hover:to-purple-400 text-white text-xs font-bold transition-all shadow-[0_0_30px_rgba(244,63,94,0.7)] cursor-pointer disabled:opacity-50 flex items-center gap-2 ios-tap-active"
                   >
                     {isSubmitting ? (
                       <>

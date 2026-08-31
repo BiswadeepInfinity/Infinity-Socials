@@ -202,16 +202,78 @@ button, a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #040406;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* iOS Spring & Liquid Motion Physics */
+@keyframes ios-spring-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(24px);
+    filter: blur(10px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.01) translateY(-2px);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes ios-step-forward {
+  0% {
+    opacity: 0;
+    transform: translateX(35px) scale(0.97);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes ios-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+.animate-ios-modal {
+  animation: ios-spring-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-ios-step {
+  animation: ios-step-forward 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-ios-float {
+  animation: ios-float 6s ease-in-out infinite;
+}
+
+.ios-tap-active {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+}
+
+.ios-tap-active:active {
+  transform: scale(0.94);
+  opacity: 0.85;
 }
 
 .isolated-scroll-track {
