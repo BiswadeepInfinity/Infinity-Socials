@@ -215,10 +215,6 @@ export default function MyReviewsPage() {
       setFormError('Title and Detailed Breakdown are required.');
       return;
     }
-    if (!youtubeUrl.trim()) {
-      setFormError('YouTube Link is mandatory for this review.');
-      return;
-    }
 
     setIsSubmitting(true);
     setFormError(null);
@@ -785,11 +781,10 @@ export default function MyReviewsPage() {
                 <div className="space-y-1.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
                   <div className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-rose-400 font-mono">
                     <span>▶</span>
-                    <span>YouTube Link (Mandatory)</span>
+                    <span>YouTube Link (Optional)</span>
                   </div>
                   <input
                     type="url"
-                    required
                     value={youtubeUrl}
                     onChange={(e) => setYoutubeUrl(e.target.value)}
                     placeholder="https://youtube.com/watch?v=..."
