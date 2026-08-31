@@ -267,53 +267,53 @@ button, a {
   animation: ios-float 6s ease-in-out infinite;
 }
 
-/* iOS 26 Pure Neutral Liquid Glass Design System */
+/* iOS 26 High-Transparency Liquid Glass Design System */
 .ios26-liquid-modal {
   position: relative;
   background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.02) 40%,
-    rgba(255, 255, 255, 0.05) 100%
-  ), rgba(18, 18, 26, 0.65);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  ), rgba(10, 10, 15, 0.25);
+  backdrop-filter: blur(20px) saturate(190%) contrast(105%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%) contrast(105%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: 
-    0 32px 80px -20px rgba(0, 0, 0, 0.85),
-    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+    0 30px 90px -15px rgba(0, 0, 0, 0.7),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2);
 }
 
 .ios26-liquid-modal::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 15%;
-  right: 15%;
+  left: 10%;
+  right: 10%;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
   pointer-events: none;
 }
 
 .ios26-liquid-input {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.25),
-    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    0 4px 14px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25);
   transition: all 0.2s ease;
 }
 
 .ios26-liquid-input:focus-within,
 .ios26-liquid-input:focus {
-  border-color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
   box-shadow: 
-    0 6px 20px rgba(0, 0, 0, 0.35),
-    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
 }
 
 .ios26-lens-cyan {

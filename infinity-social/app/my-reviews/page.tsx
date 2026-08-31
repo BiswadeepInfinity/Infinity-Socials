@@ -582,15 +582,15 @@ export default function MyReviewsPage() {
         )}
       </main>
 
-      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (PURE TRANSLUCENT LIQUID GLASS) */}
+      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (TRUE TRANSLUCENT LIQUID GLASS) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/50 backdrop-blur-xl animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/25 backdrop-blur-sm animate-in fade-in duration-300">
           
           {/* Pure Liquid Glass Floating Card */}
           <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[32px] ios26-liquid-modal overflow-hidden animate-ios-modal">
             
             {/* Header: Clean Glass Top */}
-            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shrink-0">
+            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.1] bg-white/[0.04] backdrop-blur-md shrink-0">
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-mono font-bold tracking-widest text-white/50 uppercase transition-all duration-300">
