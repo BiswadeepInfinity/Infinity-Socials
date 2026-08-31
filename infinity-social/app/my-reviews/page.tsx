@@ -31,6 +31,7 @@ export default function MyReviewsPage() {
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState<number>(1);
   const [editingReview, setEditingReview] = useState<UserReview | null>(null);
   
   // Structured Review Fields
@@ -121,6 +122,7 @@ export default function MyReviewsPage() {
 
   const openNewModal = () => {
     setEditingReview(null);
+    setCurrentStep(1);
     setTitle('');
     setCategory('Game');
     setReleaseYear(new Date().getFullYear());
@@ -143,6 +145,7 @@ export default function MyReviewsPage() {
 
   const openEditModal = (rev: UserReview) => {
     setEditingReview(rev);
+    setCurrentStep(1);
     setTitle(rev.title);
     setCategory(rev.category);
     setReleaseYear(rev.release_year);
@@ -579,307 +582,407 @@ export default function MyReviewsPage() {
         )}
       </main>
 
-      {/* FIXED STRUCTURED REVIEW MODAL */}
+      {/* 4-STEP WIZARD REVIEW BUILDER MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md">
-          <div className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl bg-[#0f0f14] border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.9)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            {/* Sticky Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-[#14141b] shrink-0">
-              <div>
-                <h3 className="text-sm sm:text-base font-bold text-white">
-                  {editingReview ? 'Edit Structured Review' : 'New Standardized Review'}
-                </h3>
-                <p className="text-[11px] text-white/40">Rich editorial critique editor with inline media support</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200">
+          <div className="w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[28px] bg-[#0c0c12] border border-white/[0.12] shadow-[0_30px_90px_rgba(0,0,0,0.95)] overflow-hidden">
+            
+            {/* Header: Title + Step Progress Bar */}
+            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.08] bg-[#12121a]/80 shrink-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-mono font-bold tracking-widest text-rose-400 uppercase">
+                    Step {currentStep} of 4 • {currentStep === 1 ? 'Media Info & Score' : currentStep === 2 ? 'Editorial Breakdown' : currentStep === 3 ? 'Highlights & Flaws' : 'Verdict & Summary'}
+                  </span>
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight mt-0.5">
+                    {editingReview ? 'Edit Critique' : 'Create Standardized Review'}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center text-white/60 hover:text-white text-sm cursor-pointer transition-colors"
+                >
+                  ✕
+                </button>
               </div>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center text-white/60 hover:text-white text-sm cursor-pointer transition-colors"
-              >
-                ✕
-              </button>
+
+              {/* Visual Step Progress Pill Indicator */}
+              <div className="grid grid-cols-4 gap-2 mt-4">
+                {[
+                  { step: 1, label: '1. Basic Info' },
+                  { step: 2, label: '2. Review Body' },
+                  { step: 3, label: '3. Pros & Cons' },
+                  { step: 4, label: '4. The Verdict' },
+                ].map((s) => (
+                  <button
+                    key={s.step}
+                    type="button"
+                    onClick={() => {
+                      if (s.step < currentStep || (title.trim() && s.step <= 2)) {
+                        setFormError(null);
+                        setCurrentStep(s.step);
+                      }
+                    }}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      currentStep >= s.step
+                        ? 'bg-gradient-to-r from-rose-500 to-amber-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]'
+                        : 'bg-white/[0.08]'
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
 
-            {/* Scrollable Form Body */}
-            <form id="review-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-5 scrollbar-thin">
+            {/* Scrollable Step Content Body */}
+            <form id="wizard-review-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin">
               {formError && (
-                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center gap-2">
-                  <span>⚠️</span>
+                <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5 animate-shake">
+                  <span className="text-sm">⚠️</span>
                   <span>{formError}</span>
                 </div>
               )}
 
-              {/* 1. Header Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-white/60">Media Title <span className="text-rose-400">*</span></label>
-                  <input
-                    type="text"
-                    required
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Elden Ring / Dune 2"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs outline-none focus:border-white/30 transition-all"
+              {/* STEP 1: Title, Category, Poster, Score & Tier */}
+              {currentStep === 1 && (
+                <div className="space-y-5 animate-in fade-in duration-150">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-white/80">
+                        Media Title <span className="text-rose-400">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        autoFocus
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="e.g. Elden Ring / Dune: Part Two"
+                        className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.1] text-white text-xs sm:text-sm outline-none focus:border-rose-500/50 transition-all font-medium"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-white/80">Category</label>
+                      <select
+                        value={category}
+                        onChange={(e: any) => setCategory(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-[#16161f] border border-white/[0.1] text-white text-xs sm:text-sm outline-none cursor-pointer"
+                      >
+                        <option value="Game">🎮 Game</option>
+                        <option value="Movie">🎬 Movie</option>
+                        <option value="Anime">⛩️ Anime</option>
+                        <option value="Series">📺 TV Series</option>
+                        <option value="Tech">💻 Tech</option>
+                        <option value="Music">🎵 Music</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Poster / Cover Art */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-white/80 block">Cover Poster / Key Art</label>
+                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08]">
+                      <div className="w-16 h-22 rounded-xl overflow-hidden bg-black/60 border border-white/10 flex items-center justify-center shrink-0 shadow-lg">
+                        {coverPreview || existingCoverUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={coverPreview || existingCoverUrl} alt="Cover Preview" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-2xl text-white/30">🖼️</span>
+                        )}
+                      </div>
+                      <div className="space-y-1.5">
+                        <label
+                          htmlFor="wizard-cover-file"
+                          className="inline-block px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs font-semibold text-white border border-white/15 transition-all cursor-pointer shadow-sm active:scale-95"
+                        >
+                          {coverFile || coverPreview ? 'Change Poster' : 'Upload Poster File'}
+                        </label>
+                        <input
+                          id="wizard-cover-file"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageFileChange}
+                          className="hidden"
+                        />
+                        <p className="text-[11px] text-white/40">Vertical poster or thumbnail (PNG, JPG, WEBP).</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Score, Verdict Tier, Release Year */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-white/80">Verdict Tier</label>
+                      <select
+                        value={verdict}
+                        onChange={(e: any) => setVerdict(e.target.value)}
+                        className="w-full px-3.5 py-3 rounded-xl bg-[#16161f] border border-white/[0.1] text-white text-xs outline-none"
+                      >
+                        <option value="must_buy">🔥 Must Buy / Watch</option>
+                        <option value="wait_sale">🏷️ Wait for Sale</option>
+                        <option value="wait_patches">⏳ Wait / Patches</option>
+                        <option value="skip">🚫 Skip</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-white/80">Score (0% to 100%)</label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          step="1"
+                          min="0"
+                          max="100"
+                          value={score}
+                          onChange={(e) => setScore(Number(e.target.value))}
+                          className="w-full px-3.5 py-3 rounded-xl bg-white/[0.04] border border-white/[0.1] text-white text-xs outline-none font-mono pr-8"
+                        />
+                        <span className="absolute right-3.5 top-3 text-xs text-white/40 font-mono">%</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-white/80">Release Year</label>
+                      <input
+                        type="number"
+                        value={releaseYear}
+                        onChange={(e) => setReleaseYear(Number(e.target.value))}
+                        className="w-full px-3.5 py-3 rounded-xl bg-white/[0.04] border border-white/[0.1] text-white text-xs outline-none font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 2: Rich Editorial Critique Editor */}
+              {currentStep === 2 && (
+                <div className="space-y-3 animate-in fade-in duration-150">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-white/80">
+                      Detailed Breakdown & Editorial Review <span className="text-rose-400">*</span>
+                    </label>
+                    <span className="text-[11px] text-white/40 font-mono">
+                      Markdown & Inline Images Supported
+                    </span>
+                  </div>
+                  <RichArticleEditor
+                    value={content}
+                    onChange={setContent}
+                    userId={user.id}
+                    placeholder="Write your in-depth review breakdown here... Format with headings, bold takeaways, quotes, or insert screenshot galleries anywhere you like!"
                   />
                 </div>
+              )}
 
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-white/50">Category</label>
-                  <select
-                    value={category}
-                    onChange={(e: any) => setCategory(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-[#16161d] border border-white/[0.08] text-white text-xs outline-none"
-                  >
-                    <option value="Game">Game</option>
-                    <option value="Movie">Movie</option>
-                    <option value="Anime">Anime</option>
-                    <option value="Series">Series</option>
-                    <option value="Tech">Tech</option>
-                    <option value="Music">Music</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 2. Cover Photo File Upload */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-white/50 block">Upload Cover Art / Poster</label>
-                <div className="flex items-center gap-4 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                  <div className="w-16 h-20 rounded-lg overflow-hidden bg-black/50 border border-white/10 flex items-center justify-center flex-shrink-0">
-                    {coverPreview || existingCoverUrl ? (
-                      <img src={coverPreview || existingCoverUrl} alt="Cover Preview" className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-xl text-white/30">🖼️</span>
-                    )}
+              {/* STEP 3: Key Highlights (Pros) & Shortcomings (Cons) */}
+              {currentStep === 3 && (
+                <div className="space-y-5 animate-in fade-in duration-150">
+                  <div className="text-xs text-white/50">
+                    Add bulleted highlights and flaws to give readers a fast executive summary of your rating.
                   </div>
-                  <div className="space-y-1">
-                    <label
-                      htmlFor="review-cover-file"
-                      className="inline-block px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-xs font-semibold text-white border border-white/10 transition-colors cursor-pointer"
-                    >
-                      Choose Poster File
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Pros */}
+                    <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-emerald-500/[0.03] border border-emerald-500/20 shadow-inner">
+                      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-400 font-mono">
+                        <span>✓</span>
+                        <span>Key Highlights (Pros)</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={proInput}
+                          onChange={(e) => setProInput(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddPro(); } }}
+                          placeholder="e.g. Masterful sound design..."
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/10 text-white text-xs outline-none focus:border-emerald-500/50"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleAddPro}
+                          className="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-bold transition-colors cursor-pointer shrink-0"
+                        >
+                          Add
+                        </button>
+                      </div>
+                      <ul className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        {pros.map((p, i) => (
+                          <li key={i} className="text-xs text-white/90 flex items-center justify-between bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 rounded-xl">
+                            <span>✓ {p}</span>
+                            <button type="button" onClick={() => setPros(pros.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs cursor-pointer">✕</button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Cons */}
+                    <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-rose-500/[0.03] border border-rose-500/20 shadow-inner">
+                      <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-400 font-mono">
+                        <span>✕</span>
+                        <span>Shortcomings (Cons)</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={conInput}
+                          onChange={(e) => setConInput(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddCon(); } }}
+                          placeholder="e.g. Minor frame rate drops..."
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/10 text-white text-xs outline-none focus:border-rose-500/50"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleAddCon}
+                          className="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold transition-colors cursor-pointer shrink-0"
+                        >
+                          Add
+                        </button>
+                      </div>
+                      <ul className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        {cons.map((c, i) => (
+                          <li key={i} className="text-xs text-white/90 flex items-center justify-between bg-rose-500/10 border border-rose-500/20 px-3 py-2 rounded-xl">
+                            <span>✕ {c}</span>
+                            <button type="button" onClick={() => setCons(cons.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs cursor-pointer">✕</button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 4: Video Link, Voice Commentary & Bottom Line */}
+              {currentStep === 4 && (
+                <div className="space-y-5 animate-in fade-in duration-150">
+                  {/* YouTube & Voice Links */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08]">
+                      <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-rose-400 font-mono">
+                        <span>▶</span>
+                        <span>YouTube Video (Optional)</span>
+                      </div>
+                      <input
+                        type="url"
+                        value={youtubeUrl}
+                        onChange={(e) => setYoutubeUrl(e.target.value)}
+                        placeholder="https://youtube.com/watch?v=..."
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 text-white text-xs outline-none focus:border-rose-500/50 font-mono"
+                      />
+                      <p className="text-[10px] text-white/35">Attach gameplay or trailer video link.</p>
+                    </div>
+
+                    <div className="space-y-1.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08]">
+                      <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-cyan-400 font-mono">
+                        <span>🎙️</span>
+                        <span>Voice Commentary (Optional)</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <label
+                          htmlFor="wizard-voice-file"
+                          className="px-3.5 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs font-semibold text-white border border-white/10 transition-colors cursor-pointer"
+                        >
+                          {voiceFile ? 'Change Audio File' : 'Upload Audio (.mp3, .m4a)'}
+                        </label>
+                        <input
+                          id="wizard-voice-file"
+                          type="file"
+                          accept="audio/*"
+                          onChange={handleVoiceFileChange}
+                          className="hidden"
+                        />
+                        {(voicePreview || existingVoiceUrl) && (
+                          <span className="text-xs text-cyan-300 font-mono">Ready ✓</span>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-white/35">Upload recorded audio critique (max 25MB).</p>
+                    </div>
+                  </div>
+
+                  {/* One-Sentence Bottom Line */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-white/80 block">
+                      The Bottom Line (Final Summary)
                     </label>
                     <input
-                      id="review-cover-file"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageFileChange}
-                      className="hidden"
-                    />
-                    <p className="text-[10px] text-white/35">Upload vertical poster or game key art (max 8MB).</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Verdict & Score */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-white/50">Verdict Tier</label>
-                  <select
-                    value={verdict}
-                    onChange={(e: any) => setVerdict(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-[#16161d] border border-white/[0.08] text-white text-xs outline-none"
-                  >
-                    <option value="must_buy">🔥 Must Buy / Watch</option>
-                    <option value="wait_sale">🏷️ Wait for Sale</option>
-                    <option value="wait_patches">⏳ Wait / Patches</option>
-                    <option value="skip">🚫 Skip</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-white/50">Score (0% to 100%)</label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      step="1"
-                      min="0"
-                      max="100"
-                      value={score}
-                      onChange={(e) => setScore(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs outline-none pr-8"
-                    />
-                    <span className="absolute right-3 top-2 text-xs text-white/40 font-mono">%</span>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-white/50">Release Year</label>
-                  <input
-                    type="number"
-                    value={releaseYear}
-                    onChange={(e) => setReleaseYear(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-xs outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* 4. Detailed Critique with Rich Editor & Inline Images */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-white/50">Detailed Breakdown & Editorial Review</label>
-                <RichArticleEditor
-                  value={content}
-                  onChange={setContent}
-                  userId={user.id}
-                  placeholder="Write your in-depth review breakdown here... Add headings, bold highlights, quotes, or insert screenshot images wherever you want!"
-                />
-              </div>
-
-              {/* 5. Fixed Structure: Pros & Cons */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Pros */}
-                <div className="space-y-2.5 p-4 rounded-2xl bg-emerald-500/[0.02] border border-emerald-500/20 shadow-inner">
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-400 font-mono">
-                    <span>✓</span>
-                    <span>Key Highlights (Pros)</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <input
                       type="text"
-                      value={proInput}
-                      onChange={(e) => setProInput(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddPro(); } }}
-                      placeholder="Add key strength..."
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white text-xs outline-none focus:border-emerald-500/40"
+                      value={bottomLine}
+                      onChange={(e) => setBottomLine(e.target.value)}
+                      placeholder="e.g. A generational masterpiece that sets the new gold standard for RPGs."
+                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.1] text-white text-xs sm:text-sm outline-none focus:border-white/40 italic"
                     />
-                    <button
-                      type="button"
-                      onClick={handleAddPro}
-                      className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-bold transition-colors cursor-pointer"
-                    >
-                      Add
-                    </button>
                   </div>
-                  <ul className="space-y-1.5 max-h-28 overflow-y-auto pr-1">
-                    {pros.map((p, i) => (
-                      <li key={i} className="text-xs text-white/90 flex items-center justify-between bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
-                        <span>✓ {p}</span>
-                        <button type="button" onClick={() => setPros(pros.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs">✕</button>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
-
-                {/* Cons */}
-                <div className="space-y-2.5 p-4 rounded-2xl bg-rose-500/[0.02] border border-rose-500/20 shadow-inner">
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-rose-400 font-mono">
-                    <span>✕</span>
-                    <span>Shortcomings (Cons)</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={conInput}
-                      onChange={(e) => setConInput(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddCon(); } }}
-                      placeholder="Add drawback or flaw..."
-                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white text-xs outline-none focus:border-rose-500/40"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleAddCon}
-                      className="px-3.5 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold transition-colors cursor-pointer"
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <ul className="space-y-1.5 max-h-28 overflow-y-auto pr-1">
-                    {cons.map((c, i) => (
-                      <li key={i} className="text-xs text-white/90 flex items-center justify-between bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-xl">
-                        <span>✕ {c}</span>
-                        <button type="button" onClick={() => setCons(cons.filter((_, idx) => idx !== i))} className="text-white/40 hover:text-white ml-2 text-xs">✕</button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* 6. Media Links */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-                  <div className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-rose-400 font-mono">
-                    <span>▶</span>
-                    <span>YouTube Link (Optional)</span>
-                  </div>
-                  <input
-                    type="url"
-                    value={youtubeUrl}
-                    onChange={(e) => setYoutubeUrl(e.target.value)}
-                    placeholder="https://youtube.com/watch?v=..."
-                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white text-xs outline-none focus:border-rose-500/40"
-                  />
-                  <p className="text-[10px] text-white/35">Provide video gameplay, trailer, or review URL.</p>
-                </div>
-
-                <div className="space-y-1.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-                  <div className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-cyan-400 font-mono">
-                    <span>🎙️</span>
-                    <span>Voice Review Audio (Optional)</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <label
-                      htmlFor="review-voice-file"
-                      className="px-3.5 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs font-semibold text-white border border-white/10 transition-colors cursor-pointer"
-                    >
-                      {voiceFile ? 'Change Audio File' : 'Upload Audio (.mp3, .m4a, .wav)'}
-                    </label>
-                    <input
-                      id="review-voice-file"
-                      type="file"
-                      accept="audio/*"
-                      onChange={handleVoiceFileChange}
-                      className="hidden"
-                    />
-                    {(voicePreview || existingVoiceUrl) && (
-                      <span className="text-[11px] text-cyan-300 font-mono">Ready ✓</span>
-                    )}
-                  </div>
-                  <p className="text-[10px] text-white/35">Upload recorded commentary (max 25MB).</p>
-                </div>
-              </div>
-
-              {/* 7. Bottom Line */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-white/60 block">The Bottom Line (One-Sentence Summary)</label>
-                <input
-                  type="text"
-                  value={bottomLine}
-                  onChange={(e) => setBottomLine(e.target.value)}
-                  placeholder="e.g. An uncompromising dark fantasy benchmark that surpasses all expectations."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white text-xs outline-none focus:border-white/30 italic"
-                />
-              </div>
+              )}
             </form>
 
-            {/* Sticky Pinned Modal Footer */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-white/[0.08] bg-[#14141b] shrink-0">
-              <span className="text-[11px] text-white/40">
-                All changes save to your public profile & reviews feed.
-              </span>
+            {/* Pinned Sticky Bottom Navigation Dock */}
+            <div className="flex items-center justify-between px-6 sm:px-8 py-4 border-t border-white/[0.08] bg-[#12121a] shrink-0">
+              {/* Back button */}
+              <div>
+                {currentStep > 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormError(null);
+                      setCurrentStep((prev) => Math.max(1, prev - 1));
+                    }}
+                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/80 hover:text-white bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>← Back</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-4 py-2.5 rounded-xl text-xs font-medium text-white/50 hover:text-white transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
 
+              {/* Next / Publish action */}
               <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-white/60 hover:text-white transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  form="review-form"
-                  disabled={isSubmitting}
-                  className="px-6 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer disabled:opacity-50 flex items-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                      <span>Publishing...</span>
-                    </>
-                  ) : (
-                    <span>{editingReview ? 'Update Critique' : 'Publish Review'}</span>
-                  )}
-                </button>
+                {currentStep < 4 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (currentStep === 1 && !title.trim()) {
+                        setFormError('Please enter a Media Title before proceeding.');
+                        return;
+                      }
+                      if (currentStep === 2 && !content.trim()) {
+                        setFormError('Please write your review critique before proceeding.');
+                        return;
+                      }
+                      setFormError(null);
+                      setCurrentStep((prev) => Math.min(4, prev + 1));
+                    }}
+                    className="px-6 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer flex items-center gap-1.5 active:scale-95"
+                  >
+                    <span>Next →</span>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    form="wizard-review-form"
+                    disabled={isSubmitting}
+                    className="px-7 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-white text-xs font-bold transition-all shadow-[0_0_25px_rgba(244,63,94,0.6)] cursor-pointer disabled:opacity-50 flex items-center gap-2 active:scale-95"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Publishing...</span>
+                      </>
+                    ) : (
+                      <span>{editingReview ? 'Update Critique' : 'Publish Review 🔥'}</span>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
+
           </div>
         </div>
       )}
