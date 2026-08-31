@@ -970,9 +970,9 @@ export default function MyReviewsPage() {
                       setFormError(null);
                       setCurrentStep((prev) => Math.min(4, prev + 1));
                     }}
-                    className="px-6 py-2.5 rounded-2xl bg-white/[0.1] hover:bg-white/[0.2] border border-white/20 backdrop-blur-xl transition-all cursor-pointer flex items-center gap-1.5 ios-tap-active group"
+                    className="px-6 py-2.5 rounded-2xl bg-white/[0.1] hover:bg-white/[0.18] border border-white/20 backdrop-blur-xl transition-all cursor-pointer flex items-center gap-1.5 ios-tap-active group"
                   >
-                    <span className="text-xs font-bold bg-gradient-to-r from-cyan-300 to-amber-300 bg-clip-text text-transparent group-hover:brightness-125 transition-all">
+                    <span className="text-xs font-semibold text-white group-hover:text-white/90 transition-colors">
                       Next →
                     </span>
                   </button>
@@ -989,13 +989,13 @@ export default function MyReviewsPage() {
                     {isSubmitting ? (
                       <>
                         <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span className="text-xs font-extrabold bg-gradient-to-r from-cyan-300 to-amber-300 bg-clip-text text-transparent">
+                        <span className="text-xs font-semibold text-white/80">
                           Publishing...
                         </span>
                       </>
                     ) : (
-                      <span className="text-xs font-extrabold bg-gradient-to-r from-cyan-300 via-amber-200 to-rose-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(255,255,255,0.4)] group-hover:brightness-125 transition-all">
-                        {editingReview ? 'Update Critique' : 'Publish Review 🔥'}
+                      <span className="text-xs font-semibold text-white group-hover:text-white/90 transition-colors">
+                        {editingReview ? 'Update Critique' : 'Publish Review'}
                       </span>
                     )}
                   </button>
