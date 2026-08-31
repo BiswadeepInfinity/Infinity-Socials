@@ -582,15 +582,15 @@ export default function MyReviewsPage() {
         )}
       </main>
 
-      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (TRUE TRANSLUCENT LIQUID GLASS) */}
+      {/* 4-STEP WIZARD REVIEW BUILDER MODAL (CRYSTAL DARK LIQUID GLASS) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/25 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
           
           {/* Pure Liquid Glass Floating Card */}
           <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col rounded-[32px] ios26-liquid-modal overflow-hidden animate-ios-modal">
             
-            {/* Header: Clean Glass Top */}
-            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.1] bg-white/[0.04] backdrop-blur-md shrink-0">
+            {/* Header: Pure Seamless Top */}
+            <div className="px-6 sm:px-8 py-5 border-b border-white/[0.08] shrink-0">
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-mono font-bold tracking-widest text-white/50 uppercase transition-all duration-300">
@@ -603,14 +603,14 @@ export default function MyReviewsPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.18] border border-white/15 flex items-center justify-center text-white/70 hover:text-white text-sm cursor-pointer transition-all ios-tap-active"
+                  className="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white/70 hover:text-white text-sm cursor-pointer transition-all ios-tap-active"
                 >
                   ✕
                 </button>
               </div>
 
               {/* Minimal Clean Step Progress Bar */}
-              <div className="grid grid-cols-4 gap-2.5 mt-4">
+              <div className="grid grid-cols-4 gap-2 mt-4">
                 {[
                   { step: 1, label: '1. Basic Info' },
                   { step: 2, label: '2. Review Body' },
@@ -628,8 +628,8 @@ export default function MyReviewsPage() {
                     }}
                     className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
                       currentStep >= s.step
-                        ? 'bg-gradient-to-r from-cyan-400 to-amber-400 shadow-[0_0_10px_rgba(255,255,255,0.4)]'
-                        : 'bg-white/[0.1] hover:bg-white/[0.15]'
+                        ? 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]'
+                        : 'bg-white/[0.08] hover:bg-white/[0.12]'
                     }`}
                   />
                 ))}
@@ -639,7 +639,7 @@ export default function MyReviewsPage() {
             {/* Scrollable Step Content Body */}
             <form id="wizard-review-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin">
               {formError && (
-                <div className="p-3.5 rounded-2xl bg-rose-500/15 backdrop-blur-xl border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2.5 shadow-lg animate-ios-step">
+                <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center gap-2.5 shadow-lg animate-ios-step">
                   <span className="text-sm">⚠️</span>
                   <span>{formError}</span>
                 </div>
