@@ -325,9 +325,12 @@ export default function MyReviewsPage() {
       }
 
       setIsModalOpen(false);
+      alert('Review published successfully!');
     } catch (err: any) {
       console.error('Submission failed:', err);
-      setFormError(err.message || 'Failed to publish review. Please verify Supabase schema.');
+      const msg = err.message || 'Failed to publish review. Please check database permissions.';
+      setFormError(msg);
+      alert(`Error publishing review: ${msg}`);
     } finally {
       setIsSubmitting(false);
     }
