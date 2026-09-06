@@ -69,104 +69,108 @@ export default function Navbar() {
 
   return (
     <>
-      {/* 1. When Scrolled: Compact Apple Dynamic Island Small Circle Floating at Top Center */}
+      {/* 1. When Scrolled: Authentic Apple Dynamic Island Floating Dock at Top Center */}
       {isScrolled && (
         <div
-          className="fixed top-3.5 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-auto"
+          className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-auto"
           onMouseLeave={handleIslandMouseLeave}
         >
-          {!islandExpanded ? (
-            /* Small Circular Punchhole (Apple Dynamic Island Pill/Circle) */
-            <button
-              type="button"
-              onClick={handleIslandClick}
-              onMouseEnter={handleIslandMouseEnter}
-              className="group relative flex items-center justify-center w-10 h-10 rounded-full bg-black/95 border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.95),0_0_15px_rgba(255,255,255,0.1),inset_0_1px_1px_rgba(255,255,255,0.4)] cursor-pointer backdrop-blur-2xl transition-all duration-300 hover:scale-110 hover:border-white/60 select-none active:scale-95"
-              title="Click or Hover to expand dock"
-              aria-label="Expand Dock"
-            >
-              {/* Pulsing ring around circle */}
-              <span className="absolute inset-0 rounded-full border border-rose-500/30 animate-ping pointer-events-none" style={{ animationDuration: '3s' }} />
-
-              {/* Dynamic Island Sensor / Butterfly Punchhole Dot */}
-              <div className="relative flex items-center justify-center w-5 h-5 rounded-full bg-white/[0.08] border border-white/20 group-hover:scale-105 transition-transform">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,1)]" />
+          <div
+            onClick={!islandExpanded ? handleIslandClick : undefined}
+            onMouseEnter={handleIslandMouseEnter}
+            className={`flex items-center transition-all duration-300 ease-out select-none cursor-pointer rounded-full bg-black/90 backdrop-blur-2xl border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.85),0_0_1px_1px_rgba(255,255,255,0.1),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:border-white/30 ${
+              !islandExpanded
+                ? 'h-9 px-3 gap-2.5 hover:scale-105 active:scale-95'
+                : 'h-11 px-4 gap-3 max-w-[95vw] overflow-x-auto no-scrollbar shadow-[0_16px_50px_rgba(0,0,0,0.95),0_0_20px_rgba(255,255,255,0.1)]'
+            }`}
+          >
+            {/* Left: Punchhole camera / Brand glyph */}
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="w-5 h-5 rounded-full bg-zinc-900 border border-white/20 flex items-center justify-center p-0.5 overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
               </div>
-            </button>
-          ) : (
-            /* Expanded Full Island Dock: contains everything in a sleek floating glass capsule */
-            <div
-              className="flex items-center gap-3 py-1.5 px-3.5 rounded-full bg-black/95 border border-white/30 shadow-[0_16px_50px_rgba(0,0,0,0.98),0_0_25px_rgba(255,255,255,0.12),inset_0_1px_1px_rgba(255,255,255,0.4)] backdrop-blur-3xl transition-all duration-300 animate-in fade-in zoom-in-95 max-w-[95vw] overflow-x-auto no-scrollbar select-none"
-            >
-              {/* Mini Brand Icon & Punchhole indicator */}
-              <Link href="/" className="flex items-center gap-2 text-white no-underline shrink-0 group">
-                <div className="w-7 h-7 rounded-full bg-white/[0.08] border border-white/20 flex items-center justify-center p-1 overflow-hidden shrink-0 group-hover:border-white/40 transition-all">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
-                </div>
-              </Link>
 
-              {/* Center Nav Links inside Dock */}
-              <nav className="flex items-center gap-1 text-xs font-semibold shrink-0">
-                <Link href="/" className="nav-link-zoom text-white no-underline px-2 py-1 rounded-full hover:bg-white/10">
-                  Feed
-                </Link>
-                <Link href="/browse" className="nav-link-zoom text-white/90 hover:text-white no-underline px-2 py-1 rounded-full hover:bg-white/10 flex items-center gap-1.5">
-                  <span>Explore</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
-                </Link>
-                <Link href="/#featured-articles" className="nav-link-zoom text-white/70 hover:text-white no-underline px-2 py-1 rounded-full hover:bg-white/10 hidden sm:inline-block">
-                  News
-                </Link>
-                <Link href="/reviews" className="nav-link-zoom text-white/70 hover:text-white no-underline px-2 py-1 rounded-full hover:bg-white/10">
-                  Reviews
-                </Link>
-                <Link href="/browse?type=anime" className="nav-link-zoom text-white/70 hover:text-white no-underline px-2 py-1 rounded-full hover:bg-white/10 hidden md:inline-block">
-                  Anime
-                </Link>
-                <Link href="/browse?type=game" className="nav-link-zoom text-white/70 hover:text-white no-underline px-2 py-1 rounded-full hover:bg-white/10 hidden md:inline-block">
-                  Gaming
-                </Link>
-                <Link href="/clubs" className="nav-link-zoom text-white/70 hover:text-white no-underline px-2 py-1 rounded-full hover:bg-white/10 hidden lg:inline-flex items-center gap-1.5">
-                  <span>Clubs</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.8)]" />
-                </Link>
-              </nav>
-
-              <div className="w-[1px] h-4 bg-white/15 shrink-0" />
-
-              {/* Right Side: Search & User in Dock */}
-              <div className="flex items-center gap-2 shrink-0">
-                <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onFocus={() => setSearchFocused(true)}
-                    onBlur={() => setSearchFocused(false)}
-                    className={`h-7 rounded-full bg-white/[0.08] border border-white/15 text-xs text-white placeholder-white/40 pl-7 pr-2.5 outline-none transition-all duration-200 ${
-                      searchFocused ? 'w-36 border-white/40 bg-white/[0.14]' : 'w-20'
-                    }`}
-                  />
-                  <span className="absolute left-2 text-[10px] text-white/40 pointer-events-none">🔍</span>
-                </form>
-
-                <NavbarAuthSection />
-
-                {/* Close Button to contract back immediately */}
-                <button
-                  type="button"
-                  onClick={() => setIslandExpanded(false)}
-                  className="w-6 h-6 rounded-full bg-white/[0.06] hover:bg-white/[0.15] border border-white/15 flex items-center justify-center text-white/60 hover:text-white text-xs cursor-pointer transition-colors"
-                  title="Contract dock"
-                  aria-label="Contract dock"
-                >
-                  ✕
-                </button>
-              </div>
+              {!islandExpanded && (
+                <span className="font-mono text-[11px] font-bold text-white/90 tracking-wide flex items-center gap-1.5">
+                  Menu
+                  <span className="text-[9px] text-white/40">▾</span>
+                </span>
+              )}
             </div>
-          )}
+
+            {/* Contracted right-side dynamic activity dot */}
+            {!islandExpanded && (
+              <div className="flex items-center gap-1 pl-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.9)] animate-pulse" />
+              </div>
+            )}
+
+            {/* Expanded Content: Full Nav Links, Search & Auth inside Island */}
+            {islandExpanded && (
+              <>
+                <nav className="flex items-center gap-1 text-xs font-semibold shrink-0">
+                  <Link href="/" className="text-white hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors">
+                    Feed
+                  </Link>
+                  <Link href="/browse" className="text-white/80 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors flex items-center gap-1.5">
+                    <span>Explore</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.8)]" />
+                  </Link>
+                  <Link href="/#featured-articles" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors hidden sm:inline-block">
+                    News
+                  </Link>
+                  <Link href="/reviews" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors">
+                    Reviews
+                  </Link>
+                  <Link href="/browse?type=anime" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors hidden md:inline-block">
+                    Anime
+                  </Link>
+                  <Link href="/browse?type=game" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors hidden md:inline-block">
+                    Gaming
+                  </Link>
+                  <Link href="/clubs" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors hidden lg:inline-flex items-center gap-1.5">
+                    <span>Clubs</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.8)]" />
+                  </Link>
+                </nav>
+
+                <div className="w-[1px] h-4 bg-white/15 shrink-0" />
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onFocus={() => setSearchFocused(true)}
+                      onBlur={() => setSearchFocused(false)}
+                      className={`h-7 rounded-full bg-white/[0.08] border border-white/15 text-xs text-white placeholder-white/40 pl-7 pr-2.5 outline-none transition-all duration-200 ${
+                        searchFocused ? 'w-36 border-white/40 bg-white/[0.14]' : 'w-20'
+                      }`}
+                    />
+                    <span className="absolute left-2 text-[10px] text-white/40 pointer-events-none">🔍</span>
+                  </form>
+
+                  <NavbarAuthSection />
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIslandExpanded(false);
+                    }}
+                    className="w-5 h-5 rounded-full bg-white/[0.08] hover:bg-white/20 flex items-center justify-center text-white/50 hover:text-white text-[10px] cursor-pointer transition-colors"
+                    title="Close"
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
 
