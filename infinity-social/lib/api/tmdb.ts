@@ -244,11 +244,20 @@ export async function getTrendingTMDB(type: 'movie' | 'tv' = 'movie'): Promise<M
   }
 }
 
+let catalogMoviesCache: { data: MediaTitle[]; timestamp: number } | null = null;
+let catalogTVCache: { data: MediaTitle[]; timestamp: number } | null = null;
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+
 /**
  * Get a large catalog of movies from multiple TMDB discovery endpoints.
  * Pulls popular + top_rated + now_playing + trending across 2 pages = 80+ titles.
  */
 export async function getCatalogMovies(): Promise<MediaTitle[]> {
+  const now = Date.now();
+  if (catalogMoviesCache && now - catalogMoviesCache.timestamp < CACHE_TTL_MS) {
+    return catalogMoviesCache.data;
+  }
+
   const endpoints = [
     '/movie/popular?language=en-US&page=1',
     '/movie/popular?language=en-US&page=2',
@@ -273,10 +282,13 @@ export async function getCatalogMovies(): Promise<MediaTitle[]> {
         }
       }
     }
+    if (all.length > 0) {
+      catalogMoviesCache = { data: all, timestamp: now };
+    }
     return all;
   } catch (err) {
     console.error('getCatalogMovies error:', err);
-    return [];
+    return catalogMoviesCache ? catalogMoviesCache.data : [];
   }
 }
 
@@ -284,6 +296,11 @@ export async function getCatalogMovies(): Promise<MediaTitle[]> {
  * Get a large catalog of TV shows from multiple TMDB discovery endpoints.
  */
 export async function getCatalogTV(): Promise<MediaTitle[]> {
+  const now = Date.now();
+  if (catalogTVCache && now - catalogTVCache.timestamp < CACHE_TTL_MS) {
+    return catalogTVCache.data;
+  }
+
   const endpoints = [
     '/tv/popular?language=en-US&page=1',
     '/tv/popular?language=en-US&page=2',
@@ -307,10 +324,13 @@ export async function getCatalogTV(): Promise<MediaTitle[]> {
         }
       }
     }
+    if (all.length > 0) {
+      catalogTVCache = { data: all, timestamp: now };
+    }
     return all;
   } catch (err) {
     console.error('getCatalogTV error:', err);
-    return [];
+    return catalogTVCache ? catalogTVCache.data : [];
   }
 }
 

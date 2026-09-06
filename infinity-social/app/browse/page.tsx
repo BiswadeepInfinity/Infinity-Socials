@@ -36,20 +36,60 @@ const SUB_GENRE_ALIASES: Record<string, string[]> = {
   'action rpgs':            ['action', 'rpg', 'role-playing', 'role playing'],
   'fps & shooters':         ['fps', 'shooter', 'first-person', 'tactical shooter'],
   'survival horror':        ['survival', 'horror', 'survival horror'],
-  // Anime — MAL genre names
+  'indie gems':             ['indie', 'independent'],
+  'open world':             ['open world', 'sandbox', 'exploration'],
+  // Anime — MAL genre names & card titles
   'shonen battle':          ['shonen', 'shounen', 'action', 'battle', 'fighting'],
   'dark fantasy & seinen':  ['dark fantasy', 'seinen', 'dark', 'psychological', 'gore', 'supernatural', 'war & politics'],
   'mecha & sci-fi':         ['mecha', 'sci-fi', 'science fiction', 'robot', 'space', 'sci-fi & fantasy'],
+  'cyberpunk & mecha':      ['mecha', 'sci-fi', 'science fiction', 'robot', 'cyberpunk'],
   'isekai':                 ['isekai', 'fantasy', 'adventure', 'sci-fi & fantasy'],
+  'isekai & power fantasy': ['isekai', 'fantasy', 'adventure', 'action'],
   'slice of life':          ['slice of life', 'everyday life', 'school', 'romance'],
-  // Movies / TV genres
+  'slice of life & romance':['slice of life', 'everyday life', 'school', 'romance'],
+  // Movies / TV genres & card titles
   'sci-fi & cyberpunk':     ['sci-fi', 'science fiction', 'cyberpunk', 'futuristic', 'sci-fi & fantasy'],
-  'open world':             ['open world', 'sandbox', 'exploration'],
+  'cinematic epics':        ['adventure', 'epic', 'action', 'war', 'history', 'drama'],
+  'psychological thrillers':['psychological', 'thriller', 'mystery', 'crime'],
+  'blockbuster universes':  ['action', 'adventure', 'sci-fi', 'superhero', 'fantasy'],
+  'auteur & indie cinema':  ['drama', 'independent', 'indie', 'auteur', 'festival'],
   // TMDB TV fallback — these show when Jikan is rate-limited
   'action & adventure':     ['action', 'battle', 'shonen', 'adventure'],
   'sci-fi & fantasy':       ['sci-fi', 'fantasy', 'mecha', 'isekai'],
   'war & politics':         ['seinen', 'war', 'dark fantasy'],
 };
+
+// Map category card names from homepage to standard browse genre pills
+const CATEGORY_TO_PILL_MAP: Record<string, string> = {
+  // Cinema & Film Spotlight
+  'sci-fi & cyberpunk': 'Sci-Fi',
+  'cinematic epics': 'Adventure',
+  'psychological thrillers': 'Thriller',
+  'blockbuster universes': 'Action',
+  'auteur & indie cinema': 'Drama',
+  // Games
+  'action rpgs': 'Action RPGs',
+  'open world': 'Open World',
+  'indie gems': 'Indie',
+  'fps & shooters': 'FPS & Shooters',
+  'survival horror': 'Survival Horror',
+  // Anime & Manga Radar
+  'shonen battle': 'Shonen Battle',
+  'dark fantasy & seinen': 'Dark Fantasy & Seinen',
+  'isekai & power fantasy': 'Isekai',
+  'cyberpunk & mecha': 'Mecha & Sci-Fi',
+  'slice of life & romance': 'Slice of Life',
+};
+
+function resolveGenrePill(rawGenre: string | null): string {
+  if (!rawGenre || !rawGenre.trim()) return 'All';
+  const decoded = decodeURIComponent(rawGenre).trim();
+  const lower = decoded.toLowerCase();
+  if (CATEGORY_TO_PILL_MAP[lower]) {
+    return CATEGORY_TO_PILL_MAP[lower];
+  }
+  return decoded;
+}
 
 function genreMatchesPill(itemGenres: string[], itemTags: string[] | undefined, pill: string): boolean {
   if (pill === 'All') return true;
@@ -76,8 +116,7 @@ function BrowsePageInner() {
   const router = useRouter();
 
   const initialType = (searchParams.get('type') as MediaType | 'all' | 'upcoming') || 'all';
-  const rawGenre = searchParams.get('genre');
-  const initialGenre = rawGenre ? decodeURIComponent(rawGenre) : 'All';
+  const initialGenre = resolveGenrePill(searchParams.get('genre'));
 
   const [selectedType, setSelectedType] = useState<'all' | 'upcoming' | MediaType>(initialType);
   const [selectedGenre, setSelectedGenre] = useState<string>(initialGenre);
@@ -91,10 +130,16 @@ function BrowsePageInner() {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
+  const lastFetchedKeyRef = useRef<string>('');
   const genrePills = GENRE_PILLS_BY_TYPE[selectedType] || GENRE_PILLS_BY_TYPE['all'];
 
   // ── Fetch from /api/media/search ──────────────────────────
   const fetchTitles = useCallback(async (type: string, query: string) => {
+    const fetchKey = `${type}::${query}`;
+    if (lastFetchedKeyRef.current === fetchKey && titles.length > 0) {
+      return;
+    }
+
     if (abortRef.current) abortRef.current.abort();
     const ctrl = new AbortController();
     abortRef.current = ctrl;
@@ -120,18 +165,25 @@ function BrowsePageInner() {
 
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
-      setTitles((data.data as MediaTitle[]) || []);
+      if (!ctrl.signal.aborted) {
+        setTitles((data.data as MediaTitle[]) || []);
+        lastFetchedKeyRef.current = fetchKey;
+      }
     } catch (err: any) {
-      if (err.name !== 'AbortError') setError('Failed to load titles. Try again.');
+      if (err.name !== 'AbortError') {
+        setError('Failed to load titles. Try again.');
+      }
     } finally {
-      setLoading(false);
+      if (!ctrl.signal.aborted) {
+        setLoading(false);
+      }
     }
-  }, []);
+  }, [titles.length]);
 
   // Sync state when URL params change (e.g. clicking category cards on homepage)
   useEffect(() => {
     const t = (searchParams.get('type') as MediaType | 'all') || 'all';
-    const g = searchParams.get('genre') ? decodeURIComponent(searchParams.get('genre')!) : 'All';
+    const g = resolveGenrePill(searchParams.get('genre'));
     setSelectedType(t);
     setSelectedGenre(g);
     fetchTitles(t, '');
