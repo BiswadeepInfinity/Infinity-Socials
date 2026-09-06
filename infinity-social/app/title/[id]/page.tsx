@@ -518,53 +518,81 @@ export default function TitleDetailPage() {
             </div>
 
             {/* Navigation Tabs for Sub-divided Content */}
-            <div className="flex items-center gap-2 border-b border-white/[0.08] pt-4">
-              <button
-                onClick={() => setActiveTab('overview')}
-                className={`pb-3 text-sm font-bold tracking-tight transition-all border-b-2 cursor-pointer ${
-                  activeTab === 'overview'
-                    ? 'text-white border-rose-500'
-                    : 'text-zinc-400 border-transparent hover:text-zinc-200'
-                }`}
-              >
-                Overview
-              </button>
-
-              <button
-                onClick={() => setActiveTab('articles')}
-                className={`pb-3 text-sm font-bold tracking-tight transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
-                  activeTab === 'articles'
-                    ? 'text-white border-rose-500'
-                    : 'text-zinc-400 border-transparent hover:text-zinc-200'
-                }`}
-              >
-                <span>Articles & Critiques</span>
-                {media.relatedArticles && media.relatedArticles.length > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-rose-500/20 text-rose-300 font-mono">
-                    {media.relatedArticles.length}
-                  </span>
-                )}
-              </button>
-
-              {media.cast && media.cast.length > 0 && (
+            <div className="relative border-b border-white/[0.08] pt-3">
+              <nav className="flex items-center gap-6 sm:gap-8 -mb-px overflow-x-auto scrollbar-none" aria-label="Tabs">
                 <button
-                  onClick={() => setActiveTab('cast')}
-                  className={`pb-3 text-sm font-bold tracking-tight transition-all border-b-2 cursor-pointer ${
-                    activeTab === 'cast'
-                      ? 'text-white border-rose-500'
-                      : 'text-zinc-400 border-transparent hover:text-zinc-200'
+                  onClick={() => setActiveTab('overview')}
+                  className={`group relative pb-3.5 pt-1 text-sm font-semibold tracking-normal transition-colors cursor-pointer inline-flex items-center gap-2 ${
+                    activeTab === 'overview'
+                      ? 'text-white'
+                      : 'text-zinc-400 hover:text-zinc-200'
                   }`}
                 >
-                  Cast & Crew
+                  <span>Overview</span>
+                  {activeTab === 'overview' && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2.5px] rounded-full bg-gradient-to-r from-rose-500 to-amber-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+                  )}
                 </button>
-              )}
+
+                <button
+                  onClick={() => setActiveTab('articles')}
+                  className={`group relative pb-3.5 pt-1 text-sm font-semibold tracking-normal transition-colors cursor-pointer inline-flex items-center gap-2 ${
+                    activeTab === 'articles'
+                      ? 'text-white'
+                      : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                  <span>Articles & Critiques</span>
+                  {media.relatedArticles && media.relatedArticles.length > 0 && (
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-medium transition-colors ${
+                        activeTab === 'articles'
+                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          : 'bg-white/[0.06] text-zinc-400 border border-white/[0.08]'
+                      }`}
+                    >
+                      {media.relatedArticles.length}
+                    </span>
+                  )}
+                  {activeTab === 'articles' && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2.5px] rounded-full bg-gradient-to-r from-rose-500 to-amber-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+                  )}
+                </button>
+
+                {media.cast && media.cast.length > 0 && (
+                  <button
+                    onClick={() => setActiveTab('cast')}
+                    className={`group relative pb-3.5 pt-1 text-sm font-semibold tracking-normal transition-colors cursor-pointer inline-flex items-center gap-2 ${
+                      activeTab === 'cast'
+                        ? 'text-white'
+                        : 'text-zinc-400 hover:text-zinc-200'
+                    }`}
+                  >
+                    <span>Cast & Crew</span>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-medium transition-colors ${
+                        activeTab === 'cast'
+                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          : 'bg-white/[0.06] text-zinc-400 border border-white/[0.08]'
+                      }`}
+                    >
+                      {media.cast.length}
+                    </span>
+                    {activeTab === 'cast' && (
+                      <span className="absolute bottom-0 left-0 right-0 h-[2.5px] rounded-full bg-gradient-to-r from-rose-500 to-amber-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+                    )}
+                  </button>
+                )}
+              </nav>
             </div>
 
             {/* Tab: Overview */}
             {activeTab === 'overview' && (
-              <div className="space-y-6 pt-2">
+              <div className="space-y-7 pt-4">
                 <div>
-                  <h3 className="text-base font-bold text-white mb-2">Overview</h3>
+                  <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2">
+                    Synopsis & Background
+                  </h3>
                   <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-normal">
                     {media.overview}
                   </p>
@@ -572,7 +600,7 @@ export default function TitleDetailPage() {
 
                 {/* Sub-divided Related Articles Preview Inside Overview */}
                 {media.relatedArticles && media.relatedArticles.length > 0 && (
-                  <div className="pt-4">
+                  <div className="pt-2 border-t border-white/[0.06]">
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="text-sm font-bold text-white uppercase tracking-wider">
                         Featured Coverage & Editorials
