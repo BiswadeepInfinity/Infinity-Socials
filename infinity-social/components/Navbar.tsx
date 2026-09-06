@@ -313,9 +313,7 @@ export default function Navbar() {
 
         </div>
 
-      </div>
-
-      {/* Mobile Slide-Down Drawer */}
+        {/* Mobile Slide-Down Drawer */}
       {mobileMenuOpen && (
         <div
           className="lg:hidden border-t border-white/10 px-4 py-4 space-y-3 shadow-2xl animate-dropdown"
