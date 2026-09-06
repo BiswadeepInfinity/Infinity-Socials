@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinity Socials</title>
+  <link rel="stylesheet" href="shell.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app-shell">
+    
+    <!-- Exact Infinity Continuum Numberline Top Track -->
+    <div id="infinity-continuum-bar">
+      <div class="continuum-left">
+        <span class="continuum-symbol start">-∞</span>
+        <span class="continuum-label">START</span>
+      </div>
+
+      <div class="continuum-track-wrapper">
+        <div class="continuum-center-tick"></div>
+        <div id="continuum-progress-bar" class="continuum-progress"></div>
+      </div>
+
+      <div class="continuum-right">
+        <span class="continuum-label">END</span>
+        <span class="continuum-symbol end">+∞</span>
+      </div>
+    </div>
+
+    <!-- Liquid Glass Native Desktop Titlebar & Dock -->
+    <header id="desktop-header">
+      <!-- Left: Logo & Infinity Identity -->
+      <div class="header-left">
+        <div class="brand-container" id="brand-home-btn">
+          <div class="brand-logo-box">
+            <img src="../assets/logo.png" alt="Logo" class="brand-logo" />
+          </div>
+          <div class="brand-text-group">
+            <span class="brand-title">INFINITY SOCIALS</span>
+            <span class="badge-desktop">CLIENT</span>
+          </div>
+        </div>
+
+        <!-- History & Navigation Controls -->
+        <div class="nav-controls">
+          <button id="btn-back" class="icon-nav-btn" title="Go Back" disabled>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          </button>
+          <button id="btn-forward" class="icon-nav-btn" title="Go Forward" disabled>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          </button>
+          <button id="btn-reload" class="icon-nav-btn" title="Refresh">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Center: Capsule Dock (Identical to Website Navigation) -->
+      <div class="header-center">
+        <nav class="capsule-dock">
+          <button class="dock-link active" data-route="/">Feed</button>
+          <button class="dock-link" data-route="/browse">
+            Explore
+            <span class="dock-dot dot-rose"></span>
+          </button>
+          <button class="dock-link" data-route="/#featured-articles">News</button>
+          <button class="dock-link" data-route="/reviews">Reviews</button>
+          <button class="dock-link" data-route="/browse?type=anime">Anime</button>
+          <button class="dock-link" data-route="/browse?type=game">Gaming</button>
+          <button class="dock-link" data-route="/browse?type=movie">Movies</button>
+          <button class="dock-link" data-route="/clubs">
+            Clubs
+            <span class="dock-dot dot-cyan"></span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Right: Search Pill & Native Window Controls -->
+      <div class="header-right">
+        <div class="search-pill">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="header-search-input" placeholder="Search Infinity..." />
+        </div>
+
+        <div class="status-indicator">
+          <span class="ping-dot"></span>
+          <span class="status-label" id="status-chip">CONNECTED</span>
+        </div>
+
+        <div class="window-controls">
+          <button id="btn-minimize" class="win-control-btn min" title="Minimize">
+            <svg viewBox="0 0 10 1" width="10" height="1" fill="currentColor"><rect width="10" height="1"/></svg>
+          </button>
+          <button id="btn-maximize" class="win-control-btn max" title="Maximize / Restore">
+            <svg viewBox="0 0 10 10" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="1.5" width="7" height="7"/></svg>
+          </button>
+          <button id="btn-close" class="win-control-btn close" title="Close">
+            <svg viewBox="0 0 10 10" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 1L9 9M9 1L1 9"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Viewport Embedding the Next.js App -->
+    <main id="app-viewport">
+      
+      <!-- Authentic Butterfly Loader Splash Screen -->
+      <div id="loading-splash" class="splash-overlay">
+        <div class="butterfly-container">
+          <img src="../assets/butterfly.svg" alt="Butterfly" class="butterfly-anim-logo" />
+          <span class="butterfly-loading-text">SYNCING WITH INFINITY CONTINUUM</span>
+        </div>
+      </div>
+
+      <!-- Authentic Infinity Glass Offline / Waiting View -->
+      <div id="offline-view" class="offline-overlay hidden">
+        <div class="glass-card-offline">
+          <div class="butterfly-wrapper-offline">
+            <img src="../assets/butterfly.svg" alt="Butterfly" class="butterfly-idle" />
+          </div>
+          <div class="offline-badge">DESKTOP LINK WAITING</div>
+          <h2 class="offline-title">CONNECTING TO INFINITY SOCIALS</h2>
+          <p class="offline-desc">
+            Connecting to <code id="target-url-label">https://infinity-socials.vercel.app</code>...
+          </p>
+
+          <div class="offline-hint-box">
+            <span class="hint-dot"></span>
+            <span>Checking connection to Infinity Socials cloud servers</span>
+          </div>
+
+          <div class="offline-action-row">
+            <button id="btn-retry" class="btn-primary-glass">
+              <span>RECONNECT</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+            </button>
+            <button id="btn-open-browser" class="btn-secondary-glass">
+              Open in Browser
+            </button>
+            <button id="btn-toggle-devtools" class="btn-secondary-glass">
+              Inspect (F12)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Embedded Web Content -->
+      <webview id="infinity-webview" src="about:blank" allowpopups></webview>
+    </main>
+
+  </div>
+
+  <script src="shell.js"></script>
+</body>
+</html>

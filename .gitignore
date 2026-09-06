@@ -1,0 +1,22 @@
+﻿# Dependencies
+node_modules/
+*/node_modules/
+
+# Production builds
+desktop/dist/
+desktop/build/
+infinity-social/.next/
+infinity-social/out/
+infinity-social/build/
+
+# Environment files
+.env*
+infinity-social/.env*
+!infinity-social/.env.example
+
+# Temporary and caches
+*.tsbuildinfo
+desktop/generate.py
+desktop/generate_ui.js
+.DS_Store
+*.log

@@ -12,6 +12,10 @@ export default function Navbar() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [islandExpanded, setIslandExpanded] = useState(false);
+  const contractTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (searchQuery.trim()) {
@@ -21,11 +25,35 @@ export default function Navbar() {
     }
   };
 
+  const handleIslandClick = () => {
+    setIslandExpanded(prev => !prev);
+    // Auto-contract after 4 seconds of inactivity if expanded via click
+    if (contractTimerRef.current) clearTimeout(contractTimerRef.current);
+    contractTimerRef.current = setTimeout(() => {
+      setIslandExpanded(false);
+    }, 4000);
+  };
+
+  const handleIslandMouseEnter = () => {
+    if (contractTimerRef.current) clearTimeout(contractTimerRef.current);
+    setIslandExpanded(true);
+  };
+
+  const handleIslandMouseLeave = () => {
+    if (contractTimerRef.current) clearTimeout(contractTimerRef.current);
+    contractTimerRef.current = setTimeout(() => {
+      setIslandExpanded(false);
+    }, 400);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 60);
+
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
       if (totalScroll > 0) {
-        const currentProgress = (window.scrollY / totalScroll) * 100;
+        const currentProgress = (currentScrollY / totalScroll) * 100;
         setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
       }
     };
@@ -33,7 +61,10 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (contractTimerRef.current) clearTimeout(contractTimerRef.current);
+    };
   }, []);
 
   return (
@@ -80,7 +111,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="max-w-[1240px] h-14 sm:h-[70px] mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-[1240px] h-14 sm:h-[70px] mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 relative">
         
         {/* Left: Brand Identity */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3 text-white no-underline shrink-0 group">
@@ -103,35 +134,76 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Center: Desktop Nav Capsule Dock */}
-        <nav className="hidden lg:flex items-center gap-1.5 py-1 px-2 rounded-full bg-white/[0.04] border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] text-xs font-semibold">
-          <Link href="/" className="nav-link-zoom text-white no-underline">
-            Feed
-          </Link>
-          <Link href="/browse" className="nav-link-zoom text-white/90 hover:text-white no-underline flex items-center gap-1.5">
-            <span>Explore</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
-          </Link>
-          <Link href="/#featured-articles" className="nav-link-zoom text-white/70 hover:text-white no-underline">
-            News
-          </Link>
-          <Link href="/reviews" className="nav-link-zoom text-white/70 no-underline">
-            Reviews
-          </Link>
-          <Link href="/browse?type=anime" className="nav-link-zoom text-white/70 no-underline">
-            Anime
-          </Link>
-          <Link href="/browse?type=game" className="nav-link-zoom text-white/70 no-underline">
-            Gaming
-          </Link>
-          <Link href="/browse?type=movie" className="nav-link-zoom text-white/70 no-underline">
-            Movies
-          </Link>
-          <Link href="/clubs" className="nav-link-zoom text-white/70 no-underline flex items-center gap-1.5">
-            <span>Clubs & Societies</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-cyan-400 to-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
-          </Link>
-        </nav>
+        {/* Center: Dynamic Island Morphing Capsule Dock */}
+        <div className="hidden lg:flex items-center justify-center">
+          {/* Contracted Dynamic Island Punchhole (When Scrolled & Not Expanded) */}
+          {isScrolled && !islandExpanded ? (
+            <div
+              onClick={handleIslandClick}
+              onMouseEnter={handleIslandMouseEnter}
+              className="group flex items-center gap-2.5 py-1.5 px-3.5 rounded-full bg-black/90 border border-white/20 shadow-[0_4px_24px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.2)] cursor-pointer backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-white/40 select-none animate-in fade-in zoom-in-95"
+              title="Click or Hover to expand navigation"
+            >
+              {/* Punchhole Pulse Dot & Butterfly */}
+              <div className="relative flex items-center justify-center w-5 h-5">
+                <span className="absolute w-2 h-2 rounded-full bg-rose-500 animate-ping opacity-75" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/butterfly.svg"
+                  alt="Punchhole"
+                  className="w-4 h-4 object-contain transition-transform group-hover:scale-110"
+                />
+              </div>
+
+              <span className="font-mono text-[10px] font-extrabold text-white/80 tracking-wider uppercase">
+                Explore Menu
+              </span>
+
+              <div className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                <span className="w-1 h-1 rounded-full bg-white/40" />
+                <span className="w-1 h-1 rounded-full bg-white/40" />
+                <span className="w-1 h-1 rounded-full bg-white/40" />
+              </div>
+            </div>
+          ) : (
+            /* Expanded Capsule Dock (Normal state OR expanded on hover/click) */
+            <nav
+              onMouseLeave={isScrolled ? handleIslandMouseLeave : undefined}
+              className={`flex items-center gap-1.5 py-1 px-2 rounded-full text-xs font-semibold transition-all duration-300 select-none ${
+                isScrolled
+                  ? 'bg-black/90 border border-white/25 shadow-[0_8px_32px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.25)] backdrop-blur-2xl scale-100 animate-in fade-in zoom-in-95'
+                  : 'bg-white/[0.04] border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]'
+              }`}
+            >
+              <Link href="/" className="nav-link-zoom text-white no-underline">
+                Feed
+              </Link>
+              <Link href="/browse" className="nav-link-zoom text-white/90 hover:text-white no-underline flex items-center gap-1.5">
+                <span>Explore</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
+              </Link>
+              <Link href="/#featured-articles" className="nav-link-zoom text-white/70 hover:text-white no-underline">
+                News
+              </Link>
+              <Link href="/reviews" className="nav-link-zoom text-white/70 no-underline">
+                Reviews
+              </Link>
+              <Link href="/browse?type=anime" className="nav-link-zoom text-white/70 no-underline">
+                Anime
+              </Link>
+              <Link href="/browse?type=game" className="nav-link-zoom text-white/70 no-underline">
+                Gaming
+              </Link>
+              <Link href="/browse?type=movie" className="nav-link-zoom text-white/70 no-underline">
+                Movies
+              </Link>
+              <Link href="/clubs" className="nav-link-zoom text-white/70 no-underline flex items-center gap-1.5">
+                <span>Clubs & Societies</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-cyan-400 to-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
+              </Link>
+            </nav>
+          )}
+        </div>
 
         {/* Right: Search & Profile & Mobile Toggle */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">

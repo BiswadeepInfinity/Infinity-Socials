@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "desktop": "npm --prefix ../desktop run start",
+    "desktop:local": "npm --prefix ../desktop run local",
+    "desktop:build": "npm --prefix ../desktop run build:exe",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
