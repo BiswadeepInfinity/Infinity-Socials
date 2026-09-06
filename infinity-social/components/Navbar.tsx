@@ -68,116 +68,130 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header
-      className="sticky top-0 z-50 w-full border-b border-white/[0.08]"
-      style={{ backgroundColor: '#050508' }}
-    >
-      {/* Polished High-Precision Infinity Reading Numberline Bar */}
-      <div className="w-full bg-[#030306] border-b border-white/[0.06] px-3 sm:px-5 py-1 flex items-center justify-between gap-2 sm:gap-3.5 select-none">
-        {/* Left: -∞ Continuum Start */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          <span className="font-mono text-xs sm:text-[13px] font-black text-rose-500 tracking-tight drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
-            -∞
-          </span>
-          <span className="font-mono text-[8px] font-bold text-white/40 tracking-wider hidden sm:inline">
-            START
-          </span>
-        </div>
-
-        {/* Center Continuum Track */}
-        <div className="relative flex-1 h-1 bg-white/[0.07] rounded-full overflow-visible">
-          {/* Neutral 0 Axis Line */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <div className="w-0.5 h-2.5 bg-white/70 rounded-sm shadow-[0_0_6px_rgba(255,255,255,0.5)]" />
+    <>
+      <header
+        className="fixed top-0 left-0 right-0 z-50 w-full border-b border-white/[0.08] transition-all duration-300"
+        style={{
+          backgroundColor: isScrolled ? 'rgba(5, 5, 8, 0.85)' : '#050508',
+          backdropFilter: isScrolled ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'none',
+        }}
+      >
+        {/* Polished High-Precision Infinity Reading Numberline Bar */}
+        <div className="w-full bg-[#030306] border-b border-white/[0.06] px-3 sm:px-5 py-1 flex items-center justify-between gap-2 sm:gap-3.5 select-none">
+          {/* Left: -∞ Continuum Start */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="font-mono text-xs sm:text-[13px] font-black text-rose-500 tracking-tight drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
+              -∞
+            </span>
+            <span className="font-mono text-[8px] font-bold text-white/40 tracking-wider hidden sm:inline">
+              START
+            </span>
           </div>
 
-          {/* Dynamic Progress Bar */}
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-rose-500 via-amber-500 via-emerald-500 to-purple-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-75"
-            style={{ width: `${scrollProgress}%` }}
-          />
-        </div>
+          {/* Center Continuum Track */}
+          <div className="relative flex-1 h-1 bg-white/[0.07] rounded-full overflow-visible">
+            {/* Neutral 0 Axis Line */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+              <div className="w-0.5 h-2.5 bg-white/70 rounded-sm shadow-[0_0_6px_rgba(255,255,255,0.5)]" />
+            </div>
 
-        {/* Right: +∞ Continuum End */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          <span className="font-mono text-[8px] font-bold text-white/40 tracking-wider hidden sm:inline">
-            END
-          </span>
-          <span className={`font-mono text-xs sm:text-[13px] font-black tracking-tight transition-all duration-300 ${
-            scrollProgress >= 95 ? 'text-purple-300 drop-shadow-[0_0_10px_rgba(168,85,247,0.9)]' : 'text-purple-500 drop-shadow-[0_0_6px_rgba(168,85,247,0.5)]'
-          }`}>
-            +∞
-          </span>
-        </div>
-      </div>
-
-      <div className="max-w-[1240px] h-14 sm:h-[70px] mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 relative">
-        
-        {/* Left: Brand Identity */}
-        <Link href="/" className="flex items-center gap-2 sm:gap-3 text-white no-underline shrink-0 group">
-          <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-black border border-white/[0.14] flex items-center justify-center shadow-lg p-1 overflow-hidden shrink-0 group-hover:border-white/30 transition-all">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="Infinity Logo"
-              className="w-full h-full object-contain"
+            {/* Dynamic Progress Bar */}
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-rose-500 via-amber-500 via-emerald-500 to-purple-500 shadow-[0_0_10px_rgba(160,80,255,0.6)] transition-all duration-75"
+              style={{ width: `${scrollProgress}%` }}
             />
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="font-display font-extrabold text-sm sm:text-base lg:text-lg tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent whitespace-nowrap">
-              INFINITY SOCIALS
+          {/* Right: +∞ Continuum End */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="font-mono text-[8px] font-bold text-white/40 tracking-wider hidden sm:inline">
+              END
             </span>
-            <span className="font-mono text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white uppercase tracking-wider hidden md:inline">
-              BETA
+            <span className={`font-mono text-xs sm:text-[13px] font-black tracking-tight transition-all duration-300 ${
+              scrollProgress >= 95 ? 'text-purple-300 drop-shadow-[0_0_10px_rgba(168,85,247,0.9)]' : 'text-purple-500 drop-shadow-[0_0_6px_rgba(168,85,247,0.5)]'
+            }`}>
+              +∞
             </span>
           </div>
-        </Link>
+        </div>
 
-        {/* Center: Dynamic Island Morphing Capsule Dock (Permanently centered) */}
-        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-auto z-20">
-          {/* Contracted Dynamic Island Punchhole (When Scrolled & Not Expanded) */}
-          {isScrolled && !islandExpanded ? (
-            <button
-              type="button"
-              onClick={handleIslandClick}
-              onMouseEnter={handleIslandMouseEnter}
-              className="group flex items-center gap-2.5 h-9 px-3.5 rounded-full bg-black/95 border border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.25)] cursor-pointer backdrop-blur-2xl transition-all duration-300 hover:scale-105 hover:border-white/45 select-none"
-              title="Click or Hover to expand"
-              aria-label="Expand Navigation"
-            >
-              {/* Apple Dynamic Island Punchhole Camera / Butterfly Eye */}
-              <div className="relative flex items-center justify-center w-5 h-5 rounded-full bg-white/[0.06] border border-white/10">
-                <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.9)] animate-pulse" />
-              </div>
+        <div className="max-w-[1240px] h-14 sm:h-[68px] mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 relative">
+          
+          {/* Left: Brand Identity */}
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 text-white no-underline shrink-0 group">
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-black border border-white/[0.14] flex items-center justify-center shadow-lg p-1 overflow-hidden shrink-0 group-hover:border-white/30 transition-all">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.png"
+                alt="Infinity Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
 
-              {/* Punchhole Label */}
-              <span className="font-mono text-[11px] font-extrabold text-white/90 tracking-wider uppercase">
-                Explore
+            <div className="flex items-center gap-1.5">
+              <span className="font-display font-extrabold text-sm sm:text-base lg:text-lg tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent whitespace-nowrap">
+                INFINITY SOCIALS
               </span>
+              <span className="font-mono text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white uppercase tracking-wider hidden md:inline">
+                BETA
+              </span>
+            </div>
+          </Link>
 
-              {/* Minimal Apple Dynamic Island Activity Indicator */}
-              <div className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
-              </div>
-            </button>
-          ) : (
-            /* Expanded Capsule Dock (Normal state OR expanded on hover/click) */
-            <nav
-              onMouseLeave={isScrolled ? handleIslandMouseLeave : undefined}
-              className={`flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-semibold transition-all duration-300 select-none ${
-                isScrolled
-                  ? 'bg-black/95 border border-white/30 shadow-[0_12px_40px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.3)] backdrop-blur-2xl scale-100'
-                  : 'bg-white/[0.04] border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]'
-              }`}
-            >
-              <Link href="/" className="nav-link-zoom text-white no-underline">
-                Feed
-              </Link>
-              <Link href="/browse" className="nav-link-zoom text-white/90 hover:text-white no-underline flex items-center gap-1.5">
-                <span>Explore</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
-              </Link>
+          {/* Center: Dynamic Island Morphing Capsule Dock (Permanently centered) */}
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-auto z-20">
+            {/* Contracted Dynamic Island Punchhole (When Scrolled & Not Expanded) */}
+            {isScrolled && !islandExpanded ? (
+              <button
+                type="button"
+                onClick={handleIslandClick}
+                onMouseEnter={handleIslandMouseEnter}
+                className="group flex items-center gap-2.5 h-10 px-4 rounded-full bg-black/95 border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.95),0_0_15px_rgba(255,255,255,0.08),inset_0_1px_1px_rgba(255,255,255,0.4)] cursor-pointer backdrop-blur-2xl transition-all duration-300 hover:scale-105 hover:border-white/60 select-none animate-pulse-slow"
+                title="Click or Hover to expand Dynamic Island"
+                aria-label="Expand Navigation Dock"
+              >
+                {/* Apple Dynamic Island Punchhole Camera / Sensor Dot */}
+                <div className="relative flex items-center justify-center w-5 h-5 rounded-full bg-white/[0.08] border border-white/15">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,1)] animate-ping" style={{ animationDuration: '2.5s' }} />
+                  <span className="absolute w-2 h-2 rounded-full bg-rose-500" />
+                </div>
+
+                {/* Punchhole Dynamic Island Pill Content */}
+                <span className="font-mono text-[11px] font-black tracking-wider text-white uppercase flex items-center gap-1.5">
+                  <span>Navigation</span>
+                  <span className="text-white/40 text-[9px]">▾</span>
+                </span>
+
+                {/* Apple Dynamic Island Right Status Waveform / Indicator */}
+                <div className="flex items-center gap-0.5 opacity-80 group-hover:opacity-100 transition-opacity pl-0.5">
+                  <span className="w-1 h-3 rounded-full bg-purple-400 shadow-[0_0_6px_rgba(192,132,252,0.8)]" />
+                  <span className="w-1 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
+                </div>
+              </button>
+            ) : (
+              /* Expanded Capsule Dock (Normal state OR expanded on hover/click) */
+              <nav
+                onMouseLeave={isScrolled ? handleIslandMouseLeave : undefined}
+                className={`flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-semibold transition-all duration-300 select-none ${
+                  isScrolled
+                    ? 'bg-black/95 border border-white/40 shadow-[0_12px_45px_rgba(0,0,0,0.98),0_0_20px_rgba(255,255,255,0.1),inset_0_1px_1px_rgba(255,255,255,0.4)] backdrop-blur-3xl scale-100 ring-1 ring-white/10'
+                    : 'bg-white/[0.04] border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]'
+                }`}
+              >
+                {isScrolled && (
+                  /* Punchhole indicator inside expanded dock */
+                  <div className="flex items-center justify-center w-4 h-4 rounded-full bg-white/[0.1] mr-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.9)]" />
+                  </div>
+                )}
+                <Link href="/" className="nav-link-zoom text-white no-underline">
+                  Feed
+                </Link>
+                <Link href="/browse" className="nav-link-zoom text-white/90 hover:text-white no-underline flex items-center gap-1.5">
+                  <span>Explore</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
+                </Link>
               <Link href="/#featured-articles" className="nav-link-zoom text-white/70 hover:text-white no-underline">
                 News
               </Link>
@@ -365,6 +379,9 @@ export default function Navbar() {
         </div>
       )}
     </header>
+    {/* Spacer so page content starts below the fixed navbar */}
+    <div className="h-[90px] sm:h-[104px] w-full pointer-events-none" aria-hidden="true" />
+    </>
   );
 }
 
