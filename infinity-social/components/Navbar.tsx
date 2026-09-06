@@ -134,44 +134,40 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Center: Dynamic Island Morphing Capsule Dock */}
-        <div className="hidden lg:flex items-center justify-center">
+        {/* Center: Dynamic Island Morphing Capsule Dock (Permanently centered) */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-auto z-20">
           {/* Contracted Dynamic Island Punchhole (When Scrolled & Not Expanded) */}
           {isScrolled && !islandExpanded ? (
-            <div
+            <button
+              type="button"
               onClick={handleIslandClick}
               onMouseEnter={handleIslandMouseEnter}
-              className="group flex items-center gap-2.5 py-1.5 px-3.5 rounded-full bg-black/90 border border-white/20 shadow-[0_4px_24px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.2)] cursor-pointer backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-white/40 select-none animate-in fade-in zoom-in-95"
-              title="Click or Hover to expand navigation"
+              className="group flex items-center gap-2.5 h-9 px-3.5 rounded-full bg-black/95 border border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.25)] cursor-pointer backdrop-blur-2xl transition-all duration-300 hover:scale-105 hover:border-white/45 select-none"
+              title="Click or Hover to expand"
+              aria-label="Expand Navigation"
             >
-              {/* Punchhole Pulse Dot & Butterfly */}
-              <div className="relative flex items-center justify-center w-5 h-5">
-                <span className="absolute w-2 h-2 rounded-full bg-rose-500 animate-ping opacity-75" />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/butterfly.svg"
-                  alt="Punchhole"
-                  className="w-4 h-4 object-contain transition-transform group-hover:scale-110"
-                />
+              {/* Apple Dynamic Island Punchhole Camera / Butterfly Eye */}
+              <div className="relative flex items-center justify-center w-5 h-5 rounded-full bg-white/[0.06] border border-white/10">
+                <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.9)] animate-pulse" />
               </div>
 
-              <span className="font-mono text-[10px] font-extrabold text-white/80 tracking-wider uppercase">
-                Explore Menu
+              {/* Punchhole Label */}
+              <span className="font-mono text-[11px] font-extrabold text-white/90 tracking-wider uppercase">
+                Explore
               </span>
 
+              {/* Minimal Apple Dynamic Island Activity Indicator */}
               <div className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
-                <span className="w-1 h-1 rounded-full bg-white/40" />
-                <span className="w-1 h-1 rounded-full bg-white/40" />
-                <span className="w-1 h-1 rounded-full bg-white/40" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
               </div>
-            </div>
+            </button>
           ) : (
             /* Expanded Capsule Dock (Normal state OR expanded on hover/click) */
             <nav
               onMouseLeave={isScrolled ? handleIslandMouseLeave : undefined}
-              className={`flex items-center gap-1.5 py-1 px-2 rounded-full text-xs font-semibold transition-all duration-300 select-none ${
+              className={`flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-semibold transition-all duration-300 select-none ${
                 isScrolled
-                  ? 'bg-black/90 border border-white/25 shadow-[0_8px_32px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.25)] backdrop-blur-2xl scale-100 animate-in fade-in zoom-in-95'
+                  ? 'bg-black/95 border border-white/30 shadow-[0_12px_40px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.3)] backdrop-blur-2xl scale-100'
                   : 'bg-white/[0.04] border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]'
               }`}
             >
