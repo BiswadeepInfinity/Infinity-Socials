@@ -147,22 +147,22 @@ export default function ArticleDiscussionHub({
             <div className="flex items-center gap-2 mb-2">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(6,182,212,0.9)]" />
               <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-cyan-300 font-bold">
-                Pop Culture Community Debates
+                Guild & Society Debates
               </span>
               <span className="text-white/30 font-mono text-xs">•</span>
               <Link
-                href={`/channels/${targetChannel.slug}`}
+                href={`/clubs/${targetChannel.slug}`}
                 className="font-mono text-[10px] sm:text-[11px] text-zinc-400 hover:text-white transition-colors"
               >
-                r/{targetChannel.slug}
+                [{targetChannel.tag || 'CLAN'}] {targetChannel.name}
               </Link>
             </div>
 
             <h2 className="font-display font-extrabold text-xl sm:text-3xl text-white tracking-tight leading-snug">
-              Article Debates & Fan Theories
+              Clan Debates & Deep Analysis
             </h2>
             <p className="text-xs sm:text-sm text-zinc-400 font-light mt-1 max-w-xl leading-relaxed">
-              Join nested deep-dive threads, earn verified community badges, and share your takes with {targetChannel.member_count.toLocaleString()} members.
+              Join clan strategy threads, earn Discord-style custom role tags, and share your takes with {targetChannel.member_count.toLocaleString()} guild members.
             </p>
           </div>
 
@@ -173,22 +173,22 @@ export default function ArticleDiscussionHub({
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-display font-bold text-xs sm:text-sm hover:from-cyan-400 hover:to-blue-500 active:scale-95 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="w-4 h-4" />
-              <span>New Fan Thread</span>
+              <span>New Clan Topic</span>
             </button>
           </div>
         </div>
 
-        {/* Horizontal Spin-off Threads Deck (Pop Culture Fan Theories) */}
+        {/* Horizontal Spin-off Threads Deck (Clan Fan Theories) */}
         <div className="my-6 relative z-10">
           <div className="flex items-center justify-between gap-2 mb-3">
             <span className="font-mono text-[10px] sm:text-xs text-white/50 uppercase tracking-wider font-semibold">
-              Trending Related Threads in r/{targetChannel.slug}
+              Trending Topics in {targetChannel.name}
             </span>
             <Link
-              href={`/channels/${targetChannel.slug}`}
+              href={`/clubs/${targetChannel.slug}`}
               className="font-mono text-[10px] sm:text-xs text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
             >
-              <span>View all threads</span>
+              <span>View Clan HQ</span>
               <span>→</span>
             </Link>
           </div>
@@ -198,7 +198,7 @@ export default function ArticleDiscussionHub({
             {relatedSpinoffPosts.map((spinoff) => (
               <Link
                 key={spinoff.id}
-                href={`/channels/${targetChannel.slug}/${spinoff.id}`}
+                href={`/clubs/${targetChannel.slug}/${spinoff.id}`}
                 className="group p-3.5 rounded-2xl bg-[#0a0a10]/80 hover:bg-[#0e0e16]/90 border border-white/10 hover:border-white/20 transition-all duration-200 flex flex-col justify-between gap-3 shadow-lg no-underline"
               >
                 <div>
@@ -206,8 +206,8 @@ export default function ArticleDiscussionHub({
                     <span className="px-2 py-0.5 rounded-md bg-white/[0.06] text-white/70 font-mono text-[9px] font-semibold uppercase">
                       {spinoff.flair}
                     </span>
-                    <span className="font-mono text-[10px] text-cyan-400 font-bold">
-                      +{spinoff.upvotes} Rep
+                    <span className="font-mono text-[10px] text-rose-400 font-bold">
+                      🔥 {spinoff.boosts || spinoff.upvotes}
                     </span>
                   </div>
                   <h4 className="font-display font-bold text-xs text-white group-hover:text-cyan-300 transition-colors line-clamp-2 leading-snug">
@@ -216,7 +216,7 @@ export default function ArticleDiscussionHub({
                 </div>
 
                 <div className="flex items-center justify-between text-[10px] font-mono text-white/40 pt-2 border-t border-white/[0.04]">
-                  <span className="truncate max-w-[100px]">u/{spinoff.author_username}</span>
+                  <span className="truncate max-w-[100px]">@{spinoff.author_username}</span>
                   <span>💬 {spinoff.comments_count}</span>
                 </div>
               </Link>

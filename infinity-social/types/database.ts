@@ -119,78 +119,164 @@ export type WatchlistItem = {
   created_at: string;
 };
 
-export type ChannelBadgeType = 
-  | 'top_1_percent_commenter'
-  | 'top_5_percent_poster'
-  | 'moderator'
-  | 'original_poster'
-  | 'verified_critic';
+export type ClubHierarchyRank = 'president' | 'vice_president' | 'executive' | 'member';
 
-export type Channel = {
+export type ClubRole = {
   id: string;
+  club_id: string;
   name: string;
-  slug: string;
-  description: string;
-  category: string;
+  color: string; // hex like #06b6d4 or #f43f5e
+  bg_color?: string;
+  icon?: string; // emoji or badge icon
+};
+
+export type ClubMember = {
+  id: string;
+  user_id: string;
+  username: string;
+  display_name: string;
   avatar_url: string;
-  banner_url?: string;
-  created_by?: string;
-  is_restricted?: boolean;
-  member_count: number;
-  weekly_visitors: number;
-  weekly_contributions: number;
-  rules?: string[];
+  rank: ClubHierarchyRank;
+  custom_roles: ClubRole[];
+  xp_contributed: number;
+  joined_at: string;
+};
+
+export type DigitalEventType = 'watchparty' | 'tournament' | 'keynote_stream' | 'raid_night' | 'discussion_summit';
+export type DigitalEventCategory = 'game' | 'anime' | 'movie' | 'tech';
+
+export type DigitalEvent = {
+  id: string;
+  club_id?: string;
+  society_id?: string;
+  title: string;
+  description: string;
+  category: DigitalEventCategory;
+  event_type: DigitalEventType;
+  banner_url: string;
+  start_time: string; // ISO date string
+  end_time?: string;
+  platform_name: string; // e.g. 'Discord Stage', 'Twitch', 'Watchparty Room', 'YouTube Live'
+  platform_url: string;
+  rsvp_user_ids: string[];
+  xp_reward: number;
+  created_by: string;
   created_at: string;
 };
 
-export type ChannelPost = {
+export type Society = {
   id: string;
-  channel_id: string;
+  name: string;
+  slug: string;
+  tag: string; // e.g. [PANTH]
+  motto: string;
+  description: string;
+  category: string;
+  crest_url: string;
+  banner_url: string;
+  founder_club_id: string;
+  member_club_ids: string[];
+  level: number;
+  xp: number;
+  treaty_charter: string[];
+  created_at: string;
+};
+
+export type ClubPact = {
+  id: string;
+  society_id: string;
+  society_name: string;
+  club_a_id: string;
+  club_b_id: string;
+  status: 'active' | 'pending';
+  treaty_title: string;
+  signed_at: string;
+};
+
+export type Club = {
+  id: string;
+  name: string;
+  slug: string;
+  tag: string; // e.g. [CRUC], [SAKU], [NOIR]
+  motto: string;
+  description: string;
+  category: 'Gaming' | 'Anime' | 'Pop Culture' | 'Tech';
+  avatar_url: string;
+  banner_url: string;
+  created_by: string;
+  president_id: string;
+  entry_type: 'open' | 'application' | 'invite';
+  member_limit: number; // e.g. 50, 100, 250
+  member_count: number;
+  level: number;
+  xp: number;
+  society_id?: string; // If federated into a Grand Society
+  custom_roles: ClubRole[];
+  members: ClubMember[];
+  perks: string[];
+  rules: string[];
+  created_at: string;
+};
+
+export type ChannelBadgeType = 
+  | 'president'
+  | 'vice_president'
+  | 'executive'
+  | 'member'
+  | 'top_contributor';
+
+// Legacy channel alias for backwards-compatibility
+export type Channel = Club;
+
+export type ClubPost = {
+  id: string;
+  club_id: string;
+  society_id?: string | null;
   user_id: string;
   author_name: string;
   author_username: string;
   author_avatar: string;
-  author_badges?: ChannelBadgeType[];
+  author_rank: ClubHierarchyRank;
+  author_custom_roles?: ClubRole[];
+  author_club_tag?: string;
   title: string;
   content: string;
   flair?: string;
   media_url?: string | null;
   link_url?: string | null;
-  // Article linkage for derived forums
   article_slug?: string | null;
   article_title?: string | null;
   article_thumbnail?: string | null;
   article_score?: string | null;
   article_read_time?: string | null;
   article_category?: string | null;
-  upvotes: number;
-  downvotes: number;
-  user_vote?: 'up' | 'down' | null;
+  event_id?: string | null;
+  boosts: number;
+  user_boosted?: boolean;
   comments_count: number;
   is_pinned?: boolean;
   created_at: string;
-  channel?: Channel;
 };
 
-export type ChannelComment = {
+// Legacy ChannelPost alias
+export type ChannelPost = ClubPost;
+
+export type ClubComment = {
   id: string;
   post_id: string;
-  parent_id?: string | null;
+  parent_id: string | null;
   user_id: string;
   author_name: string;
   author_username: string;
   author_avatar: string;
-  author_badges?: ChannelBadgeType[];
+  author_rank?: ClubHierarchyRank;
+  author_custom_roles?: ClubRole[];
   content: string;
-  upvotes: number;
-  downvotes: number;
-  user_vote?: 'up' | 'down' | null;
-  is_op?: boolean;
-  is_mod?: boolean;
-  is_pinned?: boolean;
-  is_edited?: boolean;
+  boosts: number;
+  user_boosted?: boolean;
   created_at: string;
-  replies?: ChannelComment[];
+  is_pinned?: boolean;
+  replies?: ClubComment[];
 };
 
-
+export type ChannelComment = ClubComment;

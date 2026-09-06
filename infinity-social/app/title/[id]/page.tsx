@@ -2,17 +2,86 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams, notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { getMediaById } from '@/lib/media-data';
 import { MediaTitle } from '@/types/media';
+
+// ── MetaRow helper ─────────────────────────────────────────────
+function MetaRow({
+  label, value, highlight = false
+}: { label: string; value: React.ReactNode; highlight?: boolean }) {
+  return (
+    <div className="flex items-start justify-between border-b border-white/[0.06] pb-2 gap-3">
+      <span className="text-zinc-400 shrink-0">{label}</span>
+      <span className={`font-semibold text-right ${highlight ? 'text-emerald-400' : 'text-white'}`}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+// ── Countdown helper ─────────────────────────────────────────────
+function ReleaseCountdown({ releaseDate }: { releaseDate: string }) {
+  const [timeLeft, setTimeLeft] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    // Parse as local midnight to avoid timezone shifting
+    const parts = releaseDate.split('-');
+    if (parts.length !== 3) return;
+    const target = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])).getTime();
+
+    const update = () => {
+      const now = new Date().getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        setTimeLeft(null);
+        return;
+      }
+
+      setTimeLeft({
+        d: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        h: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        m: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        s: Math.floor((diff % (1000 * 60)) / 1000),
+      });
+    };
+
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [releaseDate]);
+
+  if (!isClient || !timeLeft) return null;
+
+  const parts = releaseDate.split('-');
+  const dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 mt-2 mb-3">
+      <span className="text-zinc-400 uppercase tracking-wider font-bold text-[10px]">Releasing in -</span>
+      <span className="text-amber-400 font-mono font-bold tracking-widest bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20 shadow-[0_0_12px_rgba(251,191,36,0.25)] text-xs">
+        {timeLeft.d}d {timeLeft.h.toString().padStart(2, '0')}h {timeLeft.m.toString().padStart(2, '0')}m {timeLeft.s.toString().padStart(2, '0')}s
+      </span>
+      <span className="text-zinc-600 font-bold mx-1">•</span>
+      <span className="text-zinc-300 font-medium text-xs">
+        {formattedDate}
+      </span>
+    </div>
+  );
+}
 
 export default function TitleDetailPage() {
   const params = useParams();
   const idOrSlug = params?.id as string;
 
   const [media, setMedia] = useState<MediaTitle | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const [isInterested, setIsInterested] = useState(false);
   const [interestedCount, setInterestedCount] = useState(0);
   const [inCollection, setInCollection] = useState(false);
@@ -21,35 +90,139 @@ export default function TitleDetailPage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'articles' | 'cast' | 'discussion'>('overview');
 
   useEffect(() => {
-    if (idOrSlug) {
-      const found = getMediaById(idOrSlug);
-      if (found) {
-        setMedia(found);
-        setInterestedCount(found.interestedCount);
-        setCollectionCount(found.collectionCount || 100);
-      }
+    if (!idOrSlug) return;
+
+    // 1. Try local catalog first (fast, no network)
+    const local = getMediaById(idOrSlug);
+    if (local) {
+      setMedia(local);
+      setInterestedCount(local.interestedCount);
+      setCollectionCount(local.collectionCount || 100);
+      return;
     }
+
+    // 2. Fetch from API if not in local catalog
+    const fetchFromAPI = async () => {
+      try {
+        let apiType = 'movie';
+        if (idOrSlug.startsWith('mal-')) apiType = 'anime';
+        else if (idOrSlug.startsWith('tmdb-tv-')) apiType = 'tv';
+
+        // Check for direct TMDB ID match (e.g. tmdb-12345 or slug with numeric tail)
+        const tmdbMatch = idOrSlug.match(/^tmdb-(\d+)$/);
+        if (tmdbMatch) {
+          const tmdbId = parseInt(tmdbMatch[1], 10);
+          const detailRes = await fetch(`/api/media/details/tmdb-${tmdbId}?type=${apiType}`);
+          if (detailRes.ok) {
+            const detailData = await detailRes.json();
+            if (detailData.success && detailData.data) {
+              setMedia({
+                id: `tmdb-${tmdbId}`,
+                slug: idOrSlug,
+                title: detailData.data.title || 'Untitled',
+                type: apiType === 'tv' ? 'tv' : 'movie',
+                badge: 'Coming Soon' as any,
+                releaseYear: detailData.data.releaseYear || new Date().getFullYear(),
+                releaseDate: detailData.data.releaseDate,
+                genres: detailData.data.genres || ['Drama'],
+                posterUrl: detailData.data.posterUrl || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&q=85',
+                backdropUrl: detailData.data.backdropUrl || '',
+                interestedCount: 240,
+                collectionCount: 50,
+                ...detailData.data,
+              });
+              return;
+            }
+          }
+        }
+
+        const numericId = idOrSlug.replace(/^(tmdb|mal|rawg)-/, '').match(/(\d+)$/)?.[1];
+        if (!numericId) { setNotFound(true); return; }
+
+        const titleGuess = idOrSlug
+          .replace(/^(tmdb|mal|rawg)-/, '')
+          .replace(/-\d+$/, '')
+          .replace(/-/g, ' ');
+
+        const res = await fetch(`/api/media/search?q=${encodeURIComponent(titleGuess)}&type=${apiType}`);
+        if (!res.ok) { setNotFound(true); return; }
+
+        const data = await res.json();
+        const results: MediaTitle[] = data.data || [];
+
+        const match =
+          results.find((r) => r.id === idOrSlug) ||
+          results.find((r) => r.id.endsWith(numericId)) ||
+          results.find((r) => r.slug === idOrSlug) ||
+          results[0];
+
+        if (match) {
+          setMedia(match);
+          setInterestedCount(match.interestedCount);
+          setCollectionCount(match.collectionCount || 100);
+        } else {
+          setNotFound(true);
+        }
+      } catch {
+        setNotFound(true);
+      }
+    };
+
+    fetchFromAPI();
   }, [idOrSlug]);
 
-  if (!media && idOrSlug) {
-    // If not found in catalog
-    const fallback = getMediaById(idOrSlug);
-    if (!fallback) {
-      // Not found
-      // we can also auto-create a dynamic mock if needed
-    }
-  }
+  // 3. After basic media loads, enrich with full TMDB details (cast, crew, trailer, etc.)
+  useEffect(() => {
+    if (!media) return;
+    // Only enrich TMDB titles (id starts with "tmdb-")
+    if (!media.id.startsWith('tmdb-')) return;
+    // Skip if already enriched (has cast or tagline from detail endpoint)
+    if (media.cast && media.cast.length > 0 && media.tagline !== undefined) return;
 
-  if (!media) {
+    const enrich = async () => {
+      try {
+        const res = await fetch(`/api/media/details/${encodeURIComponent(media.id)}?type=${media.type}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.data && Object.keys(data.data).length > 0) {
+          setMedia((prev) => prev ? { ...prev, ...data.data } : prev);
+        }
+      } catch {
+        // silently ignore — basic info still shows
+      }
+    };
+
+    enrich();
+  }, [media?.id]);
+
+  // ── Loading state ──────────────────────────────────────────
+  if (!media && !notFound) {
     return (
       <div className="min-h-screen bg-[#050508] text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin text-3xl mb-4">🌀</div>
-          <p className="text-zinc-400 font-mono">Loading cinematic hub...</p>
+          <div className="w-10 h-10 mx-auto mb-4 border-2 border-rose-500/40 border-t-rose-500 rounded-full animate-spin" />
+          <p className="text-zinc-400 font-mono text-sm">Loading cinematic hub...</p>
         </div>
       </div>
     );
   }
+
+  // ── Not found state ────────────────────────────────────────
+  if (notFound) {
+    return (
+      <div className="min-h-screen bg-[#050508] text-white flex flex-col items-center justify-center gap-4">
+        <div className="text-4xl">🎬</div>
+        <h1 className="text-2xl font-black">Title Not Found</h1>
+        <p className="text-zinc-400 text-sm max-w-xs text-center">
+          We couldn't locate this title. It may have been removed or the link is incorrect.
+        </p>
+        <Link href="/browse" className="px-5 py-2.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-sm font-bold hover:bg-rose-500/30 transition-all no-underline">
+          Browse All Titles →
+        </Link>
+      </div>
+    );
+  }
+
 
   const handleInterestedToggle = () => {
     if (isInterested) {
@@ -91,20 +264,18 @@ export default function TitleDetailPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#050508]/90 via-transparent to-[#050508]/90" />
 
         {/* Floating Play Trailer Button in Center */}
-        {media.trailerYoutubeId && (
-          <button
-            onClick={() => setShowTrailer(true)}
-            className="group relative z-20 flex flex-col items-center gap-3 transition-transform duration-300 hover:scale-110 cursor-pointer"
-            aria-label="Play Trailer"
-          >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/10 backdrop-blur-xl border border-white/30 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.25)] group-hover:border-white group-hover:bg-white/20 group-hover:shadow-[0_0_40px_rgba(244,63,94,0.5)] transition-all">
-              <span className="text-white text-2xl sm:text-3xl ml-1">▶</span>
-            </div>
-            <span className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white/80 group-hover:text-white drop-shadow">
-              Watch Official Trailer
-            </span>
-          </button>
-        )}
+        <button
+          onClick={() => setShowTrailer(true)}
+          className="group relative z-20 flex flex-col items-center gap-3 transition-transform duration-300 hover:scale-110 cursor-pointer"
+          aria-label="Play Trailer"
+        >
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/10 backdrop-blur-xl border border-white/30 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.25)] group-hover:border-white group-hover:bg-white/20 group-hover:shadow-[0_0_40px_rgba(244,63,94,0.5)] transition-all">
+            <span className="text-white text-2xl sm:text-3xl ml-1">▶</span>
+          </div>
+          <span className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white/80 group-hover:text-white drop-shadow">
+            Watch Official Trailer
+          </span>
+        </button>
       </div>
 
       {/* Main Content Layout */}
@@ -126,49 +297,122 @@ export default function TitleDetailPage() {
               </div>
             </div>
 
-            {/* Quick Metadata List */}
+            {/* Quick Metadata List — enriched with TMDB detail */}
             <div className="w-full max-w-sm mt-6 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-3 text-xs">
-              <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                <span className="text-zinc-400">Category</span>
-                <span className="font-semibold text-white capitalize">{media.type}</span>
-              </div>
-              {media.directorOrDev && (
-                <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                  <span className="text-zinc-400">
-                    {media.type === 'game' ? 'Developer' : 'Directed By'}
-                  </span>
-                  <span className="font-semibold text-white text-right">{media.directorOrDev}</span>
+
+              {/* Rating bar */}
+              {media.rating && (
+                <div className="pb-3 border-b border-white/[0.06]">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-zinc-400">Rating</span>
+                    <span className="font-mono text-amber-300 font-bold text-sm">★ {media.rating}/10</span>
+                  </div>
+                  {media.voteCount && (
+                    <span className="text-zinc-500">{media.voteCount.toLocaleString()} votes</span>
+                  )}
                 </div>
               )}
-              {media.country && (
-                <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                  <span className="text-zinc-400">Country</span>
-                  <span className="font-semibold text-white">{media.country}</span>
-                </div>
+
+              <MetaRow label="Category" value={<span className="capitalize">{media.type}</span>} />
+              {media.originalTitle && media.originalTitle !== media.title && (
+                <MetaRow label="Original Title" value={<span className="italic">{media.originalTitle}</span>} />
+              )}
+              {media.releaseDate && (
+                <MetaRow
+                  label="Release Date"
+                  value={
+                    <span className="font-mono text-zinc-300">
+                      {new Date(media.releaseDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                  }
+                />
+              )}
+              {media.directorOrDev && media.directorOrDev !== 'TMDB Studios' && (
+                <MetaRow
+                  label={media.type === 'game' ? 'Developer' : media.type === 'tv' ? 'Created By' : 'Director'}
+                  value={media.directorOrDev}
+                />
+              )}
+              {media.writers && media.writers.length > 0 && (
+                <MetaRow label="Writers" value={media.writers.join(', ')} />
+              )}
+              {media.studio && (
+                <MetaRow label={media.type === 'tv' ? 'Network' : 'Studio'} value={media.studio} />
+              )}
+              {media.productionCompanies && media.productionCompanies.length > 1 && (
+                <MetaRow label="Producers" value={media.productionCompanies.slice(0, 3).join(', ')} />
+              )}
+              {(media.productionCountries && media.productionCountries.length > 0) ? (
+                <MetaRow label="Country" value={media.productionCountries.join(', ')} />
+              ) : media.country ? (
+                <MetaRow label="Country" value={media.country} />
+              ) : null}
+              {media.durationOrPlatforms && (
+                <MetaRow
+                  label={media.type === 'game' ? 'Platforms' : media.type === 'tv' ? 'Seasons' : 'Runtime'}
+                  value={media.durationOrPlatforms}
+                />
               )}
               {media.language && (
-                <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                  <span className="text-zinc-400">Language</span>
-                  <span className="font-semibold text-white">{media.language}</span>
-                </div>
+                <MetaRow label="Original Audio" value={<span className="font-mono">{media.language}</span>} />
               )}
-              {media.durationOrPlatforms && (
-                <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                  <span className="text-zinc-400">
-                    {media.type === 'game' ? 'Platforms' : 'Runtime'}
-                  </span>
-                  <span className="font-semibold text-white text-right truncate max-w-[180px]">
-                    {media.durationOrPlatforms}
-                  </span>
-                </div>
+              {media.spokenLanguages && media.spokenLanguages.length > 0 && (
+                <MetaRow label="Languages" value={media.spokenLanguages.slice(0, 3).join(', ')} />
+              )}
+              {media.budget && media.budget > 0 && (
+                <MetaRow label="Budget" value={`$${(media.budget / 1_000_000).toFixed(1)}M`} />
+              )}
+              {media.revenue && media.revenue > 0 && (
+                <MetaRow label="Box Office" value={`$${(media.revenue / 1_000_000).toFixed(1)}M`} highlight />
               )}
               {media.status && (
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-400">Status</span>
-                  <span className="font-mono text-emerald-400 font-bold">{media.status}</span>
+                <MetaRow
+                  label="Status"
+                  value={<span className="text-emerald-400 font-bold font-mono">{media.status}</span>}
+                />
+              )}
+              {media.imdbId && (
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-zinc-400">IMDb</span>
+                  <a
+                    href={`https://www.imdb.com/title/${media.imdbId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-400 hover:text-amber-300 font-mono text-[11px] underline flex items-center gap-1"
+                  >
+                    <span>{media.imdbId}</span>
+                    <span>↗</span>
+                  </a>
+                </div>
+              )}
+              {media.homepage && (
+                <div className="flex items-center justify-between pt-1 border-t border-white/[0.06]">
+                  <span className="text-zinc-400">Official Site</span>
+                  <a
+                    href={media.homepage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-rose-400 hover:text-rose-300 text-[11px] truncate max-w-[140px] underline"
+                  >
+                    Visit Website ↗
+                  </a>
                 </div>
               )}
             </div>
+
+            {/* Keywords */}
+            {media.keywords && media.keywords.length > 0 && (
+              <div className="w-full max-w-sm mt-4">
+                <p className="text-[10px] font-mono uppercase text-zinc-500 mb-2 tracking-wider">Keywords</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {media.keywords.map((kw) => (
+                    <span key={kw} className="px-2 py-0.5 rounded text-[10px] bg-white/[0.03] border border-white/[0.06] text-zinc-400">
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Column: Title Header, Actions, Overview & Sub-divided Articles */}
@@ -184,6 +428,34 @@ export default function TitleDetailPage() {
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
                 {media.title}
               </h1>
+
+              {media.releaseDate && (
+                <ReleaseCountdown releaseDate={media.releaseDate} />
+              )}
+
+              {/* Tagline */}
+              {media.tagline && (
+                <p className="mt-2 text-sm italic text-zinc-400">"{media.tagline}"</p>
+              )}
+
+              {/* Rating stats */}
+              {media.rating && (
+                <div className="flex items-center gap-4 mt-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-amber-400 text-base">★</span>
+                    <span className="text-lg font-black text-white">{media.rating}</span>
+                    <span className="text-zinc-500 text-xs">/10</span>
+                  </div>
+                  {media.voteCount && (
+                    <span className="text-xs text-zinc-500 font-mono">{media.voteCount.toLocaleString()} ratings</span>
+                  )}
+                  {media.popularity && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] bg-rose-500/10 border border-rose-500/20 text-rose-400 font-mono">
+                      🔥 {media.popularity} popularity
+                    </span>
+                  )}
+                </div>
+              )}
 
               {/* Genre Pills */}
               <div className="flex flex-wrap items-center gap-2 mt-3">
@@ -226,6 +498,14 @@ export default function TitleDetailPage() {
                 <span>📑</span>
                 <span>{inCollection ? 'In Collection' : 'Add to Collection'}</span>
                 <span className="text-zinc-400 font-mono text-[11px]">({collectionCount})</span>
+              </button>
+
+              <button
+                onClick={() => setShowTrailer(true)}
+                className="px-5 py-3 rounded-xl font-bold text-xs sm:text-sm bg-white/10 hover:bg-white/20 border border-white/25 text-white flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95"
+              >
+                <span className="text-rose-400">▶</span>
+                <span>Watch Trailer</span>
               </button>
 
               <Link
@@ -331,6 +611,37 @@ export default function TitleDetailPage() {
                               </span>
                             </div>
                           </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Similar Titles */}
+                {media.similar && media.similar.length > 0 && (
+                  <div className="pt-4">
+                    <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-3">
+                      More Like This
+                    </h4>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+                      {media.similar.map((s) => (
+                        <Link
+                          key={s.id}
+                          href={`/title/${s.id}`}
+                          className="shrink-0 group no-underline"
+                        >
+                          <div className="w-28 aspect-[2/3] rounded-xl overflow-hidden bg-zinc-900 border border-white/[0.08] group-hover:border-white/30 transition-all relative">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={s.posterUrl} alt={s.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            {s.rating && (
+                              <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-black/70 text-amber-300 border border-white/10">
+                                ★ {s.rating}
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1.5 text-[11px] text-zinc-400 font-medium line-clamp-2 group-hover:text-white transition-colors max-w-[7rem]">
+                            {s.title}
+                          </p>
                         </Link>
                       ))}
                     </div>
@@ -446,22 +757,50 @@ export default function TitleDetailPage() {
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <span>🎬</span> {media.title} — Official Trailer
               </h3>
-              <button
-                onClick={() => setShowTrailer(false)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-sm cursor-pointer"
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-2">
+                {media.trailerYoutubeId && !media.trailerYoutubeId.startsWith('SEARCH:') && (
+                  <a
+                    href={`https://www.youtube.com/watch?v=${media.trailerYoutubeId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-rose-400 hover:text-rose-300 font-medium px-2 py-1 rounded bg-white/[0.05] border border-white/10 no-underline hidden sm:inline-block"
+                  >
+                    Open on YouTube ↗
+                  </a>
+                )}
+                <button
+                  onClick={() => setShowTrailer(false)}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-sm cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             <div className="relative aspect-video w-full bg-black">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${media.trailerYoutubeId}?autoplay=1&rel=0`}
-                title={`${media.title} Trailer`}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              {(() => {
+                const trailerId = media.trailerYoutubeId;
+                const isSearch = trailerId?.startsWith('SEARCH:');
+                const searchQuery = isSearch
+                  ? trailerId?.replace('SEARCH:', '')
+                  : encodeURIComponent(`${media.title} ${media.releaseYear || ''} official trailer`);
+
+                // If we have a direct video key (11 characters like dfeUzm6KF4g or zz4rsZLcauY)
+                const isDirectKey = trailerId && !isSearch && trailerId !== 'dQw4w9WgXcQ';
+                const embedSrc = isDirectKey
+                  ? `https://www.youtube-nocookie.com/embed/${trailerId}?autoplay=1&rel=0&modestbranding=1`
+                  : `https://www.youtube-nocookie.com/embed?listType=search&list=${searchQuery}&autoplay=1&rel=0&modestbranding=1`;
+
+                return (
+                  <iframe
+                    src={embedSrc}
+                    title={`${media.title} Trailer`}
+                    className="w-full h-full border-0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                );
+              })()}
             </div>
           </div>
         </div>

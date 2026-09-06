@@ -13,6 +13,8 @@ export interface CastMember {
   name: string;
   role: string;
   avatar?: string;
+  tmdbId?: number;
+  character?: string;
 }
 
 export interface MediaArticleRef {
@@ -40,16 +42,32 @@ export interface MediaTitle {
   posterUrl: string;
   backdropUrl: string;
   trailerYoutubeId?: string;
-  rating?: number; // e.g. 8.9 / 10
+  rating?: number;
+  voteCount?: number;
+  popularity?: number;
   directorOrDev?: string;
+  writers?: string[];
+  originalTitle?: string;
+  homepage?: string;
   studio?: string;
+  productionCompanies?: string[];
   country?: string;
+  productionCountries?: string[];
   language?: string;
-  durationOrPlatforms?: string; // e.g. "2h 24m" or "PC, PS5, Xbox Series X"
+  spokenLanguages?: string[];
+  durationOrPlatforms?: string;
+  runtimeMinutes?: number;
+  tagline?: string;
+  budget?: number;
+  revenue?: number;
+  imdbId?: string;
+  keywords?: string[];
   overview: string;
   interestedCount: number;
   collectionCount?: number;
   cast?: CastMember[];
+  crew?: CastMember[];
+  similar?: { id: string; title: string; posterUrl: string; rating?: number; type: MediaType }[];
   relatedArticles?: MediaArticleRef[];
   tags?: string[];
 }

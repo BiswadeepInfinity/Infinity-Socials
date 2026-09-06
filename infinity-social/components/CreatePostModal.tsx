@@ -46,12 +46,15 @@ export default function CreatePostModal({
       return;
     }
 
-    const authorName = profile?.display_name || user?.email?.split('@')[0] || 'Community Critic';
+    const authorName = profile?.display_name || user?.email?.split('@')[0] || 'Club Member';
     const authorUsername = profile?.username || 'user_' + Math.floor(Math.random() * 1000);
     const authorAvatar = profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorUsername}`;
 
+    const targetClub = channels.find(c => c.id === selectedChannelId);
+    const userMember = targetClub?.members.find(m => m.user_id === user?.id);
+
     createPost({
-      channel_id: selectedChannelId,
+      club_id: selectedChannelId,
       title: title.trim(),
       content: content.trim(),
       flair: flair.trim(),
@@ -66,9 +69,12 @@ export default function CreatePostModal({
       author_name: authorName,
       author_username: authorUsername,
       author_avatar: authorAvatar,
+      author_rank: userMember?.rank || 'member',
+      author_custom_roles: userMember?.custom_roles || [],
+      author_club_tag: targetClub?.tag || 'CLUB',
     });
 
-    toast.success('Discussion posted successfully!');
+    toast.success('Discussion topic posted to club!');
     setTitle('');
     setContent('');
     setMediaUrl('');
@@ -80,16 +86,19 @@ export default function CreatePostModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-2xl bg-[#0d0d14] border border-white/15 rounded-3xl p-6 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-2xl bg-[#0a0a10] border border-white/[0.14] rounded-3xl p-6 sm:p-7 shadow-[0_30px_90px_rgba(0,0,0,0.85)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        {/* Specular Line */}
+        <div className="absolute top-0 left-10 right-10 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
+
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-lg font-bold text-white">Create a Post</h2>
+            <h2 className="text-lg font-bold text-white font-display">Create a Discussion</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -111,9 +120,9 @@ export default function CreatePostModal({
         )}
 
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
-          {/* Channel selector */}
+          {/* Club selector */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-zinc-400">Select Community</label>
+            <label className="text-xs font-semibold text-zinc-400">Select Target Club</label>
             <select
               value={selectedChannelId}
               onChange={(e) => setSelectedChannelId(e.target.value)}
@@ -121,7 +130,7 @@ export default function CreatePostModal({
             >
               {channels.map((c) => (
                 <option key={c.id} value={c.id} className="bg-[#0e0e16] text-white">
-                  r/{c.slug} — {c.name}
+                  [{c.tag}] {c.name}
                 </option>
               ))}
             </select>

@@ -5,14 +5,15 @@ import { ChannelComment } from '@/types/database';
 import { useChannelsStore } from '@/lib/channels-store';
 import ChannelBadge from '@/components/ChannelBadge';
 import { 
+  Flame,
   ChevronUp, 
   ChevronDown, 
   MessageSquare, 
   Share2, 
   Sparkles, 
-  ChevronRight,
-  Pin,
-  Send
+  ChevronRight, 
+  Pin, 
+  Send 
 } from 'lucide-react';
 import { useAuth } from '@/components/AuthProvider';
 import toast from 'react-hot-toast';
@@ -32,7 +33,6 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState('');
 
-  const score = comment.upvotes - comment.downvotes;
   const hasReplies = comment.replies && comment.replies.length > 0;
 
   const handleVote = (type: 'up' | 'down') => {
@@ -125,40 +125,28 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
 
         {/* Content Body */}
         <div className="flex-1 min-w-0">
-          {/* Header row */}
+          {/* Header row with @username, Rank, & Discord Roles */}
           <div className="flex flex-wrap items-center gap-1.5 text-xs mb-1">
-            <span
-              className={`font-bold ${
-                comment.is_op
-                  ? 'text-blue-400'
-                  : comment.is_mod
-                  ? 'text-emerald-400'
-                  : 'text-zinc-200'
-              }`}
-            >
-              u/{comment.author_username}
+            <span className="font-bold text-zinc-200">
+              @{comment.author_username}
             </span>
 
-            {/* OP Badge */}
-            {comment.is_op && <ChannelBadge type="original_poster" size="sm" />}
+            {/* Custom Roles & Rank */}
+            <ClubBadge
+              rank={comment.author_rank}
+              customRoles={comment.author_custom_roles || []}
+              size="xs"
+            />
 
-            {/* MOD Badge */}
-            {comment.is_mod && <ChannelBadge type="moderator" size="sm" />}
-
-            {/* Custom Badges (Top 1% Commenter, etc.) */}
-            {comment.author_badges?.map((badge) => (
-              <ChannelBadge key={badge} type={badge} size="sm" />
-            ))}
-
-            <span>•</span>
-            <span className="text-zinc-500 text-[11px]">{comment.created_at}</span>
+            <span className="text-zinc-600">•</span>
+            <span className="text-zinc-500 text-[11px] font-mono">{comment.created_at}</span>
 
             {comment.is_pinned && (
               <span className="flex items-center gap-0.5 text-emerald-400 text-[11px] font-medium ml-1">
-                <Pin className="w-3 h-3" /> Stickied comment
+                <Pin className="w-3 h-3" /> Pinned
               </span>
             )}
-
+            
             {collapsed && (
               <button
                 onClick={() => setCollapsed(false)}
@@ -178,51 +166,24 @@ export default function CommentItem({ comment, postId, depth = 0, onVote, onRepl
 
               {/* Action Buttons Bar */}
               <div className="flex items-center gap-3 text-xs text-zinc-400 mt-2">
-                {/* Reputation counter (Infinity style) */}
-                <div className="flex items-center bg-white/[0.03] rounded-lg px-1 py-0.5 border border-white/[0.06]" title="Comment Reputation">
-                  <button
-                    onClick={() => handleVote('up')}
-                    className={`p-0.5 rounded transition-all active:scale-90 cursor-pointer ${
-                      comment.user_vote === 'up'
-                        ? 'text-cyan-300 bg-cyan-500/20 border border-cyan-500/30'
-                        : 'text-zinc-500 hover:text-cyan-400'
-                    }`}
-                    title="+Reputation (+Rep)"
-                    aria-label="+Reputation"
-                  >
-                    <ChevronUp className="w-4 h-4 stroke-[2.5]" />
-                  </button>
-
-                  <span
-                    className={`font-mono text-xs font-bold px-1.5 ${
-                      comment.user_vote === 'up'
-                        ? 'text-cyan-400 font-black'
-                        : comment.user_vote === 'down'
-                        ? 'text-rose-400 font-black'
-                        : 'text-zinc-400'
-                    }`}
-                  >
-                    {score > 0 ? `+${score}` : score}
-                  </span>
-
-                  <button
-                    onClick={() => handleVote('down')}
-                    className={`p-0.5 rounded transition-all active:scale-90 cursor-pointer ${
-                      comment.user_vote === 'down'
-                        ? 'text-rose-300 bg-rose-500/20 border border-rose-500/30'
-                        : 'text-zinc-500 hover:text-rose-400'
-                    }`}
-                    title="-Reputation (-Rep)"
-                    aria-label="-Reputation"
-                  >
-                    <ChevronDown className="w-4 h-4 stroke-[2.5]" />
-                  </button>
-                </div>
+                {/* Guild Boost button */}
+                <button
+                  onClick={() => handleVote('up')}
+                  className={`flex items-center gap-1.5 px-2 py-0.5 rounded-lg border transition-all cursor-pointer ${
+                    comment.user_boosted
+                      ? 'text-rose-300 bg-rose-500/20 border-rose-500/30'
+                      : 'text-zinc-400 hover:text-rose-400 border-white/[0.06] hover:bg-white/5'
+                  }`}
+                  title="Boost Take (+XP)"
+                >
+                  <Flame className={`w-3.5 h-3.5 ${comment.user_boosted ? 'fill-rose-400' : ''}`} />
+                  <span className="font-mono font-bold">{comment.boosts}</span>
+                </button>
 
                 {/* Reply button */}
                 <button
                   onClick={() => setIsReplying(!isReplying)}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-white/5 hover:text-zinc-200 transition-colors font-semibold"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-white/5 hover:text-zinc-200 transition-colors font-semibold cursor-pointer"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   <span>Reply</span>

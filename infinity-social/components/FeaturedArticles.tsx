@@ -3,99 +3,68 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
+import { fetchAllUserReviews, FormattedReviewItem, FALLBACK_EDITORIAL_REVIEWS } from '@/lib/fetchReviews';
+
 type ReviewDomain = 'all' | 'movies' | 'games' | 'tech' | 'anime';
 
-const FEATURED_ARTICLES = [
-  {
-    id: '1',
-    slug: 'elden-ring-shadow-erdtree-review',
-    title: 'Shadow of the Erdtree: The Brutal Pinnacle of FromSoftware',
-    excerpt: 'How Miyazaki redefined difficulty and subterranean vertical exploration in the Land of Shadow.',
-    category: 'REVIEW',
-    domain: 'games',
-    accentColor: '#f43f5e',
-    coverImage: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&q=85',
-    readTime: '8 MIN',
-    author: 'Aryan Shah',
-    score: '98%',
-  },
-  {
-    id: '2',
-    slug: 'demon-slayer-hashira-training',
-    title: 'Demon Slayer: Why Ufotable’s Animation Defies Industry Limits',
-    excerpt: 'Deconstructing the sakuga frame rates and composite lighting powering the Hashira Training climax.',
-    category: 'ANIME',
-    domain: 'anime',
-    accentColor: '#f59e0b',
-    coverImage: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=85',
-    readTime: '6 MIN',
-    author: 'Kenji Tanaka',
-    score: '94%',
-  },
-  {
-    id: '3',
-    slug: 'gta-6-everything-we-know',
-    title: 'GTA VI: The Living Next-Gen Simulation of Leonida',
-    excerpt: 'Inside the patented procedural physics, AI traffic systems, and dual-protagonist narrative engine.',
-    category: 'SPECIAL',
-    domain: 'games',
-    accentColor: '#e4e4e7',
-    coverImage: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&q=85',
-    readTime: '12 MIN',
-    author: 'Sofia Rivera',
-    score: '100%',
-  },
-  {
-    id: '4',
-    slug: 'black-myth-wukong-review',
-    title: 'Black Myth: Wukong & the Global Ascent of Eastern AAA',
-    excerpt: 'How Chinese cultural myth paired with Unreal Engine 5 shattered Steam concurrent player records.',
-    category: 'DEEP DIVE',
-    domain: 'games',
-    accentColor: '#10b981',
-    coverImage: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=1200&q=85',
-    readTime: '10 MIN',
-    author: 'Marcus Chen',
-    score: '90%',
-  },
-  {
-    id: '5',
-    slug: 'one-piece-live-action-season-2',
-    title: 'One Piece Season 2: Rebuilding the Grand Line for Netflix',
-    excerpt: 'Showrunner interview on practical sets, scaling Baroque Works, and bringing Tony Tony Chopper to life.',
-    category: 'EXCLUSIVE',
-    domain: 'movies',
-    accentColor: '#a855f7',
-    coverImage: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&q=85',
-    readTime: '7 MIN',
-    author: 'Sofia Rivera',
-    score: '88%',
-  },
-  {
-    id: '6',
-    slug: 'rtx-5090-blackwell-deep-dive',
-    title: 'Nvidia RTX 5090: Next-Gen Neural Rendering & Architecture',
-    excerpt: 'Deep-dive analysis on Blackwell tensor cores, power efficiency, and real-time path tracing performance.',
-    category: 'TECH',
-    domain: 'tech',
-    accentColor: '#06b6d4',
-    coverImage: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=1200&q=85',
-    readTime: '9 MIN',
-    author: 'Kenji Tanaka',
-    score: '96%',
-  },
-];
+interface DisplayArticleItem {
+  id: string;
+  slug?: string;
+  link: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  domain: ReviewDomain;
+  accentColor: string;
+  coverImage: string;
+  readTime: string;
+  author: string;
+  score: string;
+}
+
+const DOMAIN_ACCENTS: Record<string, string> = {
+  games: '#f43f5e',
+  movies: '#facc15',
+  tech: '#06b6d4',
+  anime: '#10b981',
+};
+
+function formatForDeck(items: FormattedReviewItem[]): DisplayArticleItem[] {
+  return items.map((item) => ({
+    id: item.id,
+    slug: item.slug,
+    link: item.link,
+    title: item.title,
+    excerpt: item.deck,
+    category: `${item.category.toUpperCase()} REVIEW`,
+    domain: item.domain,
+    accentColor: DOMAIN_ACCENTS[item.domain] || '#f43f5e',
+    coverImage: item.imageUrl,
+    readTime: item.readTime,
+    author: item.author.name,
+    score: `${item.score}%`,
+  }));
+}
 
 export default function FeaturedArticlesWindow() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [articles, setArticles] = useState<DisplayArticleItem[]>(() => formatForDeck(FALLBACK_EDITORIAL_REVIEWS));
   const [activeDomain, setActiveDomain] = useState<ReviewDomain>('all');
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  useEffect(() => {
+    fetchAllUserReviews().then((items) => {
+      if (items && items.length > 0) {
+        setArticles(formatForDeck(items));
+      }
+    });
+  }, []);
+
   const displayedArticles = activeDomain === 'all'
-    ? FEATURED_ARTICLES
-    : FEATURED_ARTICLES.filter((a) => a.domain === activeDomain);
+    ? articles
+    : articles.filter((a) => a.domain === activeDomain);
 
   const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -382,7 +351,7 @@ export default function FeaturedArticlesWindow() {
       `}</style>
 
       <section
-        id="featured-articles-window"
+        id="featured-articles"
         className="w-full pt-3 pb-8 sm:py-16 lg:py-24 bg-[#020204] flex flex-col items-center relative overflow-hidden"
       >
         <div className="w-full max-w-[1240px] px-4 sm:px-6 mx-auto">
@@ -474,7 +443,7 @@ export default function FeaturedArticlesWindow() {
                   style={{ zIndex: cardStyle.zIndex }}
                 >
                   <Link
-                    href={`/articles/${article.slug}`}
+                    href={article.link || (article.slug ? `/articles/${article.slug}` : `/reviews/${article.id}`)}
                     className={`cinema-poster-card ${isHovered ? 'is-active-card' : ''}`}
                     style={{
                       width: cardStyle.width,

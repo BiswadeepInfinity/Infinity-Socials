@@ -23,6 +23,8 @@ export default function MediaTitleCard({ media }: MediaTitleCardProps) {
         return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
       case 'Must Play':
         return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+      case 'Coming Soon':
+        return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
       default:
         return 'bg-zinc-800/80 text-zinc-300 border-white/10';
     }

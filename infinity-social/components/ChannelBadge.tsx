@@ -1,115 +1,92 @@
 'use client';
 
 import React from 'react';
-import { ChannelBadgeType } from '@/types/database';
-import { ShieldCheck, Sparkles, Flame, CheckCircle2, User } from 'lucide-react';
+import { ClubHierarchyRank, ClubRole } from '@/types/database';
+import { Crown, Swords, ShieldCheck, User, Sparkles } from 'lucide-react';
 
-interface ChannelBadgeProps {
-  type: ChannelBadgeType;
-  showText?: boolean;
-  className?: string;
-  size?: 'sm' | 'md';
+interface ClubBadgeProps {
+  rank?: ClubHierarchyRank;
+  customRoles?: ClubRole[];
+  clubTag?: string;
+  clanTag?: string; // legacy support
+  size?: 'xs' | 'sm' | 'md';
 }
 
-export default function ChannelBadge({ type, showText = true, className = '', size = 'sm' }: ChannelBadgeProps) {
+export default function ClubBadge({ 
+  rank, 
+  customRoles = [], 
+  clubTag,
+  clanTag, 
+  size = 'sm' 
+}: ClubBadgeProps) {
+  const isXs = size === 'xs';
   const isSm = size === 'sm';
+  const displayTag = clubTag || clanTag;
 
-  switch (type) {
-    case 'top_1_percent_commenter':
-      return (
-        <span
-          title="Top 1% Commenter — Awarded for top insightful comments & community upvotes"
-          className={`inline-flex items-center gap-1 font-semibold rounded-full select-none cursor-default transition-all duration-200 ${
-            isSm ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs'
-          } ${className}`}
-          style={{
-            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.18) 0%, rgba(20, 184, 166, 0.25) 100%)',
-            border: '1px solid rgba(45, 212, 191, 0.45)',
-            color: '#5eead4',
-            boxShadow: '0 0 10px rgba(20, 184, 166, 0.2)',
-          }}
+  return (
+    <div className="inline-flex items-center gap-1.5 flex-wrap">
+      {/* Club Tag Pill with Specular Liquid Highlight */}
+      {displayTag && (
+        <span 
+          className={`font-mono font-bold tracking-wider uppercase rounded-md bg-white/[0.06] border border-white/[0.14] text-zinc-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] backdrop-blur-md ${
+            isXs ? 'px-1 py-0.2 text-[9px]' : isSm ? 'px-1.5 py-0.5 text-[10px]' : 'px-2 py-0.5 text-xs'
+          }`}
+          title={`Club Tag: [${displayTag}]`}
         >
-          {/* Planet / Sparkle Badge Icon */}
-          <span className="text-[12px] leading-none">🪐</span>
-          {showText && <span className="tracking-tight font-medium">Top 1% Commenter</span>}
+          [{displayTag}]
         </span>
-      );
+      )}
 
-    case 'moderator':
-      return (
+      {/* Official Hierarchy Rank */}
+      {rank === 'president' && (
         <span
-          title="Channel Moderator"
-          className={`inline-flex items-center gap-1 font-bold rounded-full select-none cursor-default ${
-            isSm ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-0.5 text-xs'
-          } ${className}`}
-          style={{
-            backgroundColor: 'rgba(34, 197, 94, 0.15)',
-            border: '1px solid rgba(34, 197, 94, 0.4)',
-            color: '#4ade80',
-            boxShadow: '0 0 8px rgba(34, 197, 94, 0.2)',
-          }}
+          title="Club President"
+          className={`inline-flex items-center gap-1 font-semibold rounded-md select-none cursor-default bg-amber-500/10 text-amber-300/90 border border-amber-500/20 ${
+            isXs ? 'px-1.5 py-0.2 text-[9px]' : isSm ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-0.5 text-xs'
+          }`}
         >
-          <ShieldCheck className={`${isSm ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-green-400`} />
-          {showText && <span className="tracking-wider uppercase font-bold text-[9px]">MOD</span>}
+          <Crown className={`${isXs ? 'w-2.5 h-2.5' : isSm ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-amber-400`} />
+          <span className="tracking-wider uppercase text-[9px] font-bold">President</span>
         </span>
-      );
+      )}
 
-    case 'original_poster':
-      return (
+      {rank === 'vice_president' && (
         <span
-          title="Original Poster"
-          className={`inline-flex items-center gap-1 font-bold rounded-full select-none cursor-default ${
-            isSm ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-0.5 text-xs'
-          } ${className}`}
-          style={{
-            backgroundColor: 'rgba(59, 130, 246, 0.18)',
-            border: '1px solid rgba(96, 165, 250, 0.4)',
-            color: '#93c5fd',
-          }}
+          title="Club Vice President"
+          className={`inline-flex items-center gap-1 font-semibold rounded-md select-none cursor-default bg-cyan-500/10 text-cyan-300/90 border border-cyan-500/20 ${
+            isXs ? 'px-1.5 py-0.2 text-[9px]' : isSm ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-0.5 text-xs'
+          }`}
         >
-          <User className={`${isSm ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-blue-400`} />
-          {showText && <span className="tracking-wider uppercase font-bold text-[9px]">OP</span>}
+          <Swords className={`${isXs ? 'w-2.5 h-2.5' : isSm ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-cyan-400`} />
+          <span className="tracking-wider uppercase text-[9px] font-bold">Vice Pres</span>
         </span>
-      );
+      )}
 
-    case 'top_5_percent_poster':
-      return (
+      {rank === 'executive' && (
         <span
-          title="Top 5% Poster — High engagement creator in this channel"
-          className={`inline-flex items-center gap-1 font-medium rounded-full select-none cursor-default ${
-            isSm ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs'
-          } ${className}`}
-          style={{
-            background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.18) 0%, rgba(245, 158, 11, 0.25) 100%)',
-            border: '1px solid rgba(251, 146, 60, 0.45)',
-            color: '#fdba74',
-            boxShadow: '0 0 8px rgba(249, 115, 22, 0.15)',
-          }}
+          title="Club Executive Member"
+          className={`inline-flex items-center gap-1 font-semibold rounded-md select-none cursor-default bg-emerald-500/10 text-emerald-300/90 border border-emerald-500/20 ${
+            isXs ? 'px-1.5 py-0.2 text-[9px]' : isSm ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-0.5 text-xs'
+          }`}
         >
-          <Flame className={`${isSm ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-amber-400`} />
-          {showText && <span className="tracking-tight">Top 5% Poster</span>}
+          <ShieldCheck className={`${isXs ? 'w-2.5 h-2.5' : isSm ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-emerald-400`} />
+          <span className="tracking-wider uppercase text-[9px] font-bold">Executive</span>
         </span>
-      );
+      )}
 
-    case 'verified_critic':
-      return (
+      {/* Custom Discord-Style Roles Displayed Right of Username */}
+      {customRoles && customRoles.map((role) => (
         <span
-          title="Verified Media Critic"
-          className={`inline-flex items-center gap-1 font-medium rounded-full select-none cursor-default ${
-            isSm ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs'
-          } ${className}`}
-          style={{
-            backgroundColor: 'rgba(168, 85, 247, 0.15)',
-            border: '1px solid rgba(192, 132, 252, 0.4)',
-            color: '#d8b4fe',
-          }}
+          key={role.id || role.name}
+          title={`Role: ${role.name}`}
+          className={`inline-flex items-center gap-1 font-medium rounded-md select-none cursor-default bg-white/[0.04] text-zinc-300 border border-white/[0.08] ${
+            isXs ? 'px-1.5 py-0.2 text-[9px]' : isSm ? 'px-2 py-0.5 text-[10px]' : 'px-2 py-0.5 text-xs'
+          }`}
         >
-          <Sparkles className={`${isSm ? 'w-3 h-3' : 'w-3.5 h-3.5'} text-purple-400`} />
-          {showText && <span className="tracking-tight">Critic</span>}
+          {role.icon && <span className="text-[10px] leading-none opacity-80">{role.icon}</span>}
+          <span className="tracking-tight">{role.name}</span>
         </span>
-      );
-
-    default:
-      return null;
-  }
+      ))}
+    </div>
+  );
 }

@@ -838,47 +838,53 @@ export default function ArticlePageClient({ slug, reviewId }: ArticlePageClientP
                 {/* Module 2: Winning Audience Consensus View (Full Width Landscape) */}
                 {(() => {
                   const winner = getWinningAudienceOption();
+                  const isAwaiting = totalAudienceVotes === 0;
+
                   return (
-                    <div className="flex flex-col md:flex-row md:items-center justify-between bg-[#050509] border border-white/[0.08] p-6 sm:p-7 rounded-[28px] shadow-inner gap-6">
+                    <div className="bg-[#050509]/90 border border-white/[0.08] p-5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-5 lg:gap-8">
                       
-                      {/* Left: Big Winning Verdict Hero Display */}
-                      <div className="space-y-3 flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                          <span className="font-mono text-xs font-bold uppercase tracking-wider text-cyan-300">
-                            COMMUNITY CONSENSUS VERDICT
-                          </span>
-                          <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider ${winner.bg} ${winner.color} ${winner.border} border ml-auto sm:ml-2`}>
-                            {winner.tag}
-                          </span>
+                      {/* Left: Winning Verdict / Status Badge & Description */}
+                      <div className="flex-1 min-w-0 flex items-center gap-4">
+                        <div className={`w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shrink-0 border ${
+                          isAwaiting 
+                            ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400' 
+                            : `${winner.bg} ${winner.border}`
+                        }`}>
+                          {winner.icon}
                         </div>
 
-                        <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center gap-4">
-                          <span className="text-3xl sm:text-4xl shrink-0 p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
-                            {winner.icon}
-                          </span>
-                          <div className="min-w-0 flex-1 overflow-hidden">
-                            <div className={`font-display font-black text-base sm:text-xl lg:text-2xl ${winner.color} tracking-tight leading-snug break-words`}>
-                              {winner.label}
-                            </div>
-                            <p className="text-xs sm:text-sm text-white/60 font-light leading-relaxed mt-1">
-                              {winner.desc}
-                            </p>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-xs font-bold uppercase tracking-widest text-cyan-400">
+                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                              Community Consensus
+                            </span>
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider border ${winner.bg} ${winner.color} ${winner.border}`}>
+                              {winner.tag}
+                            </span>
                           </div>
+
+                          <div className={`font-display font-bold text-sm sm:text-base lg:text-lg ${winner.color} tracking-tight leading-snug truncate`}>
+                            {winner.label}
+                          </div>
+
+                          <p className="text-xs text-white/50 font-light leading-relaxed mt-0.5 line-clamp-1 sm:line-clamp-2">
+                            {winner.desc}
+                          </p>
                         </div>
                       </div>
 
-                      {/* Right: Vote Stats & Legend Distribution */}
-                      <div className="w-full md:w-80 shrink-0 space-y-3 pt-4 md:pt-0 md:pl-6 border-t md:border-t-0 md:border-l border-white/[0.06] flex flex-col justify-center">
+                      {/* Right: Consolidated Vote Percentage & Distribution Bar */}
+                      <div className="w-full lg:w-72 shrink-0 flex flex-col justify-center pt-3 lg:pt-0 border-t lg:border-t-0 lg:border-l border-white/[0.06] lg:pl-6 space-y-2.5">
                         <div className="flex items-center justify-between text-xs font-mono">
-                          <span className="text-white/40">Total Consensus</span>
-                          <span className="text-white font-bold">
-                            {totalAudienceVotes > 0 ? `${winner.percentage}% Majority` : '0 Votes'}
+                          <span className="text-white/40 text-[11px]">Consensus Tally</span>
+                          <span className="text-white font-bold text-xs">
+                            {totalAudienceVotes > 0 ? `${winner.percentage}% Majority` : '0 Votes Cast'}
                           </span>
                         </div>
                         
                         {/* Progress Bar */}
-                        <div className="w-full h-2.5 rounded-full bg-white/[0.06] overflow-hidden flex p-0.5">
+                        <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden flex p-0.5">
                           {totalAudienceVotes > 0 ? (
                             <>
                               <div className="h-full bg-emerald-400 rounded-l-full transition-all duration-500" style={{ width: `${(audienceVotes.must_buy / totalAudienceVotes) * 100}%` }} />
@@ -891,31 +897,31 @@ export default function ArticlePageClient({ slug, reviewId }: ArticlePageClientP
                           )}
                         </div>
 
-                        {/* Mini Legend */}
-                        <div className="grid grid-cols-4 gap-1.5 text-[10px] font-mono text-center text-white/50 pt-1">
-                          <div className="bg-white/[0.03] py-1.5 rounded-xl border border-white/[0.05]">
-                            <span className="text-emerald-400 font-bold block sm:inline">
+                        {/* Mini Legend Pills */}
+                        <div className="grid grid-cols-4 gap-1.5 text-[10px] font-mono text-center text-white/50">
+                          <div className="bg-white/[0.02] py-1 px-1 rounded-lg border border-white/[0.04] flex items-center justify-center gap-1">
+                            <span className="text-emerald-400 font-bold">
                               {totalAudienceVotes > 0 ? `${Math.round((audienceVotes.must_buy / totalAudienceVotes) * 100)}%` : '0%'}
-                            </span>{' '}
-                            <span>Buy</span>
+                            </span>
+                            <span className="text-[9px] text-white/40">Buy</span>
                           </div>
-                          <div className="bg-white/[0.03] py-1.5 rounded-xl border border-white/[0.05]">
-                            <span className="text-amber-400 font-bold block sm:inline">
+                          <div className="bg-white/[0.02] py-1 px-1 rounded-lg border border-white/[0.04] flex items-center justify-center gap-1">
+                            <span className="text-amber-400 font-bold">
                               {totalAudienceVotes > 0 ? `${Math.round((audienceVotes.wait_sale / totalAudienceVotes) * 100)}%` : '0%'}
-                            </span>{' '}
-                            <span>Sale</span>
+                            </span>
+                            <span className="text-[9px] text-white/40">Sale</span>
                           </div>
-                          <div className="bg-white/[0.03] py-1.5 rounded-xl border border-white/[0.05]">
-                            <span className="text-cyan-400 font-bold block sm:inline">
+                          <div className="bg-white/[0.02] py-1 px-1 rounded-lg border border-white/[0.04] flex items-center justify-center gap-1">
+                            <span className="text-cyan-400 font-bold">
                               {totalAudienceVotes > 0 ? `${Math.round((audienceVotes.wait / totalAudienceVotes) * 100)}%` : '0%'}
-                            </span>{' '}
-                            <span>Wait</span>
+                            </span>
+                            <span className="text-[9px] text-white/40">Wait</span>
                           </div>
-                          <div className="bg-white/[0.03] py-1.5 rounded-xl border border-white/[0.05]">
-                            <span className="text-rose-400 font-bold block sm:inline">
+                          <div className="bg-white/[0.02] py-1 px-1 rounded-lg border border-white/[0.04] flex items-center justify-center gap-1">
+                            <span className="text-rose-400 font-bold">
                               {totalAudienceVotes > 0 ? `${Math.round((audienceVotes.skip / totalAudienceVotes) * 100)}%` : '0%'}
-                            </span>{' '}
-                            <span>Skip</span>
+                            </span>
+                            <span className="text-[9px] text-white/40">Skip</span>
                           </div>
                         </div>
                       </div>
