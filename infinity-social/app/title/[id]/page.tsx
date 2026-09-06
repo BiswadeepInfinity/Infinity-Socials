@@ -588,26 +588,33 @@ export default function TitleDetailPage() {
 
             {/* Tab: Overview */}
             {activeTab === 'overview' && (
-              <div className="space-y-7 pt-4">
+              <div className="space-y-10 pt-4">
+                {/* Synopsis Section */}
                 <div>
-                  <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2">
-                    Synopsis & Background
-                  </h3>
-                  <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-normal">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+                      Synopsis & Storyline
+                    </h3>
+                  </div>
+                  <p className="text-sm sm:text-base text-zinc-200/90 leading-relaxed font-normal bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5 sm:p-6 shadow-inner">
                     {media.overview}
                   </p>
                 </div>
 
                 {/* Sub-divided Related Articles Preview Inside Overview */}
                 {media.relatedArticles && media.relatedArticles.length > 0 && (
-                  <div className="pt-2 border-t border-white/[0.06]">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-                        Featured Coverage & Editorials
-                      </h4>
+                  <div className="pt-2">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                        <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+                          Featured Coverage & Editorials
+                        </h4>
+                      </div>
                       <button
                         onClick={() => setActiveTab('articles')}
-                        className="text-xs text-rose-400 hover:underline cursor-pointer"
+                        className="text-xs font-medium text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
                       >
                         View All ({media.relatedArticles.length}) →
                       </button>
@@ -618,23 +625,23 @@ export default function TitleDetailPage() {
                         <Link
                           key={art.id}
                           href={`/reviews?article=${art.slug}`}
-                          className="group block p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-white/20 transition-all no-underline"
+                          className="group block p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-white/25 hover:bg-white/[0.05] transition-all no-underline shadow-lg"
                         >
-                          <div className="flex items-start gap-3">
+                          <div className="flex items-start gap-3.5">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={art.thumbnail}
                               alt={art.title}
-                              className="w-16 h-16 rounded-lg object-cover shrink-0 border border-white/10"
+                              className="w-18 h-18 rounded-xl object-cover shrink-0 border border-white/10 group-hover:scale-105 transition-transform"
                             />
                             <div className="min-w-0 flex-1">
                               <span className="text-[10px] font-mono font-bold uppercase text-rose-400">
                                 {art.category} • {art.readTime}
                               </span>
-                              <h5 className="text-xs sm:text-sm font-bold text-white tracking-tight line-clamp-2 mt-0.5 group-hover:text-rose-300 transition-colors">
+                              <h5 className="text-xs sm:text-sm font-bold text-white tracking-tight line-clamp-2 mt-1 group-hover:text-rose-300 transition-colors">
                                 {art.title}
                               </h5>
-                              <span className="text-[10px] text-zinc-500 block mt-1">
+                              <span className="text-[11px] text-zinc-400 block mt-1.5">
                                 By {art.author} • {art.publishedAt}
                               </span>
                             </div>
@@ -645,31 +652,53 @@ export default function TitleDetailPage() {
                   </div>
                 )}
 
-                {/* Similar Titles */}
+                {/* Similar Titles Carousel */}
                 {media.similar && media.similar.length > 0 && (
-                  <div className="pt-4">
-                    <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-3">
-                      More Like This
-                    </h4>
-                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
-                      {media.similar.map((s) => (
+                  <div className="pt-2">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                        <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+                          More Like This
+                        </h4>
+                      </div>
+                      <span className="text-xs text-zinc-500 font-mono">
+                        {media.similar.length} recommendations
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
+                      {media.similar.slice(0, 6).map((s) => (
                         <Link
                           key={s.id}
                           href={`/title/${s.id}`}
-                          className="shrink-0 group no-underline"
+                          className="group flex flex-col no-underline"
                         >
-                          <div className="w-28 aspect-[2/3] rounded-xl overflow-hidden bg-zinc-900 border border-white/[0.08] group-hover:border-white/30 transition-all relative">
+                          <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-zinc-900/80 border border-white/[0.08] group-hover:border-rose-500/50 group-hover:shadow-[0_8px_25px_rgba(244,63,94,0.25)] transition-all duration-300">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={s.posterUrl} alt={s.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            <img
+                              src={s.posterUrl}
+                              alt={s.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                            />
+                            {/* Subtle dark gradient overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                             {s.rating && (
-                              <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-black/70 text-amber-300 border border-white/10">
-                                ★ {s.rating}
-                              </span>
+                              <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-black/75 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-md">
+                                <span>★</span>
+                                <span>{s.rating}</span>
+                              </div>
                             )}
                           </div>
-                          <p className="mt-1.5 text-[11px] text-zinc-400 font-medium line-clamp-2 group-hover:text-white transition-colors max-w-[7rem]">
-                            {s.title}
-                          </p>
+                          <div className="mt-2.5 px-0.5">
+                            <h5 className="text-xs sm:text-sm font-semibold text-zinc-200 line-clamp-1 group-hover:text-white group-hover:translate-x-0.5 transition-all">
+                              {s.title}
+                            </h5>
+                            <p className="text-[11px] text-zinc-500 font-mono mt-0.5">
+                              {s.releaseYear || 'Related'}
+                            </p>
+                          </div>
                         </Link>
                       ))}
                     </div>
