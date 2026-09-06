@@ -12,10 +12,6 @@ export default function Navbar() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [islandExpanded, setIslandExpanded] = useState(false);
-  const contractTimerRef = useRef<NodeJS.Timeout | null>(null);
-
   const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (searchQuery.trim()) {
@@ -25,32 +21,9 @@ export default function Navbar() {
     }
   };
 
-  const handleIslandClick = () => {
-    setIslandExpanded(prev => !prev);
-    // Auto-contract after 4 seconds of inactivity if expanded via click
-    if (contractTimerRef.current) clearTimeout(contractTimerRef.current);
-    contractTimerRef.current = setTimeout(() => {
-      setIslandExpanded(false);
-    }, 4000);
-  };
-
-  const handleIslandMouseEnter = () => {
-    if (contractTimerRef.current) clearTimeout(contractTimerRef.current);
-    setIslandExpanded(true);
-  };
-
-  const handleIslandMouseLeave = () => {
-    if (contractTimerRef.current) clearTimeout(contractTimerRef.current);
-    contractTimerRef.current = setTimeout(() => {
-      setIslandExpanded(false);
-    }, 400);
-  };
-
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setIsScrolled(currentScrollY > 60);
-
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
       if (totalScroll > 0) {
         const currentProgress = (currentScrollY / totalScroll) * 100;
@@ -63,196 +36,86 @@ export default function Navbar() {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (contractTimerRef.current) clearTimeout(contractTimerRef.current);
     };
   }, []);
 
   return (
-    <>
-      {/* 1. When Scrolled: Authentic Apple Dynamic Island Floating Dock at Top Center */}
-      {isScrolled && (
-        <div
-          className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-auto"
-          onMouseLeave={handleIslandMouseLeave}
-        >
-          <div
-            onClick={!islandExpanded ? handleIslandClick : undefined}
-            onMouseEnter={handleIslandMouseEnter}
-            className={`flex items-center transition-all duration-300 ease-out select-none cursor-pointer rounded-full bg-black/90 backdrop-blur-2xl border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.85),0_0_1px_1px_rgba(255,255,255,0.1),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:border-white/30 ${
-              !islandExpanded
-                ? 'h-9 px-3 gap-2.5 hover:scale-105 active:scale-95'
-                : 'h-11 px-4 gap-3 max-w-[95vw] overflow-x-auto no-scrollbar shadow-[0_16px_50px_rgba(0,0,0,0.95),0_0_20px_rgba(255,255,255,0.1)]'
-            }`}
-          >
-            {/* Left: Punchhole camera / Brand glyph */}
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="w-5 h-5 rounded-full bg-zinc-900 border border-white/20 flex items-center justify-center p-0.5 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
-              </div>
-
-              {!islandExpanded && (
-                <span className="font-mono text-[11px] font-bold text-white/90 tracking-wide flex items-center gap-1.5">
-                  Menu
-                  <span className="text-[9px] text-white/40">▾</span>
-                </span>
-              )}
-            </div>
-
-            {/* Contracted right-side dynamic activity dot */}
-            {!islandExpanded && (
-              <div className="flex items-center gap-1 pl-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.9)] animate-pulse" />
-              </div>
-            )}
-
-            {/* Expanded Content: Full Nav Links, Search & Auth inside Island */}
-            {islandExpanded && (
-              <>
-                <nav className="flex items-center gap-1 text-xs font-semibold shrink-0">
-                  <Link href="/" className="text-white hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors">
-                    Feed
-                  </Link>
-                  <Link href="/browse" className="text-white/80 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors flex items-center gap-1.5">
-                    <span>Explore</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.8)]" />
-                  </Link>
-                  <Link href="/#featured-articles" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors hidden sm:inline-block">
-                    News
-                  </Link>
-                  <Link href="/reviews" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors">
-                    Reviews
-                  </Link>
-                  <Link href="/browse?type=anime" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors hidden md:inline-block">
-                    Anime
-                  </Link>
-                  <Link href="/browse?type=game" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors hidden md:inline-block">
-                    Gaming
-                  </Link>
-                  <Link href="/clubs" className="text-white/70 hover:text-white px-2.5 py-1 rounded-full hover:bg-white/10 no-underline transition-colors hidden lg:inline-flex items-center gap-1.5">
-                    <span>Clubs</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.8)]" />
-                  </Link>
-                </nav>
-
-                <div className="w-[1px] h-4 bg-white/15 shrink-0" />
-
-                <div className="flex items-center gap-2 shrink-0">
-                  <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onFocus={() => setSearchFocused(true)}
-                      onBlur={() => setSearchFocused(false)}
-                      className={`h-7 rounded-full bg-white/[0.08] border border-white/15 text-xs text-white placeholder-white/40 pl-7 pr-2.5 outline-none transition-all duration-200 ${
-                        searchFocused ? 'w-36 border-white/40 bg-white/[0.14]' : 'w-20'
-                      }`}
-                    />
-                    <span className="absolute left-2 text-[10px] text-white/40 pointer-events-none">🔍</span>
-                  </form>
-
-                  <NavbarAuthSection />
-
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIslandExpanded(false);
-                    }}
-                    className="w-5 h-5 rounded-full bg-white/[0.08] hover:bg-white/20 flex items-center justify-center text-white/50 hover:text-white text-[10px] cursor-pointer transition-colors"
-                    title="Close"
-                    aria-label="Close"
-                  >
-                    ✕
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+    <header
+      className="sticky top-0 z-50 w-full border-b border-white/[0.08] backdrop-blur-xl transition-colors duration-200"
+      style={{ backgroundColor: 'rgba(5, 5, 8, 0.92)' }}
+    >
+      {/* Polished High-Precision Infinity Reading Numberline Bar */}
+      <div className="w-full bg-[#030306] border-b border-white/[0.06] px-3 sm:px-5 py-1 flex items-center justify-between gap-2 sm:gap-3.5 select-none">
+        {/* Left: -∞ Continuum Start */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="font-mono text-xs sm:text-[13px] font-black text-rose-500 tracking-tight drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
+            -∞
+          </span>
+          <span className="font-mono text-[8px] font-bold text-white/40 tracking-wider hidden sm:inline">
+            START
+          </span>
         </div>
-      )}
 
-      {/* 2. Top-of-Page Standard Navigation Header (Only displayed when scroll is at top) */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-40 w-full border-b border-white/[0.08] transition-all duration-300 ${
-          isScrolled ? 'opacity-0 pointer-events-none -translate-y-full' : 'opacity-100 pointer-events-auto translate-y-0'
-        }`}
-        style={{ backgroundColor: '#050508' }}
-      >
-        {/* Polished High-Precision Infinity Reading Numberline Bar */}
-        <div className="w-full bg-[#030306] border-b border-white/[0.06] px-3 sm:px-5 py-1 flex items-center justify-between gap-2 sm:gap-3.5 select-none">
-          {/* Left: -∞ Continuum Start */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="font-mono text-xs sm:text-[13px] font-black text-rose-500 tracking-tight drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">
-              -∞
-            </span>
-            <span className="font-mono text-[8px] font-bold text-white/40 tracking-wider hidden sm:inline">
-              START
-            </span>
+        {/* Center Continuum Track */}
+        <div className="relative flex-1 h-1 bg-white/[0.07] rounded-full overflow-visible">
+          {/* Neutral 0 Axis Line */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+            <div className="w-0.5 h-2.5 bg-white/70 rounded-sm shadow-[0_0_6px_rgba(255,255,255,0.5)]" />
           </div>
 
-          {/* Center Continuum Track */}
-          <div className="relative flex-1 h-1 bg-white/[0.07] rounded-full overflow-visible">
-            {/* Neutral 0 Axis Line */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-              <div className="w-0.5 h-2.5 bg-white/70 rounded-sm shadow-[0_0_6px_rgba(255,255,255,0.5)]" />
-            </div>
+          {/* Dynamic Progress Bar */}
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-rose-500 via-amber-500 via-emerald-500 to-purple-500 shadow-[0_0_10px_rgba(160,80,255,0.6)] transition-all duration-75"
+            style={{ width: `${scrollProgress}%` }}
+          />
+        </div>
 
-            {/* Dynamic Progress Bar */}
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-rose-500 via-amber-500 via-emerald-500 to-purple-500 shadow-[0_0_10px_rgba(160,80,255,0.6)] transition-all duration-75"
-              style={{ width: `${scrollProgress}%` }}
+        {/* Right: +∞ Continuum End */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="font-mono text-[8px] font-bold text-white/40 tracking-wider hidden sm:inline">
+            END
+          </span>
+          <span className={`font-mono text-xs sm:text-[13px] font-black tracking-tight transition-all duration-300 ${
+            scrollProgress >= 95 ? 'text-purple-300 drop-shadow-[0_0_10px_rgba(168,85,247,0.9)]' : 'text-purple-500 drop-shadow-[0_0_6px_rgba(168,85,247,0.5)]'
+          }`}>
+            +∞
+          </span>
+        </div>
+      </div>
+
+      <div className="max-w-[1240px] h-14 sm:h-[68px] mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 relative">
+        
+        {/* Left: Brand Identity */}
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 text-white no-underline shrink-0 group">
+          <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-black border border-white/[0.14] flex items-center justify-center shadow-lg p-1 overflow-hidden shrink-0 group-hover:border-white/30 transition-all">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Infinity Logo"
+              className="w-full h-full object-contain"
             />
           </div>
 
-          {/* Right: +∞ Continuum End */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="font-mono text-[8px] font-bold text-white/40 tracking-wider hidden sm:inline">
-              END
+          <div className="flex items-center gap-1.5">
+            <span className="font-display font-extrabold text-sm sm:text-base lg:text-lg tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent whitespace-nowrap">
+              INFINITY SOCIALS
             </span>
-            <span className={`font-mono text-xs sm:text-[13px] font-black tracking-tight transition-all duration-300 ${
-              scrollProgress >= 95 ? 'text-purple-300 drop-shadow-[0_0_10px_rgba(168,85,247,0.9)]' : 'text-purple-500 drop-shadow-[0_0_6px_rgba(168,85,247,0.5)]'
-            }`}>
-              +∞
+            <span className="font-mono text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white uppercase tracking-wider hidden md:inline">
+              BETA
             </span>
           </div>
-        </div>
+        </Link>
 
-        <div className="max-w-[1240px] h-14 sm:h-[68px] mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 relative">
-          
-          {/* Left: Brand Identity */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 text-white no-underline shrink-0 group">
-            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-black border border-white/[0.14] flex items-center justify-center shadow-lg p-1 overflow-hidden shrink-0 group-hover:border-white/30 transition-all">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo.png"
-                alt="Infinity Logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              <span className="font-display font-extrabold text-sm sm:text-base lg:text-lg tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent whitespace-nowrap">
-                INFINITY SOCIALS
-              </span>
-              <span className="font-mono text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white uppercase tracking-wider hidden md:inline">
-                BETA
-              </span>
-            </div>
-          </Link>
-
-          {/* Center: Full Capsule Dock (When at Top) */}
-          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-auto z-20">
-            <nav className="flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-semibold bg-white/[0.04] border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] select-none">
-              <Link href="/" className="nav-link-zoom text-white no-underline">
-                Feed
-              </Link>
-              <Link href="/browse" className="nav-link-zoom text-white/90 hover:text-white no-underline flex items-center gap-1.5">
-                <span>Explore</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
-              </Link>
+        {/* Center: Clean Capsule Navigation */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-auto z-20">
+          <nav className="flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-semibold bg-white/[0.04] border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] select-none">
+            <Link href="/" className="nav-link-zoom text-white no-underline">
+              Feed
+            </Link>
+            <Link href="/browse" className="nav-link-zoom text-white/90 hover:text-white no-underline flex items-center gap-1.5">
+              <span>Explore</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
+            </Link>
               <Link href="/#featured-articles" className="nav-link-zoom text-white/70 hover:text-white no-underline">
                 News
               </Link>
@@ -439,9 +302,6 @@ export default function Navbar() {
         </div>
       )}
     </header>
-    {/* Spacer so page content starts below the fixed navbar */}
-    <div className="h-[90px] sm:h-[104px] w-full pointer-events-none" aria-hidden="true" />
-    </>
   );
 }
 
